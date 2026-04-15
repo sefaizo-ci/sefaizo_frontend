@@ -26,14 +26,14 @@ body {
 /* Custom Utilities */
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, #00A99D 0%, #00C4B7 100%);
+    background: linear-gradient(135deg, #012e65 0%, #023e85 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .bg-gradient-primary {
-    background: linear-gradient(135deg, #00A99D 0%, #00C4B7 100%);
+    background: linear-gradient(135deg, #012e65 0%, #023e85 100%);
   }
   
   .container-custom {
