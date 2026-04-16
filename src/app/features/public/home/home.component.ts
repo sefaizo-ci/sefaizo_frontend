@@ -210,7 +210,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                 <div class="w-full bg-gradient-to-br from-primary to-primary-dark rounded-[2.2rem] overflow-hidden aspect-[9/19] relative">
                   <!-- Screen content -->
                   <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6">
-                    <img src="/Logoheder.png" alt="SEFAIZO" class="h-12 w-auto mb-6 brightness-0 invert">
+                    <img src="/Splash.png" alt="SEFAIZO" class="h-12 w-auto mb-6 brightness-0 invert">
                     <div class="text-2xl font-bold mb-2">SEFAIZO</div>
                     <div class="text-sm text-white/80 text-center mb-6">Votre beauté, notre priorité</div>
                     <!-- Mock UI elements -->
@@ -843,3 +843,4 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.min(...business.services.map(s => s.price));
   }
 }
+

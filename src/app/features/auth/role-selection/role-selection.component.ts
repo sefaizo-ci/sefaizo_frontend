@@ -11,7 +11,7 @@ import { Router, RouterLink } from '@angular/router';
         <!-- Logo -->
         <div class="text-center mb-12">
           <a href="/" class="inline-block">
-            <img src="/Logoheder.png" alt="SEFAIZO Logo" class="h-16 w-auto mx-auto mb-6">
+            <img src="/Splash.png" alt="SEFAIZO Logo" class="h-16 w-auto mx-auto mb-6">
           </a>
           <h1 class="text-4xl font-bold text-secondary mb-3">Bienvenue sur SEFAIZO</h1>
           <p class="text-lg text-secondary-gray max-w-2xl mx-auto">
@@ -161,3 +161,4 @@ export class RoleSelectionComponent {
     }
   }
 }
+

@@ -29,7 +29,7 @@ import { filter, map, startWith } from 'rxjs/operators';
           <div class="flex items-center justify-between">
             <!-- Logo -->
             <a routerLink="/" class="flex items-center gap-2">
-              <img src="/Logoheder.png" alt="SEFAIZO Logo" class="h-10 w-auto">
+              <img src="/Splash.png" alt="SEFAIZO Logo" class="h-10 w-auto">
             </a>
 
             <!-- Desktop Navigation -->
@@ -166,3 +166,4 @@ export class AppComponent {
     this.authService.logout();
   }
 }
+

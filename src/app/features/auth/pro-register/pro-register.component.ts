@@ -24,7 +24,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
         
         <div class="relative z-10 flex flex-col justify-center px-12 text-white">
           <a href="/" class="inline-block mb-12">
-            <img src="/Logoheder.png" alt="SEFAIZO Logo" class="h-16 w-auto brightness-0 invert">
+            <img src="/Splash.png" alt="SEFAIZO Logo" class="h-16 w-auto brightness-0 invert">
           </a>
           
           <h1 class="text-4xl font-bold mb-6 leading-tight">
@@ -82,7 +82,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
           <!-- Mobile Logo -->
           <div class="lg:hidden mb-8 text-center">
             <a href="/" class="inline-block">
-              <img src="/Logoheder.png" alt="SEFAIZO Logo" class="h-14 w-auto mx-auto">
+              <img src="/Splash.png" alt="SEFAIZO Logo" class="h-14 w-auto mx-auto">
             </a>
           </div>
 
@@ -880,3 +880,4 @@ export class ProRegisterComponent {
     });
   }
 }
+
