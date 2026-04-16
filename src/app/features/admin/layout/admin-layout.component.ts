@@ -13,7 +13,7 @@ import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
         <!-- Logo -->
         <div class="p-6 border-b">
           <a href="/" class="flex items-center gap-3">
-            <img src="/Logoheder.png" alt="SEFAIZO" class="h-10 w-auto">
+            <img src="/Splash.png" alt="SEFAIZO" class="h-10 w-auto">
             <span class="text-lg font-bold text-secondary">Admin</span>
           </a>
         </div>
@@ -143,3 +143,4 @@ import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 })
 export class AdminLayoutComponent {
 }
+

@@ -12,7 +12,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
         <div class="flex items-center justify-between">
           <!-- Logo -->
           <a href="/" class="flex items-center gap-2">
-            <img src="/Logoheder.png" alt="SEFAIZO Logo" class="h-10 w-auto">
+            <img src="/Splash.png" alt="SEFAIZO Logo" class="h-10 w-auto">
           </a>
 
           <!-- Desktop Navigation -->
@@ -40,3 +40,4 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
 })
 export class HeaderComponent {
 }
+
