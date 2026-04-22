@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MockDataService } from '../../../core/services/mock-data.service';
@@ -7,6 +7,8 @@ import { SearchInputComponent } from '../../../shared/ui/search-input/search-inp
 import { StarRatingComponent } from '../../../shared/ui/star-rating/star-rating.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { FcfaPipe } from '../../../shared/pipes/format.pipe';
+import { LucideAngularModule } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -14,73 +16,138 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
   imports: [
     CommonModule,
     RouterLink,
+    FormsModule,
     SearchInputComponent,
     StarRatingComponent,
     SkeletonComponent,
-    FcfaPipe
+    FcfaPipe,
+    LucideAngularModule
   ],
   template: `
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-primary/5 via-white to-primary/10 py-16 md:py-24 overflow-hidden">
-      <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0 opacity-5 pointer-events-none">
         <div class="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
         <div class="absolute bottom-20 right-10 w-96 h-96 bg-primary rounded-full blur-3xl"></div>
       </div>
 
       <div class="container-custom relative z-10">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-6 leading-tight">
-            Réservez vos soins beauté
-          </h1>
 
-          <p class="text-lg md:text-xl text-secondary-gray mb-10 max-w-2xl mx-auto">
-            Découvrez les meilleurs professionnels de la beauté et réservez en quelques clics.
-            Coiffure, esthétique, manucure et plus encore.
+          <!-- Title -->
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-4 leading-tight tracking-tight">
+            Réservez vos soins beauté
+            <span class="text-primary">à Abidjan</span>
+          </h1>
+          <p class="text-lg text-secondary-gray mb-8 max-w-2xl mx-auto">
+            Trouvez et réservez les meilleurs professionnels près de chez vous, en quelques secondes.
           </p>
 
-          <div class="mb-6">
-            <app-search-input
-              placeholder="Rechercher un salon, un service, une commune..."
-              (search)="onSearch($event)">
-            </app-search-input>
+          <!-- Hero Search Bar -->
+          <div class="hero-search-bar bg-white rounded-2xl shadow-xl border border-gray-100 p-2 mb-5 max-w-3xl mx-auto">
+            <div class="flex flex-col md:flex-row items-stretch">
+
+              <!-- Champ Service -->
+              <div class="flex items-center gap-3 flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-gray-100">
+                <lucide-icon name="scissors" [size]="18" [strokeWidth]="1.75" class="text-secondary-gray flex-shrink-0"></lucide-icon>
+                <div class="flex-1 min-w-0 text-left">
+                  <div class="text-xs font-semibold text-secondary-gray uppercase tracking-wider mb-0.5">Service</div>
+                  <input
+                    type="text"
+                    placeholder="Coiffure, massage, manucure..."
+                    [(ngModel)]="heroService"
+                    (keyup.enter)="onHeroSearch()"
+                    class="w-full text-sm text-secondary placeholder-gray-400 bg-transparent border-none outline-none font-medium"
+                  />
+                </div>
+              </div>
+
+              <!-- Champ Commune -->
+              <div class="flex items-center gap-3 flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-gray-100">
+                <lucide-icon name="map-pin" [size]="18" [strokeWidth]="1.75" class="text-secondary-gray flex-shrink-0"></lucide-icon>
+                <div class="flex-1 min-w-0 text-left">
+                  <div class="text-xs font-semibold text-secondary-gray uppercase tracking-wider mb-0.5">Commune</div>
+                  <select
+                    [(ngModel)]="heroCommune"
+                    class="w-full text-sm text-secondary bg-transparent border-none outline-none font-medium appearance-none cursor-pointer"
+                  >
+                    <option value="">Toutes les communes</option>
+                    @for (commune of communes; track commune) {
+                      <option [value]="commune">{{ commune }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <!-- Bouton Rechercher -->
+              <div class="px-2 py-2 flex items-center">
+                <button
+                  (click)="onHeroSearch()"
+                  class="w-full md:w-auto bg-primary hover:bg-primary-dark text-white px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap">
+                  <lucide-icon name="search" [size]="16" [strokeWidth]="2.5"></lucide-icon>
+                  Rechercher
+                </button>
+              </div>
+            </div>
           </div>
 
-          <!-- Animated Booking Counter -->
-          <div class="mb-12 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg inline-block">
-            <div class="flex items-center gap-3 justify-center">
-              <div class="animate-pulse">
-                <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                </svg>
+          <!-- Tags de recherche populaires -->
+          <div class="flex flex-wrap justify-center items-center gap-2 mb-10">
+            <span class="text-sm text-secondary-gray">Tendances :</span>
+            @for (tag of popularTags; track tag) {
+              <button
+                (click)="onTagSearch(tag)"
+                class="text-sm px-3.5 py-1.5 rounded-full bg-white border border-gray-200 text-secondary hover:border-primary hover:text-primary hover:shadow-sm transition-all duration-150 font-medium">
+                {{ tag }}
+              </button>
+            }
+          </div>
+
+          <!-- Social proof + stats -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+
+            <!-- Avatars + compteur RDV -->
+            <div class="flex items-center gap-3">
+              <div class="flex -space-x-2.5">
+                @for (letter of ['K','A','M','S']; track letter) {
+                  <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-dark border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                    {{ letter }}
+                  </div>
+                }
               </div>
               <div class="text-left">
-                <div class="text-3xl md:text-4xl font-bold text-primary">
-                  {{ animatedCounter() }}
+                <div class="flex items-center gap-1.5">
+                  <div class="animate-pulse text-primary">
+                    <lucide-icon name="clock" [size]="13" [strokeWidth]="2"></lucide-icon>
+                  </div>
+                  <span class="text-xl font-bold text-primary">{{ animatedCounter() }}</span>
                 </div>
-                <div class="text-sm text-secondary-gray">rendez-vous pris aujourd'hui</div>
+                <div class="text-xs text-secondary-gray">rendez-vous pris aujourd'hui</div>
+              </div>
+            </div>
+
+            <div class="hidden sm:block w-px h-10 bg-gray-200"></div>
+
+            <!-- Chiffres clés -->
+            <div class="flex items-center gap-6">
+              <div class="text-center">
+                <div class="text-xl font-bold text-secondary">500+</div>
+                <div class="text-xs text-secondary-gray mt-0.5">Professionnels</div>
+              </div>
+              <div class="text-center">
+                <div class="flex items-center justify-center gap-0.5">
+                  <span class="text-xl font-bold text-secondary">4.8</span>
+                  <lucide-icon name="star" [size]="14" [strokeWidth]="0" class="text-yellow-400 fill-yellow-400"></lucide-icon>
+                </div>
+                <div class="text-xs text-secondary-gray mt-0.5">Note moyenne</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xl font-bold text-secondary">10+</div>
+                <div class="text-xs text-secondary-gray mt-0.5">Communes</div>
               </div>
             </div>
           </div>
 
-          <!-- Quick Stats -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="text-center">
-              <div class="text-3xl font-bold text-primary">500+</div>
-              <div class="text-sm text-secondary-gray mt-1">Professionnels</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-primary">10+</div>
-              <div class="text-sm text-secondary-gray mt-1">Communes</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-primary">4.8★</div>
-              <div class="text-sm text-secondary-gray mt-1">Note moyenne</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-primary">5000+</div>
-              <div class="text-sm text-secondary-gray mt-1">RDV / mois</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -104,17 +171,11 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
             @for (category of categories; track category.id) {
               <button
                 (click)="filterByCategory(category.name)"
-                class="group bg-white p-6 rounded-md shadow hover:shadow-md transition-all duration-200 text-center hover:-translate-y-1">
-                <div class="w-12 h-12 mx-auto mb-3 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    @if (category.icon === 'cut') {
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h7a1 1 0 100-2H7z" clip-rule="evenodd"/>
-                    } @else {
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    }
-                  </svg>
+                class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 text-center hover:-translate-y-1 active:scale-95">
+                <div class="w-12 h-12 mx-auto mb-3 bg-primary/8 rounded-xl flex items-center justify-center group-hover:bg-primary transition-all duration-200 text-primary group-hover:text-white">
+                  <lucide-icon [name]="getCategoryIcon(category.icon)" [size]="22" [strokeWidth]="1.75"></lucide-icon>
                 </div>
-                <span class="text-sm font-medium text-secondary group-hover:text-primary">{{ category.name }}</span>
+                <span class="text-xs font-semibold text-secondary group-hover:text-primary transition-colors leading-tight block">{{ category.name }}</span>
               </button>
             }
           </div>
@@ -135,9 +196,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
           <!-- Text Content -->
           <div>
             <div class="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/>
-              </svg>
+              <lucide-icon name="smartphone" [size]="15" [strokeWidth]="2"></lucide-icon>
               Application Mobile
             </div>
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
@@ -151,26 +210,20 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
             <!-- Features -->
             <div class="space-y-4 mb-8">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
+                <div class="w-9 h-9 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="zap" [size]="17" [strokeWidth]="2" class="text-primary"></lucide-icon>
                 </div>
                 <span class="text-gray-200">Réservation en un clic</span>
               </div>
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
+                <div class="w-9 h-9 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="bell-ring" [size]="17" [strokeWidth]="2" class="text-primary"></lucide-icon>
                 </div>
                 <span class="text-gray-200">Notifications et rappels automatiques</span>
               </div>
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
+                <div class="w-9 h-9 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="calendar-check" [size]="17" [strokeWidth]="2" class="text-primary"></lucide-icon>
                 </div>
                 <span class="text-gray-200">Gestion de vos rendez-vous simplifiée</span>
               </div>
@@ -265,9 +318,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
           </div>
           <a href="/recherche" class="text-primary font-semibold hover:text-primary-dark transition-colors inline-flex items-center gap-1">
             Voir tout
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
+            <lucide-icon name="chevron-right" [size]="16" [strokeWidth]="2.5"></lucide-icon>
           </a>
         </div>
 
@@ -282,7 +333,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
         } @else {
           <div class="carousel-container relative -mx-4 px-4">
             <div #recommendedCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'recommended')">
-              @for (business of recommendedBusinesses(); track business.id) {
+              @for (business of recommendedBusinesses; track business.id) {
                 <div
                   (click)="viewBusiness(business.slug)"
                   class="business-card min-w-[280px] max-w-[280px] bg-white rounded-md shadow overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group flex-shrink-0">
@@ -295,9 +346,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                       loading="lazy">
                     @if (business.isVerified) {
                       <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                        <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
+                        <lucide-icon name="badge-check" [size]="14" [strokeWidth]="2" class="text-primary"></lucide-icon>
                         <span class="text-xs font-medium text-secondary">Vérifié</span>
                       </div>
                     }
@@ -315,10 +364,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                     </div>
 
                     <div class="flex items-center gap-1 text-sm text-secondary-gray mb-3">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                      </svg>
+                      <lucide-icon name="map-pin" [size]="13" [strokeWidth]="2" class="text-secondary-gray flex-shrink-0"></lucide-icon>
                       {{ business.city }}
                     </div>
 
@@ -331,15 +377,11 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
               }
             </div>
             <!-- Carousel Controls -->
-            <button (click)="scrollCarousel('recommended', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
+            <button (click)="scrollCarousel('recommended', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-left" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
-            <button (click)="scrollCarousel('recommended', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+            <button (click)="scrollCarousel('recommended', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-right" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
           </div>
         }
@@ -356,9 +398,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
           </div>
           <a href="/recherche" class="text-primary font-semibold hover:text-primary-dark transition-colors inline-flex items-center gap-1">
             Voir tout
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
+            <lucide-icon name="chevron-right" [size]="16" [strokeWidth]="2.5"></lucide-icon>
           </a>
         </div>
 
@@ -373,7 +413,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
         } @else {
           <div class="carousel-container relative -mx-4 px-4">
             <div #newCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'new')">
-              @for (business of newBusinesses(); track business.id) {
+              @for (business of newBusinesses; track business.id) {
                 <div
                   (click)="viewBusiness(business.slug)"
                   class="business-card min-w-[280px] max-w-[280px] bg-white rounded-md shadow overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group flex-shrink-0">
@@ -389,9 +429,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                     </div>
                     @if (business.isVerified) {
                       <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                        <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
+                        <lucide-icon name="badge-check" [size]="14" [strokeWidth]="2" class="text-primary"></lucide-icon>
                         <span class="text-xs font-medium text-secondary">Vérifié</span>
                       </div>
                     }
@@ -409,10 +447,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                     </div>
 
                     <div class="flex items-center gap-1 text-sm text-secondary-gray mb-3">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                      </svg>
+                      <lucide-icon name="map-pin" [size]="13" [strokeWidth]="2" class="text-secondary-gray flex-shrink-0"></lucide-icon>
                       {{ business.city }}
                     </div>
 
@@ -425,15 +460,11 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
               }
             </div>
             <!-- Carousel Controls -->
-            <button (click)="scrollCarousel('new', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
+            <button (click)="scrollCarousel('new', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-left" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
-            <button (click)="scrollCarousel('new', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+            <button (click)="scrollCarousel('new', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-right" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
           </div>
         }
@@ -450,9 +481,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
           </div>
           <a href="/recherche" class="text-primary font-semibold hover:text-primary-dark transition-colors inline-flex items-center gap-1">
             Voir tout
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
+            <lucide-icon name="chevron-right" [size]="16" [strokeWidth]="2.5"></lucide-icon>
           </a>
         </div>
 
@@ -467,7 +496,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
         } @else {
           <div class="carousel-container relative -mx-4 px-4">
             <div #trendingCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'trending')">
-              @for (business of trendingBusinesses(); track business.id) {
+              @for (business of trendingBusinesses; track business.id) {
                 <div
                   (click)="viewBusiness(business.slug)"
                   class="business-card min-w-[280px] max-w-[280px] bg-white rounded-md shadow overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group flex-shrink-0">
@@ -479,16 +508,12 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                       class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       loading="lazy">
                     <div class="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
-                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/>
-                      </svg>
+                      <lucide-icon name="flame" [size]="12" [strokeWidth]="2"></lucide-icon>
                       Tendance
                     </div>
                     @if (business.isVerified) {
                       <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                        <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
+                        <lucide-icon name="badge-check" [size]="14" [strokeWidth]="2" class="text-primary"></lucide-icon>
                         <span class="text-xs font-medium text-secondary">Vérifié</span>
                       </div>
                     }
@@ -506,10 +531,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
                     </div>
 
                     <div class="flex items-center gap-1 text-sm text-secondary-gray mb-3">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                      </svg>
+                      <lucide-icon name="map-pin" [size]="13" [strokeWidth]="2" class="text-secondary-gray flex-shrink-0"></lucide-icon>
                       {{ business.city }}
                     </div>
 
@@ -522,15 +544,11 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
               }
             </div>
             <!-- Carousel Controls -->
-            <button (click)="scrollCarousel('trending', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
+            <button (click)="scrollCarousel('trending', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-left" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
-            <button (click)="scrollCarousel('trending', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+            <button (click)="scrollCarousel('trending', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-right" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
           </div>
         }
@@ -558,7 +576,7 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
         } @else {
           <div class="carousel-container relative -mx-4 px-4">
             <div #reviewsCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'reviews')">
-              @for (review of featuredReviews(); track review.id) {
+              @for (review of featuredReviews; track review.id) {
                 <div class="review-card min-w-[300px] max-w-[300px] bg-white rounded-md shadow p-6 flex-shrink-0">
                   <!-- Header -->
                   <div class="flex items-center gap-3 mb-4">
@@ -586,15 +604,11 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
               }
             </div>
             <!-- Carousel Controls -->
-            <button (click)="scrollCarousel('reviews', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
+            <button (click)="scrollCarousel('reviews', -1)" class="carousel-btn carousel-btn-left absolute left-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-left" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
-            <button (click)="scrollCarousel('reviews', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+            <button (click)="scrollCarousel('reviews', 1)" class="carousel-btn carousel-btn-right absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2.5 hover:bg-gray-50 hover:shadow-lg transition-all z-10">
+              <lucide-icon name="chevron-right" [size]="20" [strokeWidth]="2" class="text-secondary"></lucide-icon>
             </button>
           </div>
         }
@@ -614,11 +628,8 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
             <button
               (click)="filterByCommune(commune)"
               class="bg-white p-4 rounded-md shadow hover:shadow-md transition-all duration-200 text-center hover:-translate-y-1 group">
-              <div class="w-10 h-10 mx-auto mb-2 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
+              <div class="w-10 h-10 mx-auto mb-2 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary transition-all duration-200 text-primary group-hover:text-white">
+                <lucide-icon name="map-pin" [size]="18" [strokeWidth]="1.75"></lucide-icon>
               </div>
               <span class="text-sm font-medium text-secondary group-hover:text-primary">{{ commune }}</span>
             </button>
@@ -689,14 +700,18 @@ import { FcfaPipe } from '../../../shared/pipes/format.pipe';
   `]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  loading = signal(true);
+  loading = signal(false);
   categories: ServiceCategory[] = [];
   communes: string[] = [];
-  topBusinesses = computed(() => this.mockData.getTopRatedBusinesses(4));
-  recommendedBusinesses = computed(() => this.mockData.getRecommendedBusinesses(8));
-  newBusinesses = computed(() => this.mockData.getNewBusinesses(8));
-  trendingBusinesses = computed(() => this.mockData.getTrendingBusinesses(8));
-  featuredReviews = computed(() => this.mockData.getFeaturedReviews(10));
+
+  // Hero search
+  heroService = '';
+  heroCommune = '';
+  readonly popularTags = ['Coiffure', 'Massage', 'Manucure', 'Barbier', 'Spa', 'Maquillage'];
+  recommendedBusinesses: Business[] = [];
+  newBusinesses: Business[] = [];
+  trendingBusinesses: Business[] = [];
+  featuredReviews: Review[] = [];
   
   // Animated counter
   animatedCounter = signal(847);
@@ -716,12 +731,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Simulate loading
-    setTimeout(() => {
-      this.categories = this.mockData.getCategories();
-      this.communes = this.mockData.getCommunes().slice(0, 10);
-      this.loading.set(false);
-    }, 500);
+    this.categories = this.mockData.getCategories();
+    this.communes = this.mockData.getCommunes().slice(0, 10);
+    this.recommendedBusinesses = this.mockData.getRecommendedBusinesses(8);
+    this.newBusinesses = this.mockData.getNewBusinesses(8);
+    this.trendingBusinesses = this.mockData.getTrendingBusinesses(8);
+    this.featuredReviews = this.mockData.getFeaturedReviews(10);
 
     // Start animated counter
     this.startAnimatedCounter();
@@ -822,6 +837,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  onHeroSearch(): void {
+    const params: Record<string, string> = {};
+    if (this.heroService.trim()) params['q'] = this.heroService.trim();
+    if (this.heroCommune) params['commune'] = this.heroCommune;
+    this.router.navigate(['/recherche'], { queryParams: params });
+  }
+
+  onTagSearch(tag: string): void {
+    this.router.navigate(['/recherche'], { queryParams: { q: tag } });
+  }
+
   filterByCategory(category: string): void {
     this.router.navigate(['/recherche'], {
       queryParams: { category }
@@ -841,6 +867,32 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   getMinPrice(business: Business): number {
     if (!business.services || business.services.length === 0) return 0;
     return Math.min(...business.services.map(s => s.price));
+  }
+
+  getCategoryIcon(icon: string): string {
+    const iconMap: Record<string, string> = {
+      cut: 'scissors',
+      scissors: 'scissors',
+      beauty: 'sparkles',
+      nail: 'sparkles',
+      spa: 'leaf',
+      massage: 'leaf',
+      fitness: 'dumbbell',
+      sport: 'dumbbell',
+      makeup: 'brush',
+      barber: 'scissors',
+      tattoo: 'pen-tool',
+      medical: 'stethoscope',
+      hair: 'scissors',
+      skin: 'sparkles',
+      eyebrow: 'eye',
+      lash: 'eye',
+      wax: 'sparkles',
+      piercing: 'circle-dot',
+      wellness: 'heart-pulse',
+    };
+    const key = (icon || '').toLowerCase();
+    return iconMap[key] ?? 'sparkles';
   }
 }
 
