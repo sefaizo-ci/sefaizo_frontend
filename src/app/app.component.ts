@@ -4,6 +4,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angu
 import { AuthService } from './core/services/auth.service';
 import { ToastContainerComponent } from './shared/ui/toast/toast.component';
 import { ButtonComponent } from './shared/ui/button/button.component';
+import { FooterComponent } from './components/footer/footer.component';
 import { Router, Event } from '@angular/router';
 import { filter, map, startWith } from 'rxjs/operators';
 
@@ -16,7 +17,8 @@ import { filter, map, startWith } from 'rxjs/operators';
     RouterLink,
     RouterLinkActive,
     ToastContainerComponent,
-    ButtonComponent
+    ButtonComponent,
+    FooterComponent
   ],
   template: `
     <!-- Toast Container -->
@@ -92,47 +94,7 @@ import { filter, map, startWith } from 'rxjs/operators';
       </main>
 
       <!-- Footer -->
-      <footer class="bg-secondary text-white pt-16 pb-8 mt-16">
-        <div class="container-custom">
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 class="font-semibold mb-4">Entreprise</h4>
-              <ul class="space-y-2 text-sm text-gray-400">
-                <li><a routerLink="/a-propos" class="hover:text-white transition-colors">À propos</a></li>
-                <li><a routerLink="/carrieres" class="hover:text-white transition-colors">Carrières</a></li>
-                <li><a routerLink="/presse" class="hover:text-white transition-colors">Presse</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-semibold mb-4">Professionnels</h4>
-              <ul class="space-y-2 text-sm text-gray-400">
-                <li><a routerLink="/devenir-partenaire" class="hover:text-white transition-colors">Devenir partenaire</a></li>
-                <li><a routerLink="/ressources" class="hover:text-white transition-colors">Ressources</a></li>
-                <li><a routerLink="/tarifs" class="hover:text-white transition-colors">Tarifs</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-semibold mb-4">Support</h4>
-              <ul class="space-y-2 text-sm text-gray-400">
-                <li><a routerLink="/centre-aide" class="hover:text-white transition-colors">Centre d'aide</a></li>
-                <li><a routerLink="/contact" class="hover:text-white transition-colors">Nous contacter</a></li>
-                <li><a routerLink="/faq" class="hover:text-white transition-colors">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-semibold mb-4">Légal</h4>
-              <ul class="space-y-2 text-sm text-gray-400">
-                <li><a routerLink="/confidentialite" class="hover:text-white transition-colors">Confidentialité</a></li>
-                <li><a routerLink="/conditions" class="hover:text-white transition-colors">Conditions d'utilisation</a></li>
-                <li><a routerLink="/cookies" class="hover:text-white transition-colors">Cookies</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            © 2026 SEFAIZO. Tous droits réservés.
-          </div>
-        </div>
-      </footer>
+      <app-footer></app-footer>
     } @else {
       <!-- No header/footer for client/pro/admin spaces -->
       <main>

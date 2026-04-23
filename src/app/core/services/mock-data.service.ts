@@ -799,30 +799,48 @@ export class MockDataService {
   }
 
   private generateReviews(): Review[] {
-    const reviews: Review[] = [];
-    const comments = [
-      'Service exceptionnel! Je recommande vivement.',
-      'Très professionnelle, résultat impeccable.',
-      'Accueil chaleureux et prestation de qualité.',
-      'Je suis ravie du résultat, à la hauteur de mes attentes.',
-      'Excellent rapport qualité-prix.',
-      'Personnel qualifié et à l\'écoute.',
-      'Ambiance détendue, moment agréable.',
-      'Résultat parfait, je reviendrai!'
+    // Profils ivoiriens authentiques — photos de personnes noires africaines
+    const profiles = [
+      { name: 'Adjoua Kouassi',    avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+      { name: 'Bintou Traoré',     avatar: '/avatars/Bintou Traoré.jpg' },
+      { name: 'Clarisse Yao',      avatar: '/avatars/clarisse-yao.jpg' },
+      { name: 'Djeneba Koné',      avatar: '/avatars/Djeneba Koné.jpg' },
+      { name: 'Fatou Diallo',      avatar: '/avatars/Fatou Diallo.jpg' },
+      { name: 'Mariam Bamba',      avatar: '/avatars/mariam-bamba.jpg' },
+      { name: 'Edwige Assi',       avatar: '/avatars/Edwige Assi.jpg' },
+      { name: 'Moussa Ouattara',   avatar: 'https://randomuser.me/api/portraits/men/46.jpg'   },
+      { name: 'Kofi Assoumou',     avatar: 'https://randomuser.me/api/portraits/men/54.jpg'   },
+      { name: 'Issouf Coulibaly',  avatar: 'https://randomuser.me/api/portraits/men/65.jpg'   },
     ];
 
+    // Commentaires typiquement ivoiriens — expressions locales authentiques
+    const comments = [
+      "Hé ! Ma coiffeuse là, elle connaît vraiment son affaire ! La coiffure qu'elle m'a faite, tout Abidjan m'a demandé le numéro. Je reviendrai à coup sûr !",
+      "Waouh, bébé là a des mains en or dêh ! Mes ongles sont trop beaux, mes amies ont trop kiffé. SEFAIZO c'est vraiment top !",
+      "Franchement, j'ai pas regretté du tout. Le massage là m'a déstressée à fond, j'avais même peur de me lever tellement c'était bon ! Je recommande à toutes mes sœurs d'Abidjan.",
+      "Mon ami m'avait parlé de SEFAIZO, j'ai essayé pour la coupe... Vraiment wôh ! C'est nickel, le barbier là connaît son travail !",
+      "Depuis que j'ai trouvé ce salon via SEFAIZO, je ne vais plus nulle part ailleurs. Le soin du visage qu'elles m'ont fait, ma peau brille comme si j'avais 18 ans !",
+      "Bon dêh, je m'attendais vraiment pas à ce niveau ! Les filles sont trop professionnelles, le salon est propre et le résultat est magnifique. Merci SEFAIZO !",
+      "Ma maquilleuse est top oh ! Pour mon anniversaire, elle m'a tellement embellie que mon mari m'a demandé si c'était vraiment moi. Je suis trop contente !",
+      "Service impeccable ! J'ai réservé depuis mon téléphone, j'ai eu la confirmation tout de suite. À l'heure convenue j'étais déjà dans le salon. C'est trop pratique dêh !",
+      "Elles m'ont fait une pédicure qui tient depuis 3 semaines sans se casser. On voit que c'est de vraies pros. Adiès, SEFAIZO c'est la solution pour nous les filles d'Abidjan !",
+      "Mon barbier via SEFAIZO est devenu comme mon ami maintenant. La coupe est toujours fraîche, il connaît mon style. Jamais je ne change, c'est réglé !",
+    ];
+
+    const reviews: Review[] = [];
     for (let i = 1; i <= 8; i++) {
       const numReviews = Math.floor(Math.random() * 5) + 3;
       for (let j = 0; j < numReviews; j++) {
+        const profile = profiles[(i + j) % profiles.length];
         reviews.push({
           id: `review-${i}-${j}`,
           bookingId: `booking-mock-${i}-${j}`,
           businessId: `business-${i}`,
           clientId: `client-mock-${j}`,
-          clientName: ['Aminata K.', 'Fatou D.', 'Marie L.', 'Sophie B.', 'Claire A.'][j % 5],
-          clientAvatar: `https://i.pravatar.cc/150?img=${(j % 10) + 1}`,
-          rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
-          comment: comments[Math.floor(Math.random() * comments.length)],
+          clientName: profile.name,
+          clientAvatar: profile.avatar,
+          rating: Math.floor(Math.random() * 2) + 4, // 4 ou 5 étoiles
+          comment: comments[(i * 3 + j) % comments.length],
           isReported: false,
           createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
         });

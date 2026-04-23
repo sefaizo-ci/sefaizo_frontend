@@ -25,26 +25,51 @@ import { FormsModule } from '@angular/forms';
   ],
   template: `
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-primary/5 via-white to-primary/10 py-16 md:py-24 overflow-hidden">
-      <div class="absolute inset-0 opacity-5 pointer-events-none">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-primary rounded-full blur-3xl"></div>
-      </div>
+    <section class="relative py-20 md:py-28 overflow-hidden hero-section">
+
+      <!-- Dégradé de base -->
+      <div class="absolute inset-0 hero-gradient"></div>
+
+      <!-- Blob accent coral — haut gauche -->
+      <div class="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full pointer-events-none animate-float"
+           style="background: radial-gradient(circle at 40% 40%, rgba(255,107,107,0.22) 0%, transparent 70%); filter: blur(48px);"></div>
+
+      <!-- Blob bleu clair — centre bas -->
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[320px] rounded-full pointer-events-none"
+           style="background: radial-gradient(ellipse, rgba(2,62,133,0.45) 0%, transparent 70%); filter: blur(60px);"></div>
+
+      <!-- Blob accent coral — bas droite -->
+      <div class="absolute -bottom-24 -right-24 w-[400px] h-[400px] rounded-full pointer-events-none animate-float-delayed"
+           style="background: radial-gradient(circle, rgba(255,107,107,0.14) 0%, transparent 65%); filter: blur(56px);"></div>
+
+      <!-- Grille de points -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 28px 28px;"></div>
+
+      <!-- Ligne lumineuse horizontale — effet halo -->
+      <div class="absolute top-1/2 left-0 right-0 h-px pointer-events-none"
+           style="background: linear-gradient(90deg, transparent 0%, rgba(255,107,107,0.3) 30%, rgba(255,255,255,0.15) 50%, rgba(255,107,107,0.3) 70%, transparent 100%);"></div>
 
       <div class="container-custom relative z-10">
         <div class="max-w-4xl mx-auto text-center">
 
-          <!-- Title -->
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-4 leading-tight tracking-tight">
+          <!-- Badge catchy -->
+          <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            La beauté à portée de main à Abidjan
+          </div>
+
+          <!-- Titre -->
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-tight tracking-tight">
             Réservez vos soins beauté
-            <span class="text-primary">à Abidjan</span>
+            <span class="hero-accent-text"> à Abidjan</span>
           </h1>
-          <p class="text-lg text-secondary-gray mb-8 max-w-2xl mx-auto">
+          <p class="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed font-light">
             Trouvez et réservez les meilleurs professionnels près de chez vous, en quelques secondes.
           </p>
 
           <!-- Hero Search Bar -->
-          <div class="hero-search-bar bg-white rounded-2xl shadow-xl border border-gray-100 p-2 mb-5 max-w-3xl mx-auto">
+          <div class="hero-search-bar bg-white rounded-2xl shadow-2xl border border-white/20 p-2 mb-5 max-w-3xl mx-auto">
             <div class="flex flex-col md:flex-row items-stretch">
 
               <!-- Champ Service -->
@@ -91,13 +116,13 @@ import { FormsModule } from '@angular/forms';
             </div>
           </div>
 
-          <!-- Tags de recherche populaires -->
+          <!-- Tags populaires -->
           <div class="flex flex-wrap justify-center items-center gap-2 mb-10">
-            <span class="text-sm text-secondary-gray">Tendances :</span>
+            <span class="text-sm text-white/60 font-light">Tendances :</span>
             @for (tag of popularTags; track tag) {
               <button
                 (click)="onTagSearch(tag)"
-                class="text-sm px-3.5 py-1.5 rounded-full bg-white border border-gray-200 text-secondary hover:border-primary hover:text-primary hover:shadow-sm transition-all duration-150 font-medium">
+                class="text-sm px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 hover:bg-white/20 hover:text-white hover:border-white/40 transition-all duration-150 font-light">
                 {{ tag }}
               </button>
             }
@@ -110,40 +135,40 @@ import { FormsModule } from '@angular/forms';
             <div class="flex items-center gap-3">
               <div class="flex -space-x-2.5">
                 @for (letter of ['K','A','M','S']; track letter) {
-                  <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-dark border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                  <div class="w-9 h-9 rounded-full bg-gradient-to-br from-accent/80 to-accent border-2 border-white/30 flex items-center justify-center text-white text-xs font-bold shadow-md">
                     {{ letter }}
                   </div>
                 }
               </div>
               <div class="text-left">
                 <div class="flex items-center gap-1.5">
-                  <div class="animate-pulse text-primary">
+                  <div class="animate-pulse text-accent">
                     <lucide-icon name="clock" [size]="13" [strokeWidth]="2"></lucide-icon>
                   </div>
-                  <span class="text-xl font-bold text-primary">{{ animatedCounter() }}</span>
+                  <span class="text-xl font-bold text-white">{{ animatedCounter() }}</span>
                 </div>
-                <div class="text-xs text-secondary-gray">rendez-vous pris aujourd'hui</div>
+                <div class="text-xs text-white/60 font-light">rendez-vous pris aujourd'hui</div>
               </div>
             </div>
 
-            <div class="hidden sm:block w-px h-10 bg-gray-200"></div>
+            <div class="hidden sm:block w-px h-10 bg-white/20"></div>
 
             <!-- Chiffres clés -->
             <div class="flex items-center gap-6">
               <div class="text-center">
-                <div class="text-xl font-bold text-secondary">500+</div>
-                <div class="text-xs text-secondary-gray mt-0.5">Professionnels</div>
+                <div class="text-xl font-bold text-white">500+</div>
+                <div class="text-xs text-white/60 mt-0.5 font-light">Professionnels</div>
               </div>
               <div class="text-center">
                 <div class="flex items-center justify-center gap-0.5">
-                  <span class="text-xl font-bold text-secondary">4.8</span>
+                  <span class="text-xl font-bold text-white">4.8</span>
                   <lucide-icon name="star" [size]="14" [strokeWidth]="0" class="text-yellow-400 fill-yellow-400"></lucide-icon>
                 </div>
-                <div class="text-xs text-secondary-gray mt-0.5">Note moyenne</div>
+                <div class="text-xs text-white/60 mt-0.5 font-light">Note moyenne</div>
               </div>
               <div class="text-center">
-                <div class="text-xl font-bold text-secondary">10+</div>
-                <div class="text-xs text-secondary-gray mt-0.5">Communes</div>
+                <div class="text-xl font-bold text-white">10+</div>
+                <div class="text-xs text-white/60 mt-0.5 font-light">Communes</div>
               </div>
             </div>
           </div>
@@ -172,7 +197,9 @@ import { FormsModule } from '@angular/forms';
               <button
                 (click)="filterByCategory(category.name)"
                 class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 text-center hover:-translate-y-1 active:scale-95">
-                <div class="w-12 h-12 mx-auto mb-3 bg-primary/8 rounded-xl flex items-center justify-center group-hover:bg-primary transition-all duration-200 text-primary group-hover:text-white">
+                <div class="w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center group-hover:bg-primary transition-all duration-200 group-hover:text-white"
+                     [style.background]="getCategoryColor().bg"
+                     [style.color]="getCategoryColor().text">
                   <lucide-icon [name]="getCategoryIcon(category.icon)" [size]="22" [strokeWidth]="1.75"></lucide-icon>
                 </div>
                 <span class="text-xs font-semibold text-secondary group-hover:text-primary transition-colors leading-tight block">{{ category.name }}</span>
@@ -195,11 +222,11 @@ import { FormsModule } from '@angular/forms';
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <!-- Text Content -->
           <div>
-            <div class="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <lucide-icon name="smartphone" [size]="15" [strokeWidth]="2"></lucide-icon>
+            <div class="inline-flex items-center gap-2 bg-white/15 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              <lucide-icon name="smartphone" [size]="15" [strokeWidth]="2" class="text-white"></lucide-icon>
               Application Mobile
             </div>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight text-white">
               Réservez partout,<br />tout le temps
             </h2>
             <p class="text-lg text-gray-300 mb-8 leading-relaxed">
@@ -210,20 +237,20 @@ import { FormsModule } from '@angular/forms';
             <!-- Features -->
             <div class="space-y-4 mb-8">
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <lucide-icon name="zap" [size]="17" [strokeWidth]="2" class="text-primary"></lucide-icon>
+                <div class="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="zap" [size]="17" [strokeWidth]="2" class="text-white"></lucide-icon>
                 </div>
                 <span class="text-gray-200">Réservation en un clic</span>
               </div>
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <lucide-icon name="bell-ring" [size]="17" [strokeWidth]="2" class="text-primary"></lucide-icon>
+                <div class="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="bell-ring" [size]="17" [strokeWidth]="2" class="text-white"></lucide-icon>
                 </div>
                 <span class="text-gray-200">Notifications et rappels automatiques</span>
               </div>
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <lucide-icon name="calendar-check" [size]="17" [strokeWidth]="2" class="text-primary"></lucide-icon>
+                <div class="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="calendar-check" [size]="17" [strokeWidth]="2" class="text-white"></lucide-icon>
                 </div>
                 <span class="text-gray-200">Gestion de vos rendez-vous simplifiée</span>
               </div>
@@ -577,29 +604,38 @@ import { FormsModule } from '@angular/forms';
           <div class="carousel-container relative -mx-4 px-4">
             <div #reviewsCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'reviews')">
               @for (review of featuredReviews; track review.id) {
-                <div class="review-card min-w-[300px] max-w-[300px] bg-white rounded-md shadow p-6 flex-shrink-0">
-                  <!-- Header -->
-                  <div class="flex items-center gap-3 mb-4">
-                    <img
-                      [src]="review.clientAvatar || 'https://via.placeholder.com/50'"
-                      [alt]="review.clientName"
-                      class="w-12 h-12 rounded-full object-cover"
-                      loading="lazy">
-                    <div>
-                      <div class="font-semibold text-secondary">{{ review.clientName }}</div>
-                      <div class="text-sm text-secondary-gray">{{ review.createdAt | date:'d MMM yyyy' }}</div>
-                    </div>
-                  </div>
+                <div class="review-card min-w-[300px] max-w-[300px] bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex-shrink-0 flex flex-col gap-4">
 
-                  <!-- Rating -->
-                  <div class="mb-3">
-                    <app-star-rating [rating]="review.rating" size="1rem" />
-                  </div>
+                  <!-- Guillemets décoratifs -->
+                  <div class="text-4xl text-primary/15 font-serif leading-none -mb-2">"</div>
 
-                  <!-- Comment -->
-                  <p class="text-secondary-gray text-sm leading-relaxed line-clamp-4">
+                  <!-- Commentaire en premier pour impact visuel -->
+                  <p class="text-secondary text-sm leading-relaxed line-clamp-4 flex-1">
                     {{ review.comment }}
                   </p>
+
+                  <!-- Rating -->
+                  <app-star-rating [rating]="review.rating" size="0.9rem" />
+
+                  <!-- Séparateur -->
+                  <div class="border-t border-gray-100 pt-4 flex items-center gap-3">
+                    <div class="relative flex-shrink-0">
+                      <img
+                        [src]="review.clientAvatar || 'https://ui-avatars.com/api/?name=' + review.clientName + '&background=012e65&color=fff&rounded=true'"
+                        [alt]="review.clientName"
+                        class="w-11 h-11 rounded-full object-cover ring-2 ring-primary/10"
+                        loading="lazy">
+                      <!-- Drapeau CI -->
+                      <span class="absolute -bottom-0.5 -right-0.5 text-xs">🇨🇮</span>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="font-semibold text-secondary text-sm truncate">{{ review.clientName }}</div>
+                      <div class="flex items-center gap-1 text-xs text-secondary-gray">
+                        <lucide-icon name="badge-check" [size]="11" [strokeWidth]="2" class="text-primary flex-shrink-0"></lucide-icon>
+                        Client vérifié · Abidjan
+                      </div>
+                    </div>
+                  </div>
                 </div>
               }
             </div>
@@ -652,9 +688,9 @@ import { FormsModule } from '@angular/forms';
             <a routerLink="/auth/register/pro" class="bg-white text-primary px-8 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors inline-block">
               Devenir Partenaire
             </a>
-            <button class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-md font-semibold hover:bg-white/10 transition-colors">
+            <a routerLink="/a-propos" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-md font-semibold hover:bg-white/10 transition-colors inline-block">
               En savoir plus
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -697,6 +733,42 @@ import { FormsModule } from '@angular/forms';
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+
+    /* ── Hero gradient ── */
+    .hero-section {
+      isolation: isolate;
+    }
+
+    .hero-gradient {
+      background:
+        linear-gradient(135deg,
+          #010f22 0%,
+          #012e65 40%,
+          #013a7a 65%,
+          #023e85 85%,
+          #01265a 100%
+        );
+    }
+
+    /* Texte dégradé "à Abidjan" */
+    .hero-accent-text {
+      background: linear-gradient(90deg, #FF6B6B 0%, #ff9a8b 50%, #ffb347 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Animations flottantes */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50%       { transform: translateY(-22px) scale(1.03); }
+    }
+    @keyframes float-delayed {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50%       { transform: translateY(-16px) scale(1.02); }
+    }
+    .animate-float         { animation: float 7s ease-in-out infinite; }
+    .animate-float-delayed { animation: float-delayed 9s ease-in-out 2s infinite; }
   `]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -871,28 +943,39 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getCategoryIcon(icon: string): string {
     const iconMap: Record<string, string> = {
-      cut: 'scissors',
+      // Catégories principales du projet
+      cut:      'scissors',          // Coiffure — ciseaux
+      sparkles: 'sparkles',          // Esthétique — éclat beauté
+      hand:     'paintbrush',        // Manucure — pinceau vernis
+      foot:     'footprints',        // Pédicure — empreintes
+      user:     'wand',              // Barbier — outil de précision
+      brush:    'palette',           // Maquillage — palette couleurs
+      face:     'droplets',          // Soins du visage — hydratation
+      spa:      'hand',              // Massage — mains soignantes
+      // Mappings complémentaires
       scissors: 'scissors',
-      beauty: 'sparkles',
-      nail: 'sparkles',
-      spa: 'leaf',
-      massage: 'leaf',
-      fitness: 'dumbbell',
-      sport: 'dumbbell',
-      makeup: 'brush',
-      barber: 'scissors',
-      tattoo: 'pen-tool',
-      medical: 'stethoscope',
-      hair: 'scissors',
-      skin: 'sparkles',
-      eyebrow: 'eye',
-      lash: 'eye',
-      wax: 'sparkles',
-      piercing: 'circle-dot',
+      beauty:   'sparkles',
+      nail:     'paintbrush',
+      massage:  'hand',
+      makeup:   'palette',
+      barber:   'wand',
+      hair:     'scissors',
+      skin:     'droplets',
+      eyebrow:  'eye',
+      lash:     'eye',
       wellness: 'heart-pulse',
+      wax:      'sparkles',
+      piercing: 'circle-dot',
+      tattoo:   'pen-tool',
+      fitness:  'dumbbell',
+      medical:  'stethoscope',
     };
     const key = (icon || '').toLowerCase();
     return iconMap[key] ?? 'sparkles';
+  }
+
+  getCategoryColor(): { bg: string; text: string } {
+    return { bg: 'rgba(0,0,0,0.06)', text: '#1A1A1A' };
   }
 }
 
