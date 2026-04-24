@@ -31,9 +31,9 @@ import { FormsModule } from '@angular/forms';
   `,
   styles: [`
     .search-input {
-      @apply w-full px-5 py-4 pr-16 border-2 border-gray-200 rounded-full text-base 
-             focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 
-             transition-all duration-200 disabled:bg-gray-100;
+      @apply w-full px-5 py-4 pr-16 border-2 border-primary rounded-full text-base
+             outline-none ring-4 ring-primary/20
+             transition-all duration-200 disabled:bg-gray-100 disabled:border-gray-200 disabled:ring-0;
     }
   `]
 })

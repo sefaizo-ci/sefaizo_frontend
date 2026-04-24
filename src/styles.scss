@@ -1,5 +1,39 @@
-/* Import Google Fonts - Inter */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap');
+/* ============================================================
+   POLICES MB EMPIRE
+   Déposez les fichiers dans /public/fonts/ avec ces noms :
+   - MBEmpire-Heavy.woff2 + MBEmpire-Heavy.ttf   (titres h1)
+   - MBEmpire-Bold.woff2  + MBEmpire-Bold.ttf    (sous-titres h2/h3)
+   - MBEmpire-Light.woff2 + MBEmpire-Light.ttf   (contenu body)
+   ============================================================ */
+@font-face {
+  font-family: 'MB Empire';
+  src: url('/fonts/MBEmpire-Heavy.woff2') format('woff2'),
+       url('/fonts/MBEmpire-Heavy.ttf')  format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MB Empire';
+  src: url('/fonts/MBEmpire-Bold.woff2') format('woff2'),
+       url('/fonts/MBEmpire-Bold.ttf')  format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MB Empire';
+  src: url('/fonts/MBEmpire-Light.woff2') format('woff2'),
+       url('/fonts/MBEmpire-Light.ttf')  format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Import Google Fonts - Inter (fallback) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&display=swap');
 
 /* Tailwind Directives */
 @tailwind base;
@@ -16,11 +50,65 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'MB Empire', 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 300; /* MB Empire Light → contenu */
   color: #1A1A1A;
   background-color: #FFFFFF;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   TYPOGRAPHIE GLOBALE — MB Empire par rôle
+   Placé dans @layer base pour que les utilities Tailwind
+   puissent le surcharger proprement si besoin.
+   ============================================================ */
+@layer base {
+  /* Toute la page hérite de MB Empire via body */
+  html {
+    font-family: 'MB Empire', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Titres principaux — MB Empire Heavy */
+  h1 {
+    font-family: 'MB Empire', 'Inter', sans-serif;
+    font-weight: 900;
+  }
+
+  /* Sous-titres — MB Empire Bold */
+  h2, h3 {
+    font-family: 'MB Empire', 'Inter', sans-serif;
+    font-weight: 700;
+  }
+
+  /* Intertitres — MB Empire Bold */
+  h4, h5, h6 {
+    font-family: 'MB Empire', 'Inter', sans-serif;
+    font-weight: 700;
+  }
+
+  /* Contenu courant — MB Empire Light */
+  p, li, td, th {
+    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+  }
+
+  /* Champs de formulaire — MB Empire Light */
+  input, select, textarea {
+    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+  }
+
+  /* Boutons — MB Empire Bold (labels toujours lisibles) */
+  button, a {
+    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Labels — MB Empire Bold */
+  label {
+    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+  }
 }
 
 /* Custom Utilities */

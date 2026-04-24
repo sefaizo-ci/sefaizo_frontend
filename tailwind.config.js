@@ -22,8 +22,21 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        // MB Empire Light → contenu / body
+        sans: ['"MB Empire"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        // MB Empire Bold → sous-titres (h2, h3)
+        heading: ['"MB Empire"', 'Inter', 'sans-serif'],
+        // MB Empire Heavy → titres principaux (h1)
+        display: ['"MB Empire"', 'Inter', 'sans-serif'],
+      },
+      fontWeight: {
+        light: '300',     // MB Empire Light  → contenu
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',      // MB Empire Bold   → sous-titres
+        extrabold: '800',
+        black: '900',     // MB Empire Heavy  → titres
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],
@@ -35,12 +48,7 @@ module.exports = {
         '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
         '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
         '5xl': ['3rem', { lineHeight: '1' }],
-      },
-      fontWeight: {
-        normal: '400',
-        medium: '500',
-        semibold: '600',
-        bold: '700',
+        '6xl': ['3.75rem', { lineHeight: '1' }],
       },
       borderRadius: {
         'sm': '4px',
@@ -62,6 +70,8 @@ module.exports = {
         'slide-down': 'slideDown 0.5s ease-out',
         'slide-left': 'slideLeft 0.5s ease-out',
         'slide-right': 'slideRight 0.5s ease-out',
+        'float': 'float 6s ease-in-out infinite',
+        'float-delayed': 'float 8s ease-in-out infinite 2s',
       },
       keyframes: {
         fadeIn: {
@@ -83,6 +93,10 @@ module.exports = {
         slideRight: {
           '0%': { transform: 'translateX(-20px)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
         },
       },
     },

@@ -15,24 +15,9 @@ import { LucideAngularModule } from 'lucide-angular';
           <!-- Brand Column -->
           <div class="col-span-2 lg:col-span-1">
             <a href="/" class="text-2xl font-bold text-primary mb-4 block">SEFAIZO</a>
-            <p class="text-gray-400 text-sm mb-4">
+            <p class="text-gray-400 text-sm">
               Votre plateforme de réservation beauté et bien-être.
             </p>
-            <!-- Social Links -->
-            <div class="flex gap-3">
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all duration-200">
-                <lucide-icon name="facebook" [size]="17" [strokeWidth]="1.75"></lucide-icon>
-              </a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all duration-200">
-                <lucide-icon name="twitter" [size]="17" [strokeWidth]="1.75"></lucide-icon>
-              </a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all duration-200">
-                <lucide-icon name="instagram" [size]="17" [strokeWidth]="1.75"></lucide-icon>
-              </a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all duration-200">
-                <lucide-icon name="youtube" [size]="17" [strokeWidth]="1.75"></lucide-icon>
-              </a>
-            </div>
           </div>
 
           <!-- Links Columns -->
@@ -79,11 +64,28 @@ import { LucideAngularModule } from 'lucide-angular';
 
         <!-- Bottom Bar -->
         <div class="border-t border-gray-800 pt-8">
-          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-gray-400 text-sm text-center md:text-left">
-              © 2026 SEFAIZO. Tous droits réservés.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
+          <div class="grid grid-cols-3 items-center gap-4">
+            <!-- Left : social icons -->
+            <div class="flex items-center gap-3">
+              <a href="#" aria-label="Instagram" class="text-white hover:text-gray-300 transition-colors">
+                <lucide-icon name="instagram" [size]="18" [strokeWidth]="1.75"></lucide-icon>
+              </a>
+              <a href="#" aria-label="Facebook" class="text-white hover:text-gray-300 transition-colors">
+                <lucide-icon name="facebook" [size]="18" [strokeWidth]="1.75"></lucide-icon>
+              </a>
+              <a href="#" aria-label="TikTok" class="text-white hover:text-gray-300 transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.28 8.28 0 0 0 4.83 1.53V6.78a4.85 4.85 0 0 1-1.06-.09z"/>
+                </svg>
+              </a>
+              <a href="#" aria-label="YouTube" class="text-white hover:text-gray-300 transition-colors">
+                <lucide-icon name="youtube" [size]="18" [strokeWidth]="1.75"></lucide-icon>
+              </a>
+            </div>
+            <!-- Center : copyright -->
+            <p class="text-gray-400 text-sm text-center">© 2026 SEFAIZO. Tous droits réservés.</p>
+            <!-- Right : language & currency -->
+            <div class="flex justify-end gap-4">
               <span class="text-gray-400 text-sm">Français (France)</span>
               <span class="text-gray-400 text-sm">EUR (€)</span>
             </div>

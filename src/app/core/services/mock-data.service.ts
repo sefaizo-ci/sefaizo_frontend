@@ -539,8 +539,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.3599,
         longitude: -3.9810,
-        coverImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800',
-        avatar: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200'
+        coverImage: '/Recommandés/Salon-Abiba.jpg',
+        avatar: '/Recommandés/Salon-Abiba.jpg'
       },
       {
         name: 'Barber Shop Plateau',
@@ -558,8 +558,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.3247,
         longitude: -4.0156,
-        coverImage: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800',
-        avatar: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=200'
+        coverImage: '/Recommandés/Top-et-class.jpeg',
+        avatar: '/Recommandés/Top-et-class.jpeg'
       },
       {
         name: 'Nails & Spa Yopougon',
@@ -577,8 +577,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.3364,
         longitude: -4.0892,
-        coverImage: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800',
-        avatar: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200'
+        coverImage: '/Recommandés/Salon-La-Bella.jpg',
+        avatar: '/Recommandés/Salon-La-Bella.jpg'
       },
       {
         name: 'Marie Coiffeuse à Domicile',
@@ -595,7 +595,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.2947,
         longitude: -3.9889,
-        avatar: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=200'
+        coverImage: '/Recommandés/Salon-Abiba.jpg',
+        avatar: '/Recommandés/Salon-Abiba.jpg'
       },
       {
         name: 'Luxury Beauty Treichville',
@@ -613,8 +614,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.2833,
         longitude: -4.0000,
-        coverImage: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800',
-        avatar: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=200'
+        coverImage: '/Recommandés/Salon-La-Bella.jpg',
+        avatar: '/Recommandés/Salon-La-Bella.jpg'
       },
       {
         name: 'Afro Hair Style Adjamé',
@@ -632,8 +633,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.3515,
         longitude: -4.0236,
-        coverImage: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800',
-        avatar: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=200'
+        coverImage: '/Recommandés/téléchargement (1).jpg',
+        avatar: '/Recommandés/téléchargement (1).jpg'
       },
       {
         name: 'Glow Up Abobo',
@@ -651,8 +652,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.4236,
         longitude: -4.0208,
-        coverImage: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=800',
-        avatar: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=200'
+        coverImage: '/Recommandés/Salon-Abiba.jpg',
+        avatar: '/Recommandés/Salon-Abiba.jpg'
       },
       {
         name: 'Port-Bouët Beauty',
@@ -670,13 +671,15 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.2547,
         longitude: -3.9264,
-        coverImage: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=800',
-        avatar: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=200'
+        coverImage: '/Recommandés/Top-et-class.jpeg',
+        avatar: '/Recommandés/Top-et-class.jpeg'
       }
     ];
 
     const now = new Date();
-    return businessData.map((data, index) => ({
+    const tomorrow = new Date(now.getTime() + 86400000);
+
+    const existing = businessData.map((data, index) => ({
       id: `business-${index + 1}`,
       professionalId: `pro-${index + 1}`,
       ...data,
@@ -687,6 +690,156 @@ export class MockDataService {
       createdAt: now,
       updatedAt: now
     }));
+
+    const nouveauxData = [
+      {
+        name: 'Afro et Nature',
+        slug: 'afro-et-nature',
+        description: 'Salon spécialisé dans les soins naturels pour cheveux afro.',
+        businessType: 'SALON' as const,
+        city: 'Cocody',
+        address: 'Riviera 3, Cocody, Abidjan',
+        phone: '+225 07 10 11 12 13',
+        email: 'contact@afroetnature.ci',
+        categories: ['Coiffure'],
+        rating: 4.3,
+        reviewCount: 12,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.3620,
+        longitude: -3.9750,
+        coverImage: '/Nouveaux sur SEFAIZO/Afro-et-nature.jpeg',
+        avatar: '/Nouveaux sur SEFAIZO/Afro-et-nature.jpeg'
+      },
+      {
+        name: 'Cocoon Beauty Concept Place',
+        slug: 'cocoon-beauty-concept-place',
+        description: 'Un espace bien-être unique alliant beauté et relaxation.',
+        businessType: 'SALON' as const,
+        city: 'Plateau',
+        address: 'Rue du Commerce, Plateau, Abidjan',
+        phone: '+225 05 11 12 13 14',
+        email: 'contact@cocoonbeauty.ci',
+        categories: ['Esthétique', 'Massage', 'Soins du visage'],
+        rating: 4.2,
+        reviewCount: 8,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.3260,
+        longitude: -4.0140,
+        coverImage: '/Nouveaux sur SEFAIZO/Cocoon-Beauty-concept-Place.jpg',
+        avatar: '/Nouveaux sur SEFAIZO/Cocoon-Beauty-concept-Place.jpg'
+      },
+      {
+        name: 'Institut Guinot',
+        slug: 'institut-guinot',
+        description: 'Institut de beauté expert en soins du visage et traitements Guinot.',
+        businessType: 'SALON' as const,
+        city: 'Marcory',
+        address: 'Zone 4, Marcory, Abidjan',
+        phone: '+225 01 12 13 14 15',
+        email: 'contact@guinot.ci',
+        categories: ['Esthétique', 'Soins du visage'],
+        rating: 4.6,
+        reviewCount: 21,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.2960,
+        longitude: -3.9910,
+        coverImage: '/Nouveaux sur SEFAIZO/Guinot.jpeg',
+        avatar: '/Nouveaux sur SEFAIZO/Guinot.jpeg'
+      },
+      {
+        name: 'Institut Moreno',
+        slug: 'institut-moreno',
+        description: 'Institut de beauté et spa haut de gamme au cœur d\'Abidjan.',
+        businessType: 'SALON' as const,
+        city: 'Cocody',
+        address: 'Angré, Cocody, Abidjan',
+        phone: '+225 07 13 14 15 16',
+        email: 'contact@moreno.ci',
+        categories: ['Esthétique', 'Massage', 'Manucure'],
+        rating: 4.5,
+        reviewCount: 17,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.3780,
+        longitude: -3.9620,
+        coverImage: '/Nouveaux sur SEFAIZO/Institut-Moreno.jpeg',
+        avatar: '/Nouveaux sur SEFAIZO/Institut-Moreno.jpeg'
+      },
+      {
+        name: 'Les Instituts My Maz',
+        slug: 'les-instituts-my-maz',
+        description: 'Réseau d\'instituts de beauté proposant des soins complets.',
+        businessType: 'SALON' as const,
+        city: 'Yopougon',
+        address: 'Yopougon Maroc, Abidjan',
+        phone: '+225 05 14 15 16 17',
+        email: 'contact@mymaz.ci',
+        categories: ['Coiffure', 'Esthétique', 'Maquillage'],
+        rating: 4.1,
+        reviewCount: 9,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.3480,
+        longitude: -4.0760,
+        coverImage: '/Nouveaux sur SEFAIZO/Les-instituts-My-Maz.jpeg',
+        avatar: '/Nouveaux sur SEFAIZO/Les-instituts-My-Maz.jpeg'
+      },
+      {
+        name: 'So Spa Sofitel',
+        slug: 'so-spa-sofitel',
+        description: 'Spa de luxe situé au Sofitel Abidjan Hôtel Ivoire.',
+        businessType: 'SALON' as const,
+        city: 'Cocody',
+        address: 'Sofitel Hôtel Ivoire, Cocody, Abidjan',
+        phone: '+225 27 20 20 10 10',
+        email: 'sospa@sofitel.ci',
+        categories: ['Massage', 'Soins du visage', 'Esthétique'],
+        rating: 4.8,
+        reviewCount: 34,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.3540,
+        longitude: -3.9880,
+        coverImage: '/Nouveaux sur SEFAIZO/So-Spa-Sofitel.jpeg',
+        avatar: '/Nouveaux sur SEFAIZO/So-Spa-Sofitel.jpeg'
+      },
+      {
+        name: 'Mrs Afro Salon',
+        slug: 'mrs-afro-salon',
+        description: 'Salon de coiffure nappy et afro naturel, spécialiste des cheveux crépus.',
+        businessType: 'SALON' as const,
+        city: 'Adjamé',
+        address: 'Adjamé, Abidjan',
+        phone: '+225 07 15 16 17 18',
+        email: 'contact@mrsafro.ci',
+        categories: ['Coiffure'],
+        rating: 4.4,
+        reviewCount: 15,
+        isVerified: false,
+        status: 'ACTIVE' as const,
+        latitude: 5.3500,
+        longitude: -4.0200,
+        coverImage: '/Nouveaux sur SEFAIZO/ob_9ab44c_mrs-afro-salon-de-coiffure-nappy-abidj.jpg',
+        avatar: '/Nouveaux sur SEFAIZO/ob_9ab44c_mrs-afro-salon-de-coiffure-nappy-abidj.jpg'
+      }
+    ];
+
+    const nouveaux = nouveauxData.map((data, index) => ({
+      id: `business-new-${index + 1}`,
+      professionalId: `pro-new-${index + 1}`,
+      ...data,
+      kycStatus: 'PENDING' as const,
+      services: this.generateServices(data.categories, index + 100),
+      workingHours: this.generateWorkingHours(),
+      homeServiceCommunes: this.generateHomeServiceCommunes(),
+      createdAt: tomorrow,
+      updatedAt: tomorrow
+    }));
+
+    return [...nouveaux, ...existing] as Business[];
   }
 
   private generateServices(categories: string[], businessIndex: number): Service[] {
@@ -799,30 +952,48 @@ export class MockDataService {
   }
 
   private generateReviews(): Review[] {
-    const reviews: Review[] = [];
-    const comments = [
-      'Service exceptionnel! Je recommande vivement.',
-      'Très professionnelle, résultat impeccable.',
-      'Accueil chaleureux et prestation de qualité.',
-      'Je suis ravie du résultat, à la hauteur de mes attentes.',
-      'Excellent rapport qualité-prix.',
-      'Personnel qualifié et à l\'écoute.',
-      'Ambiance détendue, moment agréable.',
-      'Résultat parfait, je reviendrai!'
+    // Profils ivoiriens authentiques — photos de personnes noires africaines
+    const profiles = [
+      { name: 'Adjoua Kouassi',    avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+      { name: 'Bintou Traoré',     avatar: '/avatars/Bintou Traoré.jpg' },
+      { name: 'Clarisse Yao',      avatar: '/avatars/clarisse-yao.jpg' },
+      { name: 'Djeneba Koné',      avatar: '/avatars/Djeneba Koné.jpg' },
+      { name: 'Fatou Diallo',      avatar: '/avatars/Fatou Diallo.jpg' },
+      { name: 'Mariam Bamba',      avatar: '/avatars/mariam-bamba.jpg' },
+      { name: 'Edwige Assi',       avatar: '/avatars/Edwige Assi.jpg' },
+      { name: 'Moussa Ouattara',   avatar: '/avatars/Moussa Ouattara.jpg'   },
+      { name: 'Kofi Assoumou',     avatar: 'https://randomuser.me/api/portraits/men/54.jpg'   },
+      { name: 'Issouf Coulibaly',  avatar: '/avatars/Issouf Coulibaly.jpg'  },
     ];
 
+    // Commentaires typiquement ivoiriens — expressions locales authentiques
+    const comments = [
+      "Hé ! Ma coiffeuse là, elle connaît vraiment son affaire ! La coiffure qu'elle m'a faite, tout Abidjan m'a demandé le numéro. Je reviendrai à coup sûr !",
+      "Waouh, bébé là a des mains en or dêh ! Mes ongles sont trop beaux, mes amies ont trop kiffé. SEFAIZO c'est vraiment top !",
+      "Franchement, j'ai pas regretté du tout. Le massage là m'a déstressée à fond, j'avais même peur de me lever tellement c'était bon ! Je recommande à toutes mes sœurs d'Abidjan.",
+      "Mon ami m'avait parlé de SEFAIZO, j'ai essayé pour la coupe... Vraiment wôh ! C'est nickel, le barbier là connaît son travail !",
+      "Depuis que j'ai trouvé ce salon via SEFAIZO, je ne vais plus nulle part ailleurs. Le soin du visage qu'elles m'ont fait, ma peau brille comme si j'avais 18 ans !",
+      "Bon dêh, je m'attendais vraiment pas à ce niveau ! Les filles sont trop professionnelles, le salon est propre et le résultat est magnifique. Merci SEFAIZO !",
+      "Ma maquilleuse est top oh ! Pour mon anniversaire, elle m'a tellement embellie que mon mari m'a demandé si c'était vraiment moi. Je suis trop contente !",
+      "Service impeccable ! J'ai réservé depuis mon téléphone, j'ai eu la confirmation tout de suite. À l'heure convenue j'étais déjà dans le salon. C'est trop pratique dêh !",
+      "Elles m'ont fait une pédicure qui tient depuis 3 semaines sans se casser. On voit que c'est de vraies pros. Adiès, SEFAIZO c'est la solution pour nous les filles d'Abidjan !",
+      "Mon barbier via SEFAIZO est devenu comme mon ami maintenant. La coupe est toujours fraîche, il connaît mon style. Jamais je ne change, c'est réglé !",
+    ];
+
+    const reviews: Review[] = [];
     for (let i = 1; i <= 8; i++) {
       const numReviews = Math.floor(Math.random() * 5) + 3;
       for (let j = 0; j < numReviews; j++) {
+        const profile = profiles[(i + j) % profiles.length];
         reviews.push({
           id: `review-${i}-${j}`,
           bookingId: `booking-mock-${i}-${j}`,
           businessId: `business-${i}`,
           clientId: `client-mock-${j}`,
-          clientName: ['Aminata K.', 'Fatou D.', 'Marie L.', 'Sophie B.', 'Claire A.'][j % 5],
-          clientAvatar: `https://i.pravatar.cc/150?img=${(j % 10) + 1}`,
-          rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
-          comment: comments[Math.floor(Math.random() * comments.length)],
+          clientName: profile.name,
+          clientAvatar: profile.avatar,
+          rating: Math.floor(Math.random() * 2) + 4, // 4 ou 5 étoiles
+          comment: comments[(i * 3 + j) % comments.length],
           isReported: false,
           createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
         });
