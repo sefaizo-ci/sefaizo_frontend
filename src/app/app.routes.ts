@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard, ClientGuard, ProGuard, AdminGuard, GuestGuard } from './core/guards';
 import { ClientLayoutComponent } from './features/client/layout/client-layout.component';
+import { ProLayoutComponent } from './features/pro/layout/pro-layout.component';
 
 export const routes: Routes = [
   // Public Routes
@@ -154,14 +155,19 @@ export const routes: Routes = [
     ]
   },
 
-  // Pro Space
+  // Pro Space (with layout)
   {
     path: 'espace-pro',
     canActivate: [ProGuard],
+    component: ProLayoutComponent,
     children: [
       {
         path: '',
         loadComponent: () => import('./features/pro/dashboard/pro-dashboard.component').then(m => m.ProDashboardComponent)
+      },
+      {
+        path: 'boutique',
+        loadComponent: () => import('./features/pro/boutique/pro-boutique.component').then(m => m.ProBoutiqueComponent)
       },
       {
         path: 'services',
@@ -172,8 +178,20 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pro/agenda/pro-agenda.component').then(m => m.ProAgendaComponent)
       },
       {
+        path: 'clients',
+        loadComponent: () => import('./features/pro/clients/pro-clients.component').then(m => m.ProClientsComponent)
+      },
+      {
+        path: 'statistiques',
+        loadComponent: () => import('./features/pro/statistiques/pro-statistiques.component').then(m => m.ProStatistiquesComponent)
+      },
+      {
         path: 'wallet',
         loadComponent: () => import('./features/pro/wallet/pro-wallet.component').then(m => m.ProWalletComponent)
+      },
+      {
+        path: 'parametres',
+        loadComponent: () => import('./features/pro/parametres/pro-parametres.component').then(m => m.ProParametresComponent)
       }
     ]
   },
