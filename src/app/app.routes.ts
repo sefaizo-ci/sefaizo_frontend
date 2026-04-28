@@ -24,6 +24,10 @@ export const routes: Routes = [
 
   // Content Pages (Footer Links)
   {
+    path: 'comment-ca-marche',
+    loadComponent: () => import('./features/public/comment-ca-marche/comment-ca-marche.component').then(m => m.CommentCaMarcheComponent)
+  },
+  {
     path: 'a-propos',
     loadComponent: () => import('./features/public/content/content-page.component').then(m => m.ContentPageComponent),
     data: { slug: 'about' }
@@ -105,6 +109,11 @@ export const routes: Routes = [
   },
 
   // Auth Routes
+  {
+    path: 'auth/forgot-password',
+    loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+    canActivate: [GuestGuard]
+  },
   {
     path: 'auth/login',
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),

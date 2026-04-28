@@ -36,7 +36,7 @@ export class ButtonComponent {
     const variantClasses = {
       primary: 'bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark hover:shadow-md hover:-translate-y-0.5 focus:ring-primary',
       secondary: 'bg-transparent border-2 border-primary text-primary px-6 py-3 rounded-md hover:bg-primary hover:text-white focus:ring-primary',
-      'app-store': 'bg-secondary text-white px-5 py-2.5 rounded-md items-center gap-2 hover:bg-black hover:shadow-md focus:ring-secondary'
+      'app-store': 'bg-[#a855f7] text-white px-5 py-2.5 rounded-md items-center gap-2 hover:bg-[#9333ea] hover:shadow-md focus:ring-[#a855f7]'
     };
 
     const widthClass = this.fullWidth ? 'w-full' : '';
