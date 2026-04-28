@@ -1,12 +1,13 @@
 import { Component, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, LucideAngularModule],
+  imports: [CommonModule, RouterLink, ButtonComponent, LucideAngularModule],
   template: `
     <header
       class="sticky top-0 z-50 border-b transition-all duration-300"
@@ -28,16 +29,16 @@ import { LucideAngularModule } from 'lucide-angular';
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center gap-7">
-            <a href="#services"  class="nav-link">Services</a>
-            <a href="#about"     class="nav-link">À propos</a>
-            <a href="#locations" class="nav-link">Lieux</a>
-            <a href="#contact"   class="nav-link">Contact</a>
+            <a routerLink="/"                    routerLinkActive="nav-link-active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">Accueil</a>
+            <a routerLink="/recherche"            routerLinkActive="nav-link-active" class="nav-link">Explorer</a>
+            <a routerLink="/comment-ca-marche"    routerLinkActive="nav-link-active" class="nav-link">Comment ça marche</a>
           </div>
 
           <!-- Right zone -->
           <div class="flex items-center gap-2">
             <!-- Connexion — desktop only -->
-            <a href="#login" class="hidden sm:flex items-center gap-1.5 text-secondary text-sm font-medium hover:text-primary transition-colors">
+            <a routerLink="/auth/login"
+               class="hidden sm:flex items-center gap-1.5 text-secondary text-sm font-medium transition-colors px-4 py-2 rounded-lg border border-black hover:bg-gray-50">
               <lucide-icon name="user-round" [size]="15" [strokeWidth]="2"></lucide-icon>
               Connexion
             </a>
@@ -66,10 +67,9 @@ import { LucideAngularModule } from 'lucide-angular';
         [class.border-t]="menuOpen()"
         style="border-color: #f3f4f6;">
         <div class="container-custom py-4 flex flex-col gap-1">
-          <a href="#services"  class="mobile-nav-link" (click)="closeMenu()">Services</a>
-          <a href="#about"     class="mobile-nav-link" (click)="closeMenu()">À propos</a>
-          <a href="#locations" class="mobile-nav-link" (click)="closeMenu()">Lieux</a>
-          <a href="#contact"   class="mobile-nav-link" (click)="closeMenu()">Contact</a>
+          <a routerLink="/"                 class="mobile-nav-link" (click)="closeMenu()">Accueil</a>
+          <a routerLink="/recherche"        class="mobile-nav-link" (click)="closeMenu()">Explorer</a>
+          <a routerLink="/comment-ca-marche" class="mobile-nav-link" (click)="closeMenu()">Comment ça marche</a>
 
           <div class="mt-3 pt-3 flex flex-col gap-2" style="border-top: 1px solid #f3f4f6;">
             <a href="#login" class="flex items-center gap-2 text-secondary text-sm font-medium hover:text-primary transition-colors px-3 py-2">
@@ -106,12 +106,17 @@ import { LucideAngularModule } from 'lucide-angular';
       left: 0;
       width: 0;
       height: 2px;
-      background: #012e65;
+      background: linear-gradient(to right, #7c3aed, #a855f7);
       border-radius: 1px;
       transition: width 0.2s ease;
     }
-    .nav-link:hover::after {
+    .nav-link:hover::after,
+    .nav-link-active::after {
       width: 100%;
+    }
+    .nav-link-active {
+      color: #7c3aed !important;
+      font-weight: 600;
     }
     .mobile-nav-link {
       @apply text-secondary text-base font-medium hover:text-primary transition-colors px-3 py-2.5 rounded-md hover:bg-gray-50 block;

@@ -24,152 +24,196 @@ import { FormsModule } from '@angular/forms';
     LucideAngularModule
   ],
   template: `
-    <!-- Hero Section -->
-    <section class="relative py-20 md:py-28 overflow-hidden hero-section">
+    <!-- Hero Section — Bannière pleine largeur -->
+    <section class="relative overflow-hidden hero-section-new">
 
-      <!-- Dégradé de base -->
-      <div class="absolute inset-0 hero-gradient"></div>
-
-      <!-- Blob accent coral — haut gauche -->
-      <div class="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full pointer-events-none animate-float"
-           style="background: radial-gradient(circle at 40% 40%, rgba(255,107,107,0.22) 0%, transparent 70%); filter: blur(48px);"></div>
-
-      <!-- Blob bleu clair — centre bas -->
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[320px] rounded-full pointer-events-none"
-           style="background: radial-gradient(ellipse, rgba(2,62,133,0.45) 0%, transparent 70%); filter: blur(60px);"></div>
-
-      <!-- Blob accent coral — bas droite -->
-      <div class="absolute -bottom-24 -right-24 w-[400px] h-[400px] rounded-full pointer-events-none animate-float-delayed"
-           style="background: radial-gradient(circle, rgba(255,107,107,0.14) 0%, transparent 65%); filter: blur(56px);"></div>
-
-      <!-- Grille de points -->
+      <!-- ── Fond bannière : blanc (gauche/haut) → violet #a855f7 (droite/bas) ── -->
       <div class="absolute inset-0 pointer-events-none"
-           style="background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 28px 28px;"></div>
+           style="background:linear-gradient(135deg,
+             #ffffff 0%,
+             #ffffff 38%,
+             rgba(168,85,247,0.10) 58%,
+             rgba(168,85,247,0.52) 100%)"></div>
+      <!-- Blob décoratif violet bas-droite -->
+      <div class="absolute pointer-events-none"
+           style="right:-60px;bottom:-60px;width:480px;height:480px;
+                  background:radial-gradient(circle,rgba(168,85,247,0.28) 0%,transparent 68%);
+                  filter:blur(48px)"></div>
 
-      <!-- Ligne lumineuse horizontale — effet halo -->
-      <div class="absolute top-1/2 left-0 right-0 h-px pointer-events-none"
-           style="background: linear-gradient(90deg, transparent 0%, rgba(255,107,107,0.3) 30%, rgba(255,255,255,0.15) 50%, rgba(255,107,107,0.3) 70%, transparent 100%);"></div>
+      <div class="container-custom relative z-10 py-10 lg:py-0">
 
-      <div class="container-custom relative z-10">
-        <div class="max-w-4xl mx-auto text-center">
+        <!-- MOBILE : slideshow en haut, texte en bas  |  DESKTOP : flex row -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:gap-0 gap-7"
+             style="min-height:72vh;padding-top:clamp(1.5rem,4vw,4rem);padding-bottom:clamp(1.5rem,4vw,4rem)">
 
-          <!-- Badge catchy -->
-          <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-            La beauté à portée de main à Abidjan
-          </div>
+          <!-- ── Texte + Recherche (order-2 mobile → gauche desktop) ── -->
+          <div class="w-full lg:flex-1 lg:max-w-[56%] lg:pr-8 order-2 lg:order-1">
 
-          <!-- Titre -->
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-tight tracking-tight">
-            Réservez vos soins beauté
-            <span class="hero-accent-text"> à Abidjan</span>
-          </h1>
-          <p class="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed font-light">
-            Trouvez et réservez les meilleurs professionnels près de chez vous, en quelques secondes.
-          </p>
+            <!-- Titre -->
+            <h1 class="font-black leading-tight mb-4 text-center lg:text-left"
+                style="font-size:clamp(1.85rem,5vw,3.2rem);color:#111827">
+              Réservez votre<br>beauté en
+              <span style="color:#7c3aed"> 3 clics</span>
+            </h1>
 
-          <!-- Hero Search Bar -->
-          <div class="hero-search-bar bg-white rounded-2xl shadow-2xl border-2 border-primary p-2 mb-5 max-w-3xl mx-auto">
-            <div class="flex flex-col md:flex-row items-stretch">
+            <p class="text-sm md:text-base mb-5 leading-relaxed text-center lg:text-left mx-auto lg:mx-0"
+               style="color:#4b5563;max-width:460px">
+              Trouvez les meilleurs salons à Abidjan —
+              coiffure, esthétique, bien-être, à domicile ou en salon.
+            </p>
 
-              <!-- Champ Service -->
-              <div class="flex items-center gap-3 flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-gray-100">
-                <lucide-icon name="scissors" [size]="18" [strokeWidth]="1.75" class="text-secondary-gray flex-shrink-0"></lucide-icon>
-                <div class="flex-1 min-w-0 text-left">
-                  <div class="text-xs font-semibold text-secondary-gray uppercase tracking-wider mb-0.5">Service</div>
-                  <input
-                    type="text"
-                    placeholder="Coiffure, massage, manucure..."
-                    [(ngModel)]="heroService"
-                    (keyup.enter)="onHeroSearch()"
-                    class="w-full text-sm text-secondary placeholder-gray-400 bg-transparent border-none outline-none font-medium"
-                  />
+            <!-- Barre de recherche -->
+            <div class="mb-5">
+              <div class="relative">
+                <div class="absolute -inset-1.5 rounded-3xl pointer-events-none"
+                     style="background:linear-gradient(135deg,#7c3aed,#a855f7);opacity:0.18;filter:blur(8px)"></div>
+                <div class="relative bg-white rounded-2xl p-1.5"
+                     style="border:2.5px solid #7c3aed;
+                            box-shadow:0 0 0 4px rgba(124,58,237,0.10),0 8px 32px rgba(124,58,237,0.18)">
+                  <div class="flex flex-col sm:flex-row items-stretch">
+
+                    <!-- Champ Service -->
+                    <div class="flex items-center gap-3 flex-1 px-4 py-3 rounded-xl"
+                         style="background:linear-gradient(135deg,rgba(124,58,237,0.09) 0%,rgba(168,85,247,0.05) 100%);
+                                border:2px solid #7c3aed;
+                                box-shadow:0 0 0 3px rgba(124,58,237,0.12),inset 0 1px 3px rgba(124,58,237,0.06);
+                                margin:2px;margin-right:0;border-radius:12px">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                           style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+                        <lucide-icon name="scissors" [size]="14" [strokeWidth]="2" class="text-white"></lucide-icon>
+                      </div>
+                      <div class="flex-1 min-w-0 text-left">
+                        <div class="text-xs font-extrabold uppercase tracking-widest mb-0.5" style="color:#7c3aed">Service</div>
+                        <input type="text" placeholder="Coiffure, massage, manucure..."
+                               [(ngModel)]="heroService" (keyup.enter)="onHeroSearch()"
+                               class="service-input w-full text-sm font-semibold bg-transparent placeholder-gray-400"
+                               style="color:#111827;border:none;outline:none;box-shadow:none;-webkit-appearance:none;appearance:none"/>
+                      </div>
+                    </div>
+
+                    <!-- Champ Commune -->
+                    <div class="flex items-center gap-2.5 flex-1 px-4 py-3 border-t sm:border-t-0 sm:border-r border-gray-100">
+                      <lucide-icon name="map-pin" [size]="16" [strokeWidth]="1.75" class="flex-shrink-0" style="color:#9ca3af"></lucide-icon>
+                      <div class="flex-1 min-w-0 text-left">
+                        <div class="text-xs font-semibold uppercase tracking-wider mb-0.5" style="color:#9ca3af">Commune</div>
+                        <select [(ngModel)]="heroCommune"
+                                class="w-full text-sm bg-transparent border-none outline-none font-medium appearance-none cursor-pointer"
+                                style="color:#111827">
+                          <option value="">Toutes les communes</option>
+                          @for (commune of communes; track commune) {
+                            <option [value]="commune">{{ commune }}</option>
+                          }
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Bouton Rechercher -->
+                    <div class="px-1.5 py-1.5 flex items-center">
+                      <button (click)="onHeroSearch()"
+                              class="w-full sm:w-auto text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-all active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                              style="background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%);
+                                     box-shadow:0 4px 16px rgba(124,58,237,0.4)">
+                        <lucide-icon name="search" [size]="15" [strokeWidth]="2.5"></lucide-icon>
+                        Rechercher
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Champ Commune -->
-              <div class="flex items-center gap-3 flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-gray-100">
-                <lucide-icon name="map-pin" [size]="18" [strokeWidth]="1.75" class="text-secondary-gray flex-shrink-0"></lucide-icon>
-                <div class="flex-1 min-w-0 text-left">
-                  <div class="text-xs font-semibold text-secondary-gray uppercase tracking-wider mb-0.5">Commune</div>
-                  <select
-                    [(ngModel)]="heroCommune"
-                    class="w-full text-sm text-secondary bg-transparent border-none outline-none font-medium appearance-none cursor-pointer"
-                  >
-                    <option value="">Toutes les communes</option>
-                    @for (commune of communes; track commune) {
-                      <option [value]="commune">{{ commune }}</option>
-                    }
-                  </select>
-                </div>
-              </div>
-
-              <!-- Bouton Rechercher -->
-              <div class="px-2 py-2 flex items-center">
-                <button
-                  (click)="onHeroSearch()"
-                  class="w-full md:w-auto bg-primary hover:bg-primary-dark text-white px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap">
-                  <lucide-icon name="search" [size]="16" [strokeWidth]="2.5"></lucide-icon>
-                  Rechercher
+            <!-- Tags tendances -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-5">
+              <span class="text-xs font-medium" style="color:#6b7280">Tendances :</span>
+              @for (tag of popularTags; track tag) {
+                <button (click)="onTagSearch(tag)"
+                        class="text-xs px-3 py-1 rounded-full border font-medium transition-all hover:border-purple-400 hover:bg-purple-50"
+                        style="border-color:#d4b8ff;color:#7c3aed;background:rgba(245,240,255,0.9)">
+                  {{ tag }}
                 </button>
+              }
+            </div>
+
+            <!-- Stats pills -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2">
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-white shadow-sm">
+                <lucide-icon name="store" [size]="13" [strokeWidth]="2" style="color:#7c3aed"></lucide-icon>
+                <span class="text-sm font-bold" style="color:#111827">500+</span>
+                <span class="text-xs" style="color:#6b7280">salons</span>
+              </div>
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-white shadow-sm">
+                <lucide-icon name="calendar-check" [size]="13" [strokeWidth]="2" style="color:#7c3aed"></lucide-icon>
+                <span class="text-sm font-bold" style="color:#111827">10 000+</span>
+                <span class="text-xs" style="color:#6b7280">réservations</span>
+              </div>
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-white shadow-sm">
+                <lucide-icon name="star" [size]="13" [strokeWidth]="0" class="fill-yellow-400 text-yellow-400"></lucide-icon>
+                <span class="text-sm font-bold" style="color:#111827">Note 4.8/5</span>
               </div>
             </div>
           </div>
 
-          <!-- Tags populaires -->
-          <div class="flex flex-wrap justify-center items-center gap-2 mb-10">
-            <span class="text-sm text-white/60 font-light">Tendances :</span>
-            @for (tag of popularTags; track tag) {
-              <button
-                (click)="onTagSearch(tag)"
-                class="text-sm px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 hover:bg-white/20 hover:text-white hover:border-white/40 transition-all duration-150 font-light">
-                {{ tag }}
-              </button>
-            }
-          </div>
+          <!-- ── Slideshow (order-1 mobile → droite desktop) ── -->
+          <div class="w-full lg:flex-1 lg:flex lg:justify-end lg:items-center lg:pr-4 order-1 lg:order-2">
+            <div class="relative mx-auto" style="width:100%;max-width:420px">
 
-          <!-- Social proof + stats -->
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-
-            <!-- Avatars + compteur RDV -->
-            <div class="flex items-center gap-3">
-              <div class="flex -space-x-2.5">
-                @for (letter of ['K','A','M','S']; track letter) {
-                  <div class="w-9 h-9 rounded-full bg-gradient-to-br from-accent/80 to-accent border-2 border-white/30 flex items-center justify-center text-white text-xs font-bold shadow-md">
-                    {{ letter }}
-                  </div>
+              <!-- Slideshow boutiques 5s -->
+              <div class="relative overflow-hidden rounded-3xl shadow-2xl hero-slideshow">
+                @for (img of heroImages; track img; let i = $index) {
+                  <img [src]="img"
+                       alt="Salon de beauté Abidjan"
+                       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                       [style.opacity]="heroSlideIndex() === i ? '1' : '0'">
                 }
-              </div>
-              <div class="text-left">
-                <div class="flex items-center gap-1.5">
-                  <div class="animate-pulse text-accent">
-                    <lucide-icon name="clock" [size]="13" [strokeWidth]="2"></lucide-icon>
-                  </div>
-                  <span class="text-xl font-bold text-white">{{ animatedCounter() }}</span>
+                <!-- Fondu gauche (desktop uniquement) -->
+                <div class="absolute inset-0 pointer-events-none hidden lg:block"
+                     style="background:linear-gradient(to right,rgba(255,255,255,0.4) 0%,transparent 25%)"></div>
+                <!-- Overlay bas violet -->
+                <div class="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+                     style="background:linear-gradient(to top,rgba(168,85,247,0.55),transparent)"></div>
+                <!-- Indicateurs -->
+                <div class="absolute bottom-3 right-4 flex gap-1.5 z-10">
+                  @for (img of heroImages; track img; let i = $index) {
+                    <button (click)="goToSlide(i)"
+                            class="rounded-full transition-all duration-300"
+                            [style.width]="heroSlideIndex() === i ? '18px' : '6px'"
+                            style="height:6px"
+                            [style.background]="heroSlideIndex() === i ? '#a855f7' : 'rgba(255,255,255,0.6)'">
+                    </button>
+                  }
                 </div>
-                <div class="text-xs text-white/60 font-light">rendez-vous pris aujourd'hui</div>
               </div>
-            </div>
 
-            <div class="hidden sm:block w-px h-10 bg-white/20"></div>
-
-            <!-- Chiffres clés -->
-            <div class="flex items-center gap-6">
-              <div class="text-center">
-                <div class="text-xl font-bold text-white">500+</div>
-                <div class="text-xs text-white/60 mt-0.5 font-light">Professionnels</div>
-              </div>
-              <div class="text-center">
-                <div class="flex items-center justify-center gap-0.5">
-                  <span class="text-xl font-bold text-white">4.8</span>
-                  <lucide-icon name="star" [size]="14" [strokeWidth]="0" class="text-yellow-400 fill-yellow-400"></lucide-icon>
+              <!-- Badge réservation confirmée -->
+              <div class="absolute bottom-4 left-3 bg-white rounded-2xl shadow-xl p-2.5 flex items-center gap-2"
+                   style="min-width:168px">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                     style="background:#dcfce7">
+                  <svg class="w-3.5 h-3.5" style="color:#16a34a" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
                 </div>
-                <div class="text-xs text-white/60 mt-0.5 font-light">Note moyenne</div>
+                <div>
+                  <div class="text-xs font-bold" style="color:#111827">Réservation confirmée !</div>
+                  <div class="text-xs" style="color:#6b7280">Beauty Glam · Cocody</div>
+                </div>
               </div>
-              <div class="text-center">
-                <div class="text-xl font-bold text-white">10+</div>
-                <div class="text-xs text-white/60 mt-0.5 font-light">Communes</div>
+
+              <!-- Badge note -->
+              <div class="absolute top-3 right-3 bg-white rounded-2xl shadow-xl px-2.5 py-1.5 flex items-center gap-1.5">
+                <div class="flex gap-0.5">
+                  @for (s of [1,2,3,4,5]; track s) {
+                    <svg class="w-2.5 h-2.5 text-yellow-400 fill-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  }
+                </div>
+                <div>
+                  <div class="text-xs font-bold" style="color:#111827">4.8/5</div>
+                  <div class="text-xs" style="color:#6b7280">400+ avis</div>
+                </div>
               </div>
+
             </div>
           </div>
 
@@ -177,32 +221,28 @@ import { FormsModule } from '@angular/forms';
       </div>
     </section>
 
-    <!-- Categories Section -->
-    <section class="section">
+    <!-- Categories Section — Style maquette -->
+    <section class="py-10 border-b border-gray-100" style="background:#fafafa">
       <div class="container-custom">
-        <h2 class="section-title text-center mb-4">Nos Catégories</h2>
-        <p class="section-subtitle text-center mx-auto mb-12">
-          Trouvez le service dont vous avez besoin
-        </p>
-
         @if (loading()) {
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
+          <div class="flex gap-4 overflow-hidden justify-center">
             @for (cat of [1,2,3,4,5,6,7,8]; track cat) {
-              <app-skeleton variant="card" />
+              <div class="w-24 h-24 rounded-2xl bg-gray-100 animate-pulse flex-shrink-0"></div>
             }
           </div>
         } @else {
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
+          <div class="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-2 justify-start md:justify-center">
             @for (category of categories; track category.id) {
               <button
                 (click)="filterByCategory(category.name)"
-                class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 text-center hover:-translate-y-1 active:scale-95">
-                <div class="w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center group-hover:bg-primary transition-all duration-200 group-hover:text-white"
-                     [style.background]="getCategoryColor().bg"
-                     [style.color]="getCategoryColor().text">
-                  <lucide-icon [name]="getCategoryIcon(category.icon)" [size]="22" [strokeWidth]="1.75"></lucide-icon>
+                class="cat-pill group flex flex-col items-center gap-2.5 px-6 py-4 rounded-2xl border bg-white flex-shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
+                style="min-width:96px;border-color:#f3e8ff">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+                     style="background:#f5f0ff;color:#7c3aed">
+                  <lucide-icon [name]="getCategoryIcon(category.icon)" [size]="20" [strokeWidth]="1.75"></lucide-icon>
                 </div>
-                <span class="text-xs font-semibold text-secondary group-hover:text-primary transition-colors leading-tight block">{{ category.name }}</span>
+                <span class="text-xs font-semibold whitespace-nowrap transition-colors"
+                      style="color:#374151">{{ category.name }}</span>
               </button>
             }
           </div>
@@ -1408,16 +1448,17 @@ import { FormsModule } from '@angular/forms';
       </div>
     </section>
 
-    <!-- Recommandés Section -->
-    <section class="section bg-gray-50">
+    <!-- Recommandés Section — Style maquette -->
+    <section class="section" style="background:#fff">
       <div class="container-custom">
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="section-title mb-2">Recommandés</h2>
-            <p class="text-secondary-gray">Les préférés de nos clients</p>
+            <h2 class="section-title mb-1">Salons recommandés pour vous</h2>
+            <p class="text-secondary-gray">Les préférés de nos clients à Abidjan</p>
           </div>
-          <a href="/recherche" class="text-primary font-semibold hover:text-primary-dark transition-colors inline-flex items-center gap-1">
-            Voir tout
+          <a href="/recherche" class="font-semibold hover:opacity-80 transition-colors inline-flex items-center gap-1 text-sm"
+             style="color:#7c3aed">
+            Voir tout les salons
             <lucide-icon name="chevron-right" [size]="16" [strokeWidth]="2.5"></lucide-icon>
           </a>
         </div>
@@ -1433,44 +1474,58 @@ import { FormsModule } from '@angular/forms';
         } @else {
           <div class="carousel-container relative -mx-4 px-4">
             <div #recommendedCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'recommended')">
-              @for (business of recommendedBusinesses; track business.id) {
-                <div
-                  (click)="viewBusiness(business.slug)"
-                  class="business-card min-w-[280px] max-w-[280px] bg-white rounded-md shadow overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group flex-shrink-0">
+              @for (business of recommendedBusinesses; track business.id; let i = $index) {
+                <div class="salon-card min-w-[270px] max-w-[270px] bg-white rounded-2xl overflow-hidden flex-shrink-0 flex flex-col"
+                     style="box-shadow:0 4px 24px rgba(124,58,237,0.08);border:1px solid #f3e8ff">
                   <!-- Cover Image -->
-                  <div class="relative h-40 overflow-hidden">
-                    <img
-                      [src]="business.coverImage || 'https://via.placeholder.com/400x200?text=Salon'"
-                      [alt]="business.name"
-                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      loading="lazy">
+                  <div class="relative h-44 overflow-hidden flex-shrink-0">
+                    <img [src]="business.coverImage || '/Recommandés/Salon-Abiba.jpg'"
+                         [alt]="business.name"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                         loading="lazy">
+                    <!-- Badge NOUVEAU sur cartes paires -->
+                    @if (i % 2 === 0) {
+                      <div class="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+                           style="background:#dcfce7;color:#16a34a">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        NOUVEAU
+                      </div>
+                    }
+                    <!-- Badge vérifié -->
                     @if (business.isVerified) {
-                      <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                        <lucide-icon name="badge-check" [size]="14" [strokeWidth]="2" class="text-primary"></lucide-icon>
-                        <span class="text-xs font-medium text-secondary">Vérifié</span>
+                      <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
+                        <lucide-icon name="badge-check" [size]="13" [strokeWidth]="2" style="color:#7c3aed"></lucide-icon>
+                        <span class="text-xs font-medium" style="color:#374151">Vérifié</span>
                       </div>
                     }
                   </div>
 
                   <!-- Content -->
-                  <div class="p-4">
-                    <h3 class="font-semibold text-secondary mb-2 group-hover:text-primary transition-colors truncate">
-                      {{ business.name }}
-                    </h3>
+                  <div class="p-4 flex flex-col flex-1">
+                    <h3 class="font-bold text-sm mb-2 truncate" style="color:#111827">{{ business.name }}</h3>
 
-                    <div class="flex items-center gap-2 mb-2">
-                      <app-star-rating [rating]="business.rating" size="0.875rem" />
-                      <span class="text-sm text-secondary-gray">({{ business.reviewCount }})</span>
+                    <div class="flex items-center gap-1.5 mb-1.5">
+                      <app-star-rating [rating]="business.rating" size="0.8rem" />
+                      <span class="text-xs" style="color:#6b7280">({{ business.reviewCount }})</span>
                     </div>
 
-                    <div class="flex items-center gap-1 text-sm text-secondary-gray mb-3">
-                      <lucide-icon name="map-pin" [size]="13" [strokeWidth]="2" class="text-secondary-gray flex-shrink-0"></lucide-icon>
+                    <div class="flex items-center gap-1 text-xs mb-3" style="color:#9ca3af">
+                      <lucide-icon name="map-pin" [size]="12" [strokeWidth]="2" class="flex-shrink-0"></lucide-icon>
                       {{ business.city }}
                     </div>
 
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs text-secondary-gray">À partir de</span>
-                      <span class="text-primary font-bold">{{ getMinPrice(business) | fcfa }}</span>
+                    <div class="flex items-center justify-between mt-auto">
+                      <div>
+                        <div class="text-xs" style="color:#9ca3af">À partir de</div>
+                        <div class="text-sm font-bold" style="color:#7c3aed">{{ getMinPrice(business) | fcfa }}</div>
+                      </div>
+                      <button (click)="viewBusiness(business.slug)" (click)="$event.stopPropagation()"
+                              class="text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90 active:scale-95"
+                              style="background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)">
+                        Réserver
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1514,46 +1569,47 @@ import { FormsModule } from '@angular/forms';
           <div class="carousel-container relative -mx-4 px-4">
             <div #newCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'new')">
               @for (business of newBusinesses; track business.id) {
-                <div
-                  (click)="viewBusiness(business.slug)"
-                  class="business-card min-w-[280px] max-w-[280px] bg-white rounded-md shadow overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group flex-shrink-0">
-                  <!-- Cover Image -->
-                  <div class="relative h-40 overflow-hidden">
-                    <img
-                      [src]="business.coverImage || 'https://via.placeholder.com/400x200?text=Salon'"
-                      [alt]="business.name"
-                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      loading="lazy">
-                    <div class="absolute top-2 left-2 bg-primary text-white text-xs font-semibold px-2 py-1 rounded-full">
-                      Nouveau
+                <div class="salon-card min-w-[270px] max-w-[270px] bg-white rounded-2xl overflow-hidden flex-shrink-0 flex flex-col"
+                     style="box-shadow:0 4px 24px rgba(124,58,237,0.08);border:1px solid #f3e8ff">
+                  <div class="relative h-44 overflow-hidden flex-shrink-0">
+                    <img [src]="business.coverImage || '/Nouveaux sur SEFAIZO/Afro-et-nature.jpeg'"
+                         [alt]="business.name"
+                         class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                         loading="lazy">
+                    <div class="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+                         style="background:#dcfce7;color:#16a34a">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      NOUVEAU
                     </div>
                     @if (business.isVerified) {
-                      <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                        <lucide-icon name="badge-check" [size]="14" [strokeWidth]="2" class="text-primary"></lucide-icon>
-                        <span class="text-xs font-medium text-secondary">Vérifié</span>
+                      <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
+                        <lucide-icon name="badge-check" [size]="13" [strokeWidth]="2" style="color:#7c3aed"></lucide-icon>
+                        <span class="text-xs font-medium" style="color:#374151">Vérifié</span>
                       </div>
                     }
                   </div>
-
-                  <!-- Content -->
-                  <div class="p-4">
-                    <h3 class="font-semibold text-secondary mb-2 group-hover:text-primary transition-colors truncate">
-                      {{ business.name }}
-                    </h3>
-
-                    <div class="flex items-center gap-2 mb-2">
-                      <app-star-rating [rating]="business.rating" size="0.875rem" />
-                      <span class="text-sm text-secondary-gray">({{ business.reviewCount }})</span>
+                  <div class="p-4 flex flex-col flex-1">
+                    <h3 class="font-bold text-sm mb-2 truncate" style="color:#111827">{{ business.name }}</h3>
+                    <div class="flex items-center gap-1.5 mb-1.5">
+                      <app-star-rating [rating]="business.rating" size="0.8rem" />
+                      <span class="text-xs" style="color:#6b7280">({{ business.reviewCount }})</span>
                     </div>
-
-                    <div class="flex items-center gap-1 text-sm text-secondary-gray mb-3">
-                      <lucide-icon name="map-pin" [size]="13" [strokeWidth]="2" class="text-secondary-gray flex-shrink-0"></lucide-icon>
+                    <div class="flex items-center gap-1 text-xs mb-3" style="color:#9ca3af">
+                      <lucide-icon name="map-pin" [size]="12" [strokeWidth]="2" class="flex-shrink-0"></lucide-icon>
                       {{ business.city }}
                     </div>
-
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs text-secondary-gray">À partir de</span>
-                      <span class="text-primary font-bold">{{ getMinPrice(business) | fcfa }}</span>
+                    <div class="flex items-center justify-between mt-auto">
+                      <div>
+                        <div class="text-xs" style="color:#9ca3af">À partir de</div>
+                        <div class="text-sm font-bold" style="color:#7c3aed">{{ getMinPrice(business) | fcfa }}</div>
+                      </div>
+                      <button (click)="viewBusiness(business.slug)"
+                              class="text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90 active:scale-95"
+                              style="background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)">
+                        Réserver
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1656,13 +1712,56 @@ import { FormsModule } from '@angular/forms';
     </section>
 
     <!-- Avis Section -->
-    <section class="section">
+    <section class="section" style="background:#fafafa">
       <div class="container-custom">
-        <div class="flex justify-between items-center mb-8">
-          <div>
-            <h2 class="section-title mb-2">Avis de nos clients</h2>
-            <p class="text-secondary-gray">Ce qu'ils pensent de nos professionnels</p>
+
+        <!-- En-tête + visuel maquette avis -->
+        <div class="flex flex-col lg:flex-row items-center gap-12 mb-12">
+          <!-- Texte gauche -->
+          <div class="flex-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-4 border"
+                 style="background:#f5f0ff;border-color:#d4b8ff;color:#7c3aed">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              Avis vérifiés
+            </div>
+            <h2 class="section-title mb-3">Avis de nos clients</h2>
+            <p class="text-secondary-gray text-lg mb-6">
+              Des milliers de clientes satisfaites à Abidjan.<br>
+              Laissez votre avis après chaque visite !
+            </p>
+            <!-- Stats avis -->
+            <div class="flex items-center gap-6">
+              <div>
+                <div class="text-3xl font-black" style="color:#7c3aed">4.8</div>
+                <div class="flex gap-0.5 mt-1">
+                  @for (s of [1,2,3,4,5]; track s) {
+                    <svg class="w-4 h-4 text-yellow-400 fill-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  }
+                </div>
+                <div class="text-xs mt-1" style="color:#9ca3af">Note moyenne</div>
+              </div>
+              <div class="w-px h-12" style="background:#e5e7eb"></div>
+              <div>
+                <div class="text-3xl font-black" style="color:#111827">400+</div>
+                <div class="text-xs mt-1" style="color:#9ca3af">Avis certifiés</div>
+              </div>
+              <div class="w-px h-12" style="background:#e5e7eb"></div>
+              <div>
+                <div class="text-3xl font-black" style="color:#111827">98%</div>
+                <div class="text-xs mt-1" style="color:#9ca3af">Clients satisfaits</div>
+              </div>
+            </div>
           </div>
+
+        </div>
+
+        <!-- Titre carousel -->
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold" style="color:#111827">Ce qu'ils pensent de nos professionnels</h3>
         </div>
 
         @if (loading()) {
@@ -1677,34 +1776,34 @@ import { FormsModule } from '@angular/forms';
           <div class="carousel-container relative -mx-4 px-4">
             <div #reviewsCarousel class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4" (scroll)="onCarouselScroll($event, 'reviews')">
               @for (review of featuredReviews; track review.id) {
-                <div class="review-card min-w-[300px] max-w-[300px] bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex-shrink-0 flex flex-col gap-4">
+                <div class="review-card min-w-[300px] max-w-[300px] bg-white rounded-2xl flex-shrink-0 flex flex-col p-5"
+                     style="border:1px solid #f3e8ff;box-shadow:0 4px 20px rgba(124,58,237,0.07)">
 
-                  <!-- Guillemets décoratifs -->
-                  <div class="text-4xl text-primary/15 font-serif leading-none -mb-2">"</div>
+                  <!-- Guillemet + étoiles -->
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="text-5xl leading-none font-serif opacity-20" style="color:#7c3aed">"</div>
+                    <app-star-rating [rating]="review.rating" size="0.85rem" />
+                  </div>
 
-                  <!-- Commentaire en premier pour impact visuel -->
-                  <p class="text-secondary text-sm leading-relaxed line-clamp-4 flex-1">
+                  <!-- Commentaire -->
+                  <p class="text-sm leading-relaxed flex-1 mb-4 line-clamp-4" style="color:#374151">
                     {{ review.comment }}
                   </p>
 
-                  <!-- Rating -->
-                  <app-star-rating [rating]="review.rating" size="0.9rem" />
-
-                  <!-- Séparateur -->
-                  <div class="border-t border-gray-100 pt-4 flex items-center gap-3">
+                  <!-- Auteur -->
+                  <div class="border-t pt-4 flex items-center gap-3" style="border-color:#f3e8ff">
                     <div class="relative flex-shrink-0">
-                      <img
-                        [src]="review.clientAvatar || 'https://ui-avatars.com/api/?name=' + review.clientName + '&background=012e65&color=fff&rounded=true'"
-                        [alt]="review.clientName"
-                        class="w-11 h-11 rounded-full object-cover ring-2 ring-primary/10"
-                        loading="lazy">
-                      <!-- Drapeau CI -->
+                      <img [src]="review.clientAvatar || 'https://ui-avatars.com/api/?name=' + review.clientName + '&background=7c3aed&color=fff&rounded=true'"
+                           [alt]="review.clientName"
+                           class="w-10 h-10 rounded-full object-cover"
+                           style="ring:2px;ring-color:rgba(124,58,237,0.15)"
+                           loading="lazy">
                       <span class="absolute -bottom-0.5 -right-0.5 text-xs">🇨🇮</span>
                     </div>
                     <div class="min-w-0">
-                      <div class="font-semibold text-secondary text-sm truncate">{{ review.clientName }}</div>
-                      <div class="flex items-center gap-1 text-xs text-secondary-gray">
-                        <lucide-icon name="badge-check" [size]="11" [strokeWidth]="2" class="text-primary flex-shrink-0"></lucide-icon>
+                      <div class="font-bold text-sm truncate" style="color:#111827">{{ review.clientName }}</div>
+                      <div class="flex items-center gap-1 text-xs" style="color:#9ca3af">
+                        <lucide-icon name="badge-check" [size]="11" [strokeWidth]="2" style="color:#7c3aed" class="flex-shrink-0"></lucide-icon>
                         Client vérifié · Abidjan
                       </div>
                     </div>
@@ -1725,22 +1824,23 @@ import { FormsModule } from '@angular/forms';
     </section>
 
     <!-- Popular Communes -->
-    <section class="section bg-gray-50">
+    <section class="section" style="background:#fff">
       <div class="container-custom">
-        <h2 class="section-title text-center mb-4">Communes Populaires</h2>
-        <p class="section-subtitle text-center mx-auto mb-12">
-          Trouvez des professionnels près de chez vous
-        </p>
+        <div class="text-center mb-10">
+          <h2 class="section-title mb-2">Communes Populaires</h2>
+          <p class="section-subtitle mx-auto">Trouvez des professionnels près de chez vous à Abidjan</p>
+        </div>
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           @for (commune of communes; track commune) {
-            <button
-              (click)="filterByCommune(commune)"
-              class="bg-white p-4 rounded-md shadow hover:shadow-md transition-all duration-200 text-center hover:-translate-y-1 group">
-              <div class="w-10 h-10 mx-auto mb-2 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary transition-all duration-200 text-primary group-hover:text-white">
-                <lucide-icon name="map-pin" [size]="18" [strokeWidth]="1.75"></lucide-icon>
+            <button (click)="filterByCommune(commune)"
+              class="group bg-white p-5 rounded-2xl text-center transition-all duration-200 hover:-translate-y-1 active:scale-95"
+              style="border:1px solid #f3e8ff;box-shadow:0 2px 12px rgba(124,58,237,0.06)">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center transition-all duration-200"
+                   style="background:#f5f0ff;color:#7c3aed">
+                <lucide-icon name="map-pin" [size]="20" [strokeWidth]="1.75"></lucide-icon>
               </div>
-              <span class="text-sm font-medium text-secondary group-hover:text-primary">{{ commune }}</span>
+              <span class="text-sm font-semibold transition-colors" style="color:#374151">{{ commune }}</span>
             </button>
           }
         </div>
@@ -1807,28 +1907,47 @@ import { FormsModule } from '@angular/forms';
       overflow: hidden;
     }
 
-    /* ── Hero gradient ── */
-    .hero-section {
+    /* ── Hero nouveau (split layout blanc/violet) ── */
+    .hero-section-new {
       isolation: isolate;
+      background: #ffffff;
     }
 
-    .hero-gradient {
-      background:
-        linear-gradient(135deg,
-          #010f22 0%,
-          #012e65 40%,
-          #013a7a 65%,
-          #023e85 85%,
-          #01265a 100%
-        );
+    /* Hauteur du slideshow : responsive */
+    .hero-slideshow {
+      height: 240px;
+    }
+    @media (min-width: 480px) {
+      .hero-slideshow { height: 290px; }
+    }
+    @media (min-width: 1024px) {
+      .hero-slideshow { height: 460px; }
     }
 
-    /* Texte dégradé "à Abidjan" */
-    .hero-accent-text {
-      background: linear-gradient(90deg, #FF6B6B 0%, #ff9a8b 50%, #ffb347 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    /* ── Catégorie pill hover ── */
+    .cat-pill:hover {
+      border-color: #7c3aed !important;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.12);
+    }
+    .cat-pill:hover div { background: #7c3aed !important; color: white !important; }
+    .cat-pill:hover span { color: #7c3aed !important; }
+
+    /* ── Input Service : supprime le focus ring bleu natif ── */
+    .service-input:focus,
+    .service-input:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+
+    /* ── Salon card hover ── */
+    .salon-card {
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .salon-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(124,58,237,0.15) !important;
     }
 
     /* ─── Phone simulator ─────────────────────────────── */
@@ -1985,6 +2104,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   phoneScreen = signal(0);
   private phoneTimer: any;
 
+  // Hero slideshow
+  heroSlideIndex = signal(0);
+  private heroSlideTimer: any;
+  readonly heroImages = [
+    '/Nouveaux sur SEFAIZO/Afro-et-nature.jpeg',
+    '/Nouveaux sur SEFAIZO/Cocoon-Beauty-concept-Place.jpg',
+    '/Nouveaux sur SEFAIZO/Guinot.jpeg',
+    '/Nouveaux sur SEFAIZO/Institut-Moreno.jpeg',
+    '/Nouveaux sur SEFAIZO/Les-instituts-My-Maz.jpeg',
+    '/Nouveaux sur SEFAIZO/So-Spa-Sofitel.jpeg',
+    '/Nouveaux sur SEFAIZO/ob_9ab44c_mrs-afro-salon-de-coiffure-nappy-abidj.jpg',
+  ];
+
   // Carousel references
   @ViewChild('recommendedCarousel') recommendedCarouselRef!: ElementRef;
   @ViewChild('newCarousel') newCarouselRef!: ElementRef;
@@ -2009,6 +2141,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     // Start animated counter
     this.startAnimatedCounter();
     this.startPhoneAnimation();
+    this.startHeroSlideshow();
   }
 
   ngAfterViewInit(): void {
@@ -2030,6 +2163,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (interval) clearInterval(interval);
     });
     if (this.phoneTimer) clearTimeout(this.phoneTimer);
+    if (this.heroSlideTimer) clearInterval(this.heroSlideTimer);
+  }
+
+  private startHeroSlideshow(): void {
+    this.heroSlideTimer = setInterval(() => {
+      this.heroSlideIndex.update(i => (i + 1) % this.heroImages.length);
+    }, 5000);
+  }
+
+  goToSlide(index: number): void {
+    this.heroSlideIndex.set(index);
+    clearInterval(this.heroSlideTimer);
+    this.heroSlideTimer = setInterval(() => {
+      this.heroSlideIndex.update(i => (i + 1) % this.heroImages.length);
+    }, 5000);
   }
 
   private startPhoneAnimation(): void {

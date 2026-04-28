@@ -24,6 +24,10 @@ export const routes: Routes = [
 
   // Content Pages (Footer Links)
   {
+    path: 'comment-ca-marche',
+    loadComponent: () => import('./features/public/comment-ca-marche/comment-ca-marche.component').then(m => m.CommentCaMarcheComponent)
+  },
+  {
     path: 'a-propos',
     loadComponent: () => import('./features/public/content/content-page.component').then(m => m.ContentPageComponent),
     data: { slug: 'about' }
