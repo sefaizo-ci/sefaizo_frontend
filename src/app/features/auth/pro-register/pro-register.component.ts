@@ -537,6 +537,50 @@ type Mode = 'phone' | 'email' | 'google';
                 </div>
               </div>
 
+              <!-- Upload pièce d'identité (optionnel) -->
+              <div class="rounded-2xl p-4" style="background:#faf5ff;border:1px dashed #c4b5fd">
+                <div class="flex items-start gap-2.5 mb-3">
+                  <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                       style="background:white;border:1px solid #e5e7eb">
+                    <svg class="w-4 h-4" style="color:#a855f7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold" style="color:#7c3aed">Pièce d'identité
+                      <span class="font-normal ml-1 px-1.5 py-0.5 rounded-full text-xs"
+                            style="background:#ede9fe;color:#9ca3af">Optionnel</span>
+                    </p>
+                    <p class="text-xs mt-0.5" style="color:#9ca3af">
+                      Accélérez votre validation en joignant dès maintenant votre CNI ou passeport
+                    </p>
+                  </div>
+                </div>
+
+                @if (idDocName) {
+                  <div class="flex items-center gap-2 px-3 py-2 rounded-xl mb-2"
+                       style="background:white;border:1px solid #e5e7eb">
+                    <svg class="w-4 h-4 flex-shrink-0" style="color:#a855f7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-xs flex-1 truncate" style="color:#374151">{{ idDocName }}</span>
+                    <button type="button" (click)="idDocName=''; idDocFile=null"
+                            class="text-xs" style="color:#9ca3af">✕</button>
+                  </div>
+                }
+
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <div class="flex-1 px-3 py-2 rounded-xl text-xs"
+                       style="background:white;border:1px solid #e5e7eb;color:#9ca3af">
+                    {{ idDocName || 'Choisir un fichier (JPG, PNG, PDF)' }}
+                  </div>
+                  <span class="px-3 py-2 rounded-xl text-xs font-bold flex-shrink-0"
+                        style="background:#a855f7;color:white">Parcourir</span>
+                  <input type="file" accept="image/*,.pdf" class="hidden"
+                         (change)="onIdDocChange($event)">
+                </label>
+              </div>
+
               <!-- CGU -->
               <label class="flex items-start gap-2.5 cursor-pointer">
                 <input type="checkbox" [(ngModel)]="acceptTerms" name="terms"
@@ -638,6 +682,15 @@ export class ProRegisterComponent {
   };
   selectedServices: string[] = [];
   acceptTerms = false;
+
+  // Pièce d'identité (optionnel)
+  idDocName = '';
+  idDocFile: File | null = null;
+
+  onIdDocChange(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) { this.idDocName = file.name; this.idDocFile = file; }
+  }
 
   communes = ['Cocody','Plateau','Yopougon','Marcory','Treichville','Adjamé','Abobo','Port-Bouët','Attécoubé','Koumassi'];
   serviceOptions = ['Coiffure','Esthétique','Manucure','Pédicure','Barbier','Maquillage','Soins du visage','Massage'];

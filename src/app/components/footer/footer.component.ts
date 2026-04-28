@@ -87,7 +87,7 @@ import { LucideAngularModule } from 'lucide-angular';
             <!-- Right : language & currency -->
             <div class="flex justify-end gap-4">
               <span class="text-gray-400 text-sm">Français (France)</span>
-              <span class="text-gray-400 text-sm">EUR (€)</span>
+              <span class="text-gray-400 text-sm">CI (FCFA)</span>
             </div>
           </div>
         </div>

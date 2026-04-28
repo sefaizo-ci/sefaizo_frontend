@@ -232,6 +232,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/commissions/commissions.component').then(m => m.AdminCommissionsComponent)
       },
       {
+        path: 'salons',
+        loadComponent: () => import('./features/admin/salons/admin-salons.component').then(m => m.AdminSalonsComponent)
+      },
+      {
         path: 'kyc',
         loadComponent: () => import('./features/admin/kyc/kyc.component').then(m => m.AdminKycComponent)
       },

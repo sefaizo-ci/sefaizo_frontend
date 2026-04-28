@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
 import { MockDataService } from '../../../core/services/mock-data.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Wallet, WalletTransaction } from '../../../core/models';
@@ -11,87 +12,96 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 @Component({
   selector: 'app-pro-wallet',
   standalone: true,
-  imports: [CommonModule, FormsModule, FcfaPipe, DateFormatPipe, ModalComponent],
+  imports: [CommonModule, FormsModule, LucideAngularModule, FcfaPipe, DateFormatPipe, ModalComponent],
   template: `
     <div class="space-y-6">
       <!-- Header -->
       <div>
-        <h1 class="text-2xl font-bold text-secondary">Mon Wallet</h1>
-        <p class="text-secondary-gray mt-1">Gérez vos gains et demandez des reversements</p>
+        <h1 class="text-xl font-black" style="color:#111827">Mon Wallet</h1>
+        <p class="text-sm mt-0.5" style="color:#6b7280">Gérez vos gains et demandez des reversements</p>
       </div>
 
       <!-- Balance Cards -->
       <div class="grid md:grid-cols-3 gap-4">
         <div class="md:col-span-2 rounded-2xl p-6 text-white relative overflow-hidden"
-          style="background: linear-gradient(135deg, #1a1a2e 0%, #2d2d50 100%)">
+             style="background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)">
+          <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full" style="background:rgba(255,255,255,0.08)"></div>
+          <div class="absolute right-4 bottom-0 w-20 h-20 rounded-full" style="background:rgba(255,255,255,0.06)"></div>
           <div class="relative z-10">
-            <div class="text-sm text-white/60 mb-1">Solde disponible</div>
-            <div class="text-4xl font-bold mb-1">{{ wallet()?.balance | fcfa:false }}</div>
-            <div class="text-white/60 text-sm mb-6">FCFA</div>
+            <div class="text-sm text-white/70 mb-1">Solde disponible</div>
+            <div class="text-4xl font-black mb-1">{{ wallet()?.balance | fcfa:false }}</div>
+            <div class="text-white/60 text-sm mb-5">FCFA</div>
             <button (click)="openPayoutModal()"
-              class="bg-white text-secondary font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-gray-100 transition-colors">
+              class="bg-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-all active:scale-95"
+              style="color:#7c3aed">
               Demander un reversement
             </button>
           </div>
-          <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/5"></div>
-          <div class="absolute right-4 bottom-0 w-20 h-20 rounded-full bg-primary/20"></div>
         </div>
 
         <div class="space-y-3">
-          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-            <div class="text-xs text-secondary-gray mb-1">En attente</div>
-            <div class="text-xl font-bold text-yellow-600">{{ wallet()?.pendingBalance | fcfa:false }}</div>
-            <div class="text-xs text-secondary-gray">FCFA</div>
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-8 h-8 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+                <lucide-icon name="clock" [size]="14" [strokeWidth]="1.75" style="color:#d97706"></lucide-icon>
+              </div>
+              <span class="text-xs font-semibold" style="color:#6b7280">En attente</span>
+            </div>
+            <div class="text-xl font-black" style="color:#111827">{{ wallet()?.pendingBalance | fcfa:false }}</div>
+            <div class="text-xs mt-0.5" style="color:#9ca3af">FCFA</div>
           </div>
-          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-            <div class="text-xs text-secondary-gray mb-1">Total encaissé</div>
-            <div class="text-xl font-bold text-green-600">{{ totalCredited() | fcfa:false }}</div>
-            <div class="text-xs text-secondary-gray">FCFA cumulé</div>
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-8 h-8 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+                <lucide-icon name="trending-up" [size]="14" [strokeWidth]="1.75" style="color:#16a34a"></lucide-icon>
+              </div>
+              <span class="text-xs font-semibold" style="color:#6b7280">Total encaissé</span>
+            </div>
+            <div class="text-xl font-black" style="color:#111827">{{ totalCredited() | fcfa:false }}</div>
+            <div class="text-xs mt-0.5" style="color:#9ca3af">FCFA cumulé</div>
           </div>
         </div>
       </div>
 
       <!-- Info -->
-      <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
-        <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <p class="text-sm text-blue-700">
-          Les gains des réservations sont crédités automatiquement après 48h suivant la prestation. Un minimum de <strong>5 000 FCFA</strong> est requis pour demander un reversement.
+      <div class="rounded-2xl p-4 flex items-start gap-3"
+           style="background:#faf5ff;border:1px solid #e9d5ff">
+        <div class="w-8 h-8 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+          <lucide-icon name="info" [size]="14" [strokeWidth]="2" style="color:#a855f7"></lucide-icon>
+        </div>
+        <p class="text-sm" style="color:#7c3aed">
+          Les gains sont crédités automatiquement après 48h suivant la prestation.
+          Un minimum de <strong>5 000 FCFA</strong> est requis pour demander un reversement.
         </p>
       </div>
 
       <!-- Transactions -->
-      <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <div class="p-5 border-b flex items-center justify-between">
-          <h2 class="font-semibold text-secondary">Historique des transactions</h2>
-          <div class="text-sm text-secondary-gray">{{ transactions.length }} transactions</div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-4" style="border-bottom:1px solid #f3f4f6">
+          <div>
+            <h2 class="font-bold text-sm" style="color:#111827">Historique des transactions</h2>
+            <p class="text-xs" style="color:#9ca3af">{{ transactions.length }} transactions</p>
+          </div>
         </div>
 
         @if (transactions.length === 0) {
-          <div class="p-12 text-center">
-            <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-            <p class="text-secondary-gray">Aucune transaction</p>
+          <div class="py-12 text-center">
+            <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+              <lucide-icon name="wallet" [size]="20" [strokeWidth]="1.5" style="color:#a855f7"></lucide-icon>
+            </div>
+            <p class="text-sm" style="color:#9ca3af">Aucune transaction</p>
           </div>
         } @else {
           <div class="divide-y divide-gray-50">
             @for (txn of transactions; track txn.id) {
               <div class="p-5 flex items-center gap-4">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  [class]="txn.type === 'CREDIT' ? 'bg-green-100' : 'bg-red-100'">
-                  <svg class="w-5 h-5" [class]="txn.type === 'CREDIT' ? 'text-green-600' : 'text-red-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    @if (txn.type === 'CREDIT') {
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    } @else {
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
-                    }
-                  </svg>
+                <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center flex-shrink-0">
+                  <lucide-icon [name]="txn.type === 'CREDIT' ? 'arrow-down-left' : 'arrow-up-right'" [size]="16" [strokeWidth]="2"
+                               [style.color]="txn.type === 'CREDIT' ? '#16a34a' : '#dc2626'"></lucide-icon>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="text-sm font-medium text-secondary">{{ txn.description }}</div>
-                  <div class="text-xs text-secondary-gray mt-0.5">{{ txn.createdAt | dateFormat: 'long' }}</div>
+                  <div class="text-sm font-semibold" style="color:#111827">{{ txn.description }}</div>
+                  <div class="text-xs mt-0.5" style="color:#9ca3af">{{ txn.createdAt | dateFormat: 'long' }}</div>
                 </div>
                 <div class="text-right flex-shrink-0">
                   <div class="font-bold" [class]="txn.type === 'CREDIT' ? 'text-green-600' : 'text-red-500'">
