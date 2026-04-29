@@ -1,6 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
 import { MockDataService } from '../../../core/services/mock-data.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Booking } from '../../../core/models';
@@ -10,198 +11,157 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 @Component({
   selector: 'app-client-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    FcfaPipe,
-    DateFormatPipe,
-    BadgeComponent
-  ],
+  imports: [CommonModule, RouterLink, LucideAngularModule, FcfaPipe, DateFormatPipe, BadgeComponent],
   template: `
-    <div>
-      <!-- Welcome Header -->
-      <div class="text-white rounded-md shadow-lg p-6 mb-8" style="background: linear-gradient(135deg, #2d2d319c 0%, #1a1a1e9c 100%);">
-        <h1 class="text-2xl font-bold mb-2">Bonjour, {{ getUser()?.firstName }} 👋</h1>
-        <p class="text-white/80">Retrouvez vos réservations et gérez votre profil</p>
-      </div>
+    <div class="space-y-5">
 
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-md shadow p-6">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-            </div>
-            <div>
-              <div class="text-2xl font-bold text-secondary">{{ stats.aVenir }}</div>
-              <div class="text-sm text-secondary-gray">À venir</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-md shadow p-6">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <div>
-              <div class="text-2xl font-bold text-secondary">{{ stats.terminees }}</div>
-              <div class="text-sm text-secondary-gray">Terminées</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-md shadow p-6">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <div>
-              <div class="text-2xl font-bold text-secondary">{{ stats.enAttente }}</div>
-              <div class="text-sm text-secondary-gray">En attente</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-md shadow p-6">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-              </svg>
-            </div>
-            <div>
-              <div class="text-2xl font-bold text-secondary">{{ stats.favoris }}</div>
-              <div class="text-sm text-secondary-gray">Favoris</div>
-            </div>
-          </div>
+      <!-- Bannière de bienvenue -->
+      <div class="rounded-2xl p-5 text-white relative overflow-hidden"
+           style="background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)">
+        <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full" style="background:rgba(255,255,255,0.08)"></div>
+        <div class="absolute right-10 bottom-0 w-20 h-20 rounded-full" style="background:rgba(255,255,255,0.06)"></div>
+        <div class="relative z-10">
+          <h1 class="text-xl font-black mb-1">Bonjour, {{ getUser()?.firstName }} 👋</h1>
+          <p class="text-white/75 text-sm">Retrouvez vos réservations et gérez votre compte.</p>
+          <a routerLink="/recherche"
+             class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+             style="background:white;color:#7c3aed">
+            <lucide-icon name="search" [size]="14" [strokeWidth]="2"></lucide-icon>
+            Réserver un service
+          </a>
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <div class="grid md:grid-cols-3 gap-6 mb-8">
-        <a routerLink="/recherche" class="bg-white rounded-md shadow p-6 hover:shadow-md transition-all group">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-secondary">Nouvelle réservation</h3>
-              <p class="text-sm text-secondary-gray">Réserver un service</p>
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+              <lucide-icon name="calendar-days" [size]="16" [strokeWidth]="1.75" style="color:#a855f7"></lucide-icon>
             </div>
           </div>
-        </a>
+          <div class="text-2xl font-black" style="color:#111827">{{ stats.aVenir }}</div>
+          <div class="text-xs mt-0.5" style="color:#6b7280">À venir</div>
+        </div>
 
-        <a routerLink="/espace-client/reservations" class="bg-white rounded-md shadow p-6 hover:shadow-md transition-all group">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-secondary">Voir réservations</h3>
-              <p class="text-sm text-secondary-gray">Gérer mes RDV</p>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+              <lucide-icon name="check-circle" [size]="16" [strokeWidth]="1.75" style="color:#16a34a"></lucide-icon>
             </div>
           </div>
-        </a>
+          <div class="text-2xl font-black" style="color:#111827">{{ stats.terminees }}</div>
+          <div class="text-xs mt-0.5" style="color:#6b7280">Terminées</div>
+        </div>
 
-        <a routerLink="/espace-client/favorites" class="bg-white rounded-md shadow p-6 hover:shadow-md transition-all group">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-              </svg>
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+              <lucide-icon name="clock" [size]="16" [strokeWidth]="1.75" style="color:#d97706"></lucide-icon>
             </div>
-            <div>
-              <h3 class="font-semibold text-secondary">Mes favoris</h3>
-              <p class="text-sm text-secondary-gray">Salons préférés</p>
+          </div>
+          <div class="text-2xl font-black" style="color:#111827">{{ stats.enAttente }}</div>
+          <div class="text-xs mt-0.5" style="color:#6b7280">En attente</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+              <lucide-icon name="heart" [size]="16" [strokeWidth]="1.75" style="color:#a855f7"></lucide-icon>
             </div>
+          </div>
+          <div class="text-2xl font-black" style="color:#111827">{{ stats.favoris }}</div>
+          <div class="text-xs mt-0.5" style="color:#6b7280">Favoris</div>
+        </div>
+      </div>
+
+      <!-- Raccourcis -->
+      <div class="grid md:grid-cols-3 gap-3">
+        <a routerLink="/recherche"
+           class="flex items-center gap-3 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center flex-shrink-0">
+            <lucide-icon name="search" [size]="16" [strokeWidth]="1.75" style="color:#a855f7"></lucide-icon>
+          </div>
+          <div>
+            <div class="font-bold text-sm" style="color:#111827">Nouvelle réservation</div>
+            <div class="text-xs" style="color:#9ca3af">Trouver un salon</div>
+          </div>
+        </a>
+        <a routerLink="/espace-client/reservations"
+           class="flex items-center gap-3 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center flex-shrink-0">
+            <lucide-icon name="calendar-check" [size]="16" [strokeWidth]="1.75" style="color:#111827"></lucide-icon>
+          </div>
+          <div>
+            <div class="font-bold text-sm" style="color:#111827">Mes réservations</div>
+            <div class="text-xs" style="color:#9ca3af">Gérer mes RDV</div>
+          </div>
+        </a>
+        <a routerLink="/espace-client/favorites"
+           class="flex items-center gap-3 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center flex-shrink-0">
+            <lucide-icon name="heart" [size]="16" [strokeWidth]="1.75" style="color:#111827"></lucide-icon>
+          </div>
+          <div>
+            <div class="font-bold text-sm" style="color:#111827">Mes favoris</div>
+            <div class="text-xs" style="color:#9ca3af">Salons préférés</div>
           </div>
         </a>
       </div>
 
-      <!-- Upcoming Bookings -->
-      <div class="bg-white rounded-md shadow">
-        <div class="p-6 border-b">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold text-secondary">Prochains rendez-vous</h2>
-            <a routerLink="/espace-client/reservations" class="text-primary font-medium hover:text-primary-dark text-sm">
-              Voir tout
-            </a>
+      <!-- Prochains RDV -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-4" style="border-bottom:1px solid #f3f4f6">
+          <div>
+            <h2 class="font-bold text-sm" style="color:#111827">Prochains rendez-vous</h2>
+            <p class="text-xs" style="color:#9ca3af">Vos réservations confirmées</p>
           </div>
+          <a routerLink="/espace-client/reservations"
+             class="text-xs font-semibold px-3 py-1.5 rounded-lg"
+             style="background:#f3e8ff;color:#7c3aed">Voir tout</a>
         </div>
 
         @if (upcomingBookings.length === 0) {
-          <div class="p-12 text-center">
-            <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
+          <div class="py-12 text-center">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
+              <lucide-icon name="calendar-days" [size]="22" [strokeWidth]="1.5" style="color:#a855f7"></lucide-icon>
             </div>
-            <h3 class="text-xl font-semibold text-secondary mb-2">Aucun rendez-vous à venir</h3>
-            <p class="text-secondary-gray mb-6">Réservez votre premier service dès maintenant</p>
-            <a routerLink="/recherche" class="btn-primary inline-block">
-              Réserver un service
+            <p class="font-semibold text-sm mb-1" style="color:#374151">Aucun rendez-vous à venir</p>
+            <p class="text-xs mb-4" style="color:#9ca3af">Réservez votre premier service</p>
+            <a routerLink="/recherche"
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
+               style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+              Réserver maintenant
             </a>
           </div>
         } @else {
-          <div class="divide-y">
+          <div class="divide-y divide-gray-50">
             @for (booking of upcomingBookings; track booking.id) {
-              <div class="p-6">
-                <div class="flex flex-col md:flex-row justify-between gap-4">
-                  <div class="flex items-start gap-4">
-                    <div class="w-16 h-16 bg-primary/10 rounded-md flex items-center justify-center flex-shrink-0">
-                      <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                      </svg>
-                    </div>
-                    <div class="flex-1">
-                      <div class="flex items-center gap-3 mb-2">
-                        <h3 class="font-semibold text-secondary text-lg">{{ booking.businessName }}</h3>
-                        <app-badge [variant]="getStatusBadgeVariant(booking.status)">
-                          {{ getStatusLabel(booking.status) }}
-                        </app-badge>
-                      </div>
-                      <p class="text-secondary-gray mb-3">{{ booking.service.name }}</p>
-                      <div class="flex flex-wrap gap-4 text-sm text-secondary-gray">
-                        <span class="flex items-center gap-1">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                          </svg>
-                          {{ booking.date | dateFormat: 'long' }}
-                        </span>
-                        <span class="flex items-center gap-1">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                          </svg>
-                          {{ booking.time }}
-                        </span>
-                        <span class="flex items-center gap-1">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                          </svg>
-                          {{ booking.type === 'SALON' ? 'Au salon' : 'À domicile' }}
-                        </span>
-                      </div>
-                    </div>
+              <div class="flex items-center gap-4 px-5 py-4">
+                <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="scissors" [size]="16" [strokeWidth]="1.75" style="color:#a855f7"></lucide-icon>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-0.5">
+                    <span class="font-bold text-sm truncate" style="color:#111827">{{ booking.businessName }}</span>
+                    <app-badge [variant]="getStatusBadgeVariant(booking.status)" class="flex-shrink-0">
+                      {{ getStatusLabel(booking.status) }}
+                    </app-badge>
                   </div>
-                  <div class="flex flex-col items-end gap-2">
-                    <div class="text-xl font-bold text-primary">{{ booking.total | fcfa }}</div>
-                    <a
-                      routerLink="/espace-client/reservations"
-                      class="text-primary font-medium hover:text-primary-dark text-sm">
-                      Voir détails
-                    </a>
+                  <div class="text-xs" style="color:#6b7280">{{ booking.service.name }}</div>
+                  <div class="flex items-center gap-3 mt-1">
+                    <span class="flex items-center gap-1 text-xs" style="color:#9ca3af">
+                      <lucide-icon name="calendar" [size]="11" [strokeWidth]="2"></lucide-icon>
+                      {{ booking.date | dateFormat: 'short' }}
+                    </span>
+                    <span class="flex items-center gap-1 text-xs" style="color:#9ca3af">
+                      <lucide-icon name="clock" [size]="11" [strokeWidth]="2"></lucide-icon>
+                      {{ booking.time }}
+                    </span>
                   </div>
+                </div>
+                <div class="text-sm font-black flex-shrink-0" style="color:#a855f7">
+                  {{ booking.total | fcfa }}
                 </div>
               </div>
             }
