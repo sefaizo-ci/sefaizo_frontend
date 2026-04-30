@@ -1,0 +1,29 @@
+<header class="mb-7 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-6 max-[760px]:grid-cols-1">
+  <div>
+    <h1 class="m-0 text-[24px] leading-tight font-black text-ink">{{ title }}</h1>
+    <p class="mt-1 text-sm font-bold text-[#69708a]">
+      {{ subtitle.split('Coiffure femme, Tresses')[0] }}<span class="text-primary">Coiffure femme, Tresses</span>
+    </p>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-end gap-3 text-sm font-bold text-[#303653] max-[760px]:justify-start">
+    <span class="mr-1 text-muted">Trier par :</span>
+    <button class="inline-flex h-9 min-w-[120px] items-center justify-between gap-3 rounded-md border border-border bg-white px-3 text-sm font-bold" type="button">
+      {{ sortLabel }}
+      <lucide-icon [img]="icons.chevronDown" [size]="16" [strokeWidth]="2.2" aria-hidden="true" />
+    </button>
+    <button class="inline-flex h-9 items-center justify-center rounded-md border border-border bg-white px-4 text-sm font-bold" type="button">Note</button>
+    <button class="inline-flex h-9 items-center justify-center rounded-md border border-border bg-white px-4 text-sm font-bold" type="button">Prix</button>
+    <span class="mx-8 max-[1160px]:hidden"></span>
+    <div class="inline-flex overflow-hidden rounded-md border border-border bg-white">
+      <button class="inline-flex h-9 items-center gap-2 px-4 text-sm font-bold text-[#69708a]" type="button">
+        <lucide-icon [img]="icons.sliders" [size]="16" [strokeWidth]="2" aria-hidden="true" />
+        Liste
+      </button>
+      <button class="inline-flex h-9 items-center gap-2 bg-primary-100 px-4 text-sm font-bold text-primary" type="button">
+        <lucide-icon [img]="icons.grid" [size]="16" [strokeWidth]="2" aria-hidden="true" />
+        Carte
+      </button>
+    </div>
+  </div>
+</header>

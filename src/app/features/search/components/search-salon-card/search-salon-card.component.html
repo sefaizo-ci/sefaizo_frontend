@@ -1,0 +1,31 @@
+<article class="min-w-0 overflow-hidden rounded-lg border border-border bg-white">
+  <div class="h-[205px] bg-[#ded8ff] max-[520px]:h-48">
+    <img class="h-full w-full object-fill" [src]="salon.imageUrl" [alt]="salon.name" loading="lazy" />
+  </div>
+
+  <div class="p-4 pb-[18px]">
+    <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 max-[520px]:grid-cols-1 max-[520px]:gap-1">
+      <h2 class="m-0 text-[18px] leading-tight font-black text-ink">{{ salon.name }}</h2>
+      <span class="inline-flex items-center gap-1 text-sm font-bold text-[#566079] max-[520px]:justify-self-start">
+        <lucide-icon class="fill-accent text-accent" [img]="icons.star" [size]="15" [strokeWidth]="2.2" aria-hidden="true" />
+        {{ salon.rating.toFixed(1) }} ({{ salon.reviewCount }} avis)
+      </span>
+    </div>
+
+    <p class="mt-2 mb-3 inline-flex items-center gap-1 text-sm font-bold text-muted">
+      <lucide-icon [img]="icons.mapPin" [size]="15" [strokeWidth]="2.1" aria-hidden="true" />
+      {{ salon.location }}
+    </p>
+
+    <div class="mb-4 flex flex-wrap gap-3">
+      @for (tag of salon.tags; track tag) {
+        <span class="rounded-md bg-[#f0f1f6] px-3 py-1.5 text-xs font-bold text-[#303653]">{{ tag }}</span>
+      }
+    </div>
+
+    <div class="grid grid-cols-[minmax(0,1fr)_124px] items-center gap-4 max-[520px]:grid-cols-1">
+      <strong class="text-base font-black text-primary">À partir de {{ salon.startingPrice | price }}</strong>
+      <a class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)]" href="#">Voir le salon</a>
+    </div>
+  </div>
+</article>

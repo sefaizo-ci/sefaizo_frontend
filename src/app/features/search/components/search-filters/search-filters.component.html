@@ -1,0 +1,98 @@
+<aside class="min-w-0 border-r border-border pt-6 pr-8 pb-8 max-[1040px]:border-r-0 max-[1040px]:pr-0">
+  <div class="mb-6 flex min-w-0 items-center justify-between gap-4">
+    <h2 class="m-0 text-[22px] leading-tight font-black text-ink">Filtres</h2>
+    <button class="shrink-0 whitespace-nowrap text-xs font-extrabold text-primary" type="button">Réinitialiser</button>
+  </div>
+
+  <section class="mb-[22px]" aria-labelledby="search-location-title">
+    <h3 id="search-location-title" class="mb-3.5 text-[13px] font-black text-ink">Localisation</h3>
+    <button class="flex h-10 w-full min-w-0 items-center justify-between rounded-md border border-border bg-white px-3 text-sm font-bold text-[#303653]" type="button">
+      <span class="inline-flex min-w-0 items-center gap-2.5">
+        <lucide-icon class="text-[#59617b]" [img]="icons.mapPin" [size]="18" [strokeWidth]="2" aria-hidden="true" />
+        <span class="truncate">{{ filters.location }}</span>
+      </span>
+      <lucide-icon class="text-[#59617b]" [img]="icons.chevronDown" [size]="16" [strokeWidth]="2.2" aria-hidden="true" />
+    </button>
+  </section>
+
+  <section class="mb-[22px]" aria-labelledby="search-category-title">
+    <h3 id="search-category-title" class="mb-3 text-[13px] font-black text-ink">Catégorie</h3>
+    <div class="grid gap-3">
+      @for (category of filters.categories; track category.id) {
+        <button class="grid min-w-0 grid-cols-[18px_22px_minmax(0,1fr)_34px] items-center gap-3 text-left text-sm font-bold text-[#202641]" type="button">
+          <span
+            class="inline-flex h-[18px] w-[18px] items-center justify-center rounded-[4px] border text-white"
+            [class.border-primary]="category.selected"
+            [class.bg-primary]="category.selected"
+            [class.border-border]="!category.selected"
+            [class.bg-white]="!category.selected"
+          >
+            @if (category.selected) {
+              <lucide-icon [img]="icons.check" [size]="13" [strokeWidth]="3" aria-hidden="true" />
+            }
+          </span>
+          <lucide-icon class="text-primary" [img]="categoryIcons[category.icon]" [size]="19" [strokeWidth]="2" aria-hidden="true" />
+          <span class="truncate">{{ category.label }}</span>
+          <span class="justify-self-end rounded-md bg-[#f0f1f6] px-2.5 py-1 text-xs font-black text-[#69708a]">{{ category.count }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="mb-[22px]" aria-labelledby="search-rating-title">
+    <h3 id="search-rating-title" class="mb-3 text-[13px] font-black text-ink">Note minimum</h3>
+    <div class="flex items-center gap-3 text-sm font-black text-ink">
+      @for (star of [1, 2, 3, 4, 5]; track star) {
+        <span class="text-[25px] leading-none" [class.text-accent]="star <= filters.minimumRating" [class.text-[#cfd2dc]]="star > filters.minimumRating">★</span>
+      }
+      <span class="ml-2 text-xs font-black">& plus</span>
+    </div>
+  </section>
+
+  <section class="mb-[22px]" aria-labelledby="search-price-title">
+    <h3 id="search-price-title" class="mb-3 text-[13px] font-black text-ink">Prix</h3>
+    <p class="mb-3 pl-4 text-sm font-bold text-[#202641]">{{ filters.priceRange.min | price }} — {{ filters.priceRange.max | price }}</p>
+    <div class="px-5">
+      <div class="relative h-6">
+        <span class="absolute top-2.5 right-0 left-0 h-[3px] rounded-full bg-border"></span>
+        <span class="absolute top-2.5 right-8 left-0 h-[3px] rounded-full bg-primary"></span>
+        <span class="absolute top-[3px] left-0 h-[18px] w-[18px] rounded-full border-2 border-primary bg-white"></span>
+        <span class="absolute top-[3px] right-6 h-[18px] w-[18px] rounded-full border-2 border-primary bg-white"></span>
+      </div>
+    </div>
+    <div class="mt-1 flex justify-between gap-3 text-xs font-bold text-muted">
+      <span class="whitespace-nowrap">{{ filters.priceRange.min | price }}</span>
+      <span class="whitespace-nowrap">{{ filters.priceRange.max | price }}</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="search-rdv-title">
+    <h3 id="search-rdv-title" class="mb-3 text-[13px] font-black text-ink">Type RDV</h3>
+    <div class="grid grid-cols-2 gap-2 max-[760px]:grid-cols-1">
+      @for (mode of filters.appointmentModes; track mode.id) {
+        <button
+          class="flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-md border px-2 text-sm font-bold"
+          type="button"
+          [class.border-primary]="mode.selected"
+          [class.bg-primary-100]="mode.selected"
+          [class.text-primary]="mode.selected"
+          [class.border-border]="!mode.selected"
+          [class.bg-white]="!mode.selected"
+          [class.text-[#69708a]]="!mode.selected"
+        >
+          <lucide-icon class="shrink-0" [img]="mode.icon === 'store' ? icons.store : icons.home" [size]="17" [strokeWidth]="2" aria-hidden="true" />
+          <span class="truncate">{{ mode.label }}</span>
+          @if (mode.selected) {
+            <span class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+              <lucide-icon [img]="icons.check" [size]="12" [strokeWidth]="3" aria-hidden="true" />
+            </span>
+          }
+        </button>
+      }
+    </div>
+
+    <button class="mt-[26px] flex h-11 w-full items-center justify-center rounded-md bg-primary px-4 text-sm font-extrabold text-white shadow-[0_12px_24px_rgba(91,53,246,0.22)]" type="button">
+      Appliquer ({{ resultCount }})
+    </button>
+  </section>
+</aside>

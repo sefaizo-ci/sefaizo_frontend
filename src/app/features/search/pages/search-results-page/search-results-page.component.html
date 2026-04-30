@@ -1,0 +1,19 @@
+@if (content$ | async; as content) {
+  <div class="min-h-screen bg-white text-ink">
+    <app-site-header activeItem="Explorer" layout="wide" />
+
+    <main class="wide-container grid min-w-0 grid-cols-[306px_minmax(0,1fr)] gap-8 max-[1040px]:grid-cols-1 max-[1040px]:gap-6">
+      <app-search-filters class="min-w-0" [filters]="content.filters" [resultCount]="content.resultCount" />
+
+      <section class="min-w-0 pt-7 pb-10">
+        <app-search-results-toolbar [title]="content.title" [subtitle]="content.subtitle" [sortLabel]="content.sortLabel" />
+
+        <div class="grid grid-cols-2 gap-x-5 gap-y-[22px] max-[900px]:grid-cols-1">
+          @for (salon of content.salons; track salon.id) {
+            <app-search-salon-card [salon]="salon" />
+          }
+        </div>
+      </section>
+    </main>
+  </div>
+}

@@ -1,16 +1,20 @@
 <header class="sticky top-0 z-20 border-b border-border/70 bg-white/95 backdrop-blur-lg">
-  <div class="app-container grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-8 max-[960px]:flex max-[960px]:justify-between max-[960px]:gap-3 max-[520px]:min-h-[68px]">
-    <a class="text-[32px] leading-none font-black text-primary max-[520px]:text-[27px]" href="#" aria-label="SEFAIZO accueil">SEFAIZO</a>
+  <div
+    class="grid min-h-[76px] grid-cols-[auto_1fr_auto] items-center gap-8 max-[960px]:flex max-[960px]:justify-between max-[960px]:gap-3 max-[520px]:min-h-[68px]"
+    [class.app-container]="layout === 'default'"
+    [class.wide-container]="layout === 'wide'"
+  >
+    <a class="text-[32px] leading-none font-black text-primary max-[520px]:text-[27px]" routerLink="/" aria-label="SEFAIZO accueil">SEFAIZO</a>
 
     <nav class="flex justify-center gap-8 max-[960px]:hidden" aria-label="Navigation principale">
       @for (item of navItems; track item) {
         <a
           class="relative text-sm font-extrabold text-[#5f657f] transition-colors after:absolute after:right-0 after:-bottom-[22px] after:left-0 after:h-[3px] after:rounded-full after:bg-primary after:content-['']"
-          href="#"
-          [class.text-primary]="item === 'Accueil'"
-          [class.after:hidden]="item !== 'Accueil'"
+          [routerLink]="item.path"
+          [class.text-primary]="item.label === activeItem"
+          [class.after:hidden]="item.label !== activeItem"
         >
-          {{ item }}
+          {{ item.label }}
         </a>
       }
     </nav>
