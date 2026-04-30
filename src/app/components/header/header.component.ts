@@ -21,7 +21,7 @@ import { LucideAngularModule } from 'lucide-angular';
 
           <!-- Logo -->
           <a href="/" class="flex items-center gap-2 shrink-0">
-            <img src="/Splash.png" alt="SEFAIZO Logo"
+            <img src="/Logoheder.png" alt="SEFAIZO Logo"
                  class="w-auto transition-all duration-300"
                  [class.h-9]="!isScrolled()"
                  [class.h-8]="isScrolled()">
@@ -38,9 +38,10 @@ import { LucideAngularModule } from 'lucide-angular';
           <div class="flex items-center gap-2">
             <!-- Connexion — desktop only -->
             <a routerLink="/auth/login"
-               class="hidden sm:flex items-center gap-1.5 text-secondary text-sm font-medium transition-colors px-4 py-2 rounded-lg border border-black hover:bg-gray-50">
+               class="hidden sm:flex items-center gap-1.5 text-sm font-bold transition-colors px-4 py-2 rounded-lg border hover:bg-purple-50"
+               style="color:#5f30d4;border-color:#5721de">
               <lucide-icon name="user-round" [size]="15" [strokeWidth]="2"></lucide-icon>
-              Connexion
+              Se connecter
             </a>
 
             <!-- Réserver — desktop only -->
@@ -72,9 +73,11 @@ import { LucideAngularModule } from 'lucide-angular';
           <a routerLink="/comment-ca-marche" class="mobile-nav-link" (click)="closeMenu()">Comment ça marche</a>
 
           <div class="mt-3 pt-3 flex flex-col gap-2" style="border-top: 1px solid #f3f4f6;">
-            <a href="#login" class="flex items-center gap-2 text-secondary text-sm font-medium hover:text-primary transition-colors px-3 py-2">
+            <a routerLink="/auth/login" (click)="closeMenu()"
+               class="flex items-center gap-2 text-sm font-bold hover:opacity-80 transition-opacity px-3 py-2"
+               style="color:#5f30d4">
               <lucide-icon name="user-round" [size]="16" [strokeWidth]="2"></lucide-icon>
-              Connexion
+              Se connecter
             </a>
             <app-button variant="primary" [fullWidth]="true">Réserver</app-button>
           </div>
@@ -97,7 +100,7 @@ import { LucideAngularModule } from 'lucide-angular';
       box-shadow: 0 4px 24px rgba(1,46,101,0.08);
     }
     .nav-link {
-      @apply text-secondary text-sm font-medium hover:text-primary transition-colors relative;
+      @apply text-secondary text-sm font-bold hover:text-primary transition-colors relative;
     }
     .nav-link::after {
       content: '';
@@ -106,7 +109,7 @@ import { LucideAngularModule } from 'lucide-angular';
       left: 0;
       width: 0;
       height: 2px;
-      background: linear-gradient(to right, #7c3aed, #a855f7);
+      background: linear-gradient(to right, #4c0eb7, #7c3aed);
       border-radius: 1px;
       transition: width 0.2s ease;
     }
@@ -115,11 +118,11 @@ import { LucideAngularModule } from 'lucide-angular';
       width: 100%;
     }
     .nav-link-active {
-      color: #7c3aed !important;
-      font-weight: 600;
+      color: #4c0eb7 !important;
+      font-weight: 700;
     }
     .mobile-nav-link {
-      @apply text-secondary text-base font-medium hover:text-primary transition-colors px-3 py-2.5 rounded-md hover:bg-gray-50 block;
+      @apply text-secondary text-base font-bold hover:text-primary transition-colors px-3 py-2.5 rounded-md hover:bg-gray-50 block;
     }
   `]
 })

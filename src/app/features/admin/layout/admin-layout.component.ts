@@ -8,7 +8,7 @@ import { LucideAngularModule } from 'lucide-angular';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, LucideAngularModule],
   template: `
-    <div class="min-h-screen flex" style="background:#f8f7fc">
+    <div class="min-h-screen flex font-light" style="background:#f8f7fc;font-family:'MB Empire',sans-serif">
 
       <!-- ══ SIDEBAR ══ -->
       <aside class="w-60 flex-shrink-0 flex flex-col bg-white border-r"
@@ -17,7 +17,7 @@ import { LucideAngularModule } from 'lucide-angular';
         <!-- Logo -->
         <div class="px-5 py-5" style="border-bottom:1px solid #f0edf8">
           <a href="/" class="flex items-center gap-2.5">
-            <img src="/Splash.png" alt="SEFAIZO" class="h-8 w-auto">
+            <img src="/Logoheder.png" alt="SEFAIZO" class="h-8 w-auto">
             <div>
               <div class="text-sm font-black leading-tight" style="color:#111827">SEFAIZO</div>
               <div class="text-xs font-medium" style="color:#a855f7">Administration</div>
@@ -188,7 +188,8 @@ import { LucideAngularModule } from 'lucide-angular';
       padding: 9px 12px;
       border-radius: 10px;
       font-size: 0.8125rem;
-      font-weight: 500;
+      font-family: 'MB Empire', sans-serif;
+      font-weight: 300;
       color: #6b7280;
       transition: all 0.15s ease;
       cursor: pointer;
