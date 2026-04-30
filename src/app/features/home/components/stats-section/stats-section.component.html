@@ -1,0 +1,15 @@
+<section class="bg-white pb-7">
+  <div class="app-container grid grid-cols-4 gap-5 rounded-lg bg-[#f6f3ff] px-7 py-6 max-[940px]:grid-cols-2 max-[560px]:grid-cols-1">
+    @for (stat of stats; track stat.id) {
+      <article class="flex items-center gap-[18px]">
+        <span class="inline-flex h-[66px] w-[66px] shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary">
+          <lucide-icon [img]="icons[stat.icon]" [size]="34" [strokeWidth]="2.1" aria-hidden="true" />
+        </span>
+        <div>
+          <strong class="m-0 text-[clamp(23px,2.4vw,32px)] leading-none font-black text-ink">{{ stat.value }}</strong>
+          <p class="mt-1.5 mb-0 text-sm font-extrabold text-[#5f6682]">{{ stat.label }}</p>
+        </div>
+      </article>
+    }
+  </div>
+</section>

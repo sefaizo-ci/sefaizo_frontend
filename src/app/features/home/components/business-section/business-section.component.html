@@ -1,0 +1,11 @@
+<section class="bg-white py-3.5 pb-7">
+  <div class="app-container">
+    <app-section-header [title]="title" [linkLabel]="linkLabel" />
+
+    <div class="grid grid-cols-1 gap-6 min-[620px]:grid-cols-2" [ngClass]="businesses.length === 4 ? 'min-[1020px]:grid-cols-4' : 'min-[1020px]:grid-cols-3'">
+      @for (business of businesses; track business.id) {
+        <app-business-card [business]="business" />
+      }
+    </div>
+  </div>
+</section>

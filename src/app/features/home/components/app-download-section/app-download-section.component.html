@@ -1,0 +1,35 @@
+<section class="bg-white py-2 pb-7">
+  <div class="app-container">
+    <div class="relative grid min-h-[250px] grid-cols-[minmax(0,1fr)_360px] items-center overflow-hidden rounded-lg bg-linear-to-br from-[#6844f6] via-[#8f70ff] to-[#b6a3ff] max-[850px]:grid-cols-1">
+      <div class="relative z-10 max-w-[560px] px-12 py-10 text-white max-[560px]:px-6 max-[560px]:py-8">
+        <h2 class="m-0 text-[clamp(29px,3.4vw,40px)] leading-tight font-black">Téléchargez l’app SEFAIZO</h2>
+        <p class="mt-3.5 text-lg leading-snug font-bold">Réservez, gérez vos rendez-vous et profitez d'offres exclusives où que vous soyez.</p>
+
+        <div class="mt-6 flex flex-wrap gap-3.5">
+          <a class="inline-flex min-h-12 items-center gap-2.5 rounded-md bg-[#14172d] px-4 py-2 text-white max-[560px]:w-full" href="#" aria-label="Télécharger sur Google Play">
+            <lucide-icon [img]="icons.play" [size]="24" [strokeWidth]="2.4" aria-hidden="true" />
+            <span class="text-[9px] leading-none font-extrabold">DISPONIBLE SUR<br /><strong class="text-[17px]">Google Play</strong></span>
+          </a>
+          <a class="inline-flex min-h-12 items-center gap-2.5 rounded-md bg-[#14172d] px-4 py-2 text-white max-[560px]:w-full" href="#" aria-label="Télécharger dans l'App Store">
+            <lucide-icon [img]="icons.apple" [size]="24" [strokeWidth]="2.4" aria-hidden="true" />
+            <span class="text-[9px] leading-none font-extrabold">Télécharger dans<br /><strong class="text-[17px]">l'App Store</strong></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="absolute right-24 -bottom-24 h-[328px] w-[205px] rotate-12 rounded-[32px] border-[8px] border-ink bg-white p-3 shadow-[0_22px_48px_rgba(17,21,47,0.3)] before:absolute before:top-2.5 before:left-1/2 before:h-[17px] before:w-[74px] before:-translate-x-1/2 before:rounded-full before:bg-ink before:content-[''] max-[850px]:opacity-30" aria-hidden="true">
+        <div class="h-full rounded-[22px] bg-[#f9f7ff] bg-[url('/assets/images/home/hero-salon.png')] bg-cover bg-center"></div>
+      </div>
+
+      <span class="absolute top-16 right-[520px] inline-flex h-[82px] w-[82px] items-center justify-center rounded-full bg-white/15 text-white/60 max-[850px]:opacity-30">
+        <lucide-icon [img]="icons.calendar" [size]="34" [strokeWidth]="2" />
+      </span>
+      <span class="absolute right-[604px] bottom-8 inline-flex h-[82px] w-[82px] items-center justify-center rounded-full bg-white/15 text-white/60 max-[850px]:opacity-30">
+        <lucide-icon [img]="icons.star" [size]="34" [strokeWidth]="2" />
+      </span>
+      <span class="absolute top-[52px] right-9 inline-flex h-28 w-28 items-center justify-center rounded-full bg-white/15 text-white/60 max-[850px]:opacity-30">
+        <lucide-icon [img]="icons.heart" [size]="44" [strokeWidth]="2" />
+      </span>
+    </div>
+  </div>
+</section>

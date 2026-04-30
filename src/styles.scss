@@ -1,48 +1,5 @@
-/* ============================================================
-   POLICES MB EMPIRE
-   Déposez les fichiers dans /public/fonts/ avec ces noms :
-   - MBEmpire-Heavy.woff2 + MBEmpire-Heavy.ttf   (titres h1)
-   - MBEmpire-Bold.woff2  + MBEmpire-Bold.ttf    (sous-titres h2/h3)
-   - MBEmpire-Light.woff2 + MBEmpire-Light.ttf   (contenu body)
-   ============================================================ */
-@font-face {
-  font-family: 'MB Empire';
-  src: url('/fonts/MBEmpire-Heavy.woff2') format('woff2'),
-       url('/fonts/MBEmpire-Heavy.ttf')  format('truetype');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MB Empire';
-  src: url('/fonts/MBEmpire-Bold.woff2') format('woff2'),
-       url('/fonts/MBEmpire-Bold.ttf')  format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MB Empire';
-  src: url('/fonts/MBEmpire-Light.woff2') format('woff2'),
-       url('/fonts/MBEmpire-Light.ttf')  format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Import Google Fonts - Inter (fallback) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&display=swap');
-
-/* Tailwind Directives */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Global Styles */
-* {
-  box-sizing: border-box;
+:root {
+  --container: 1184px;
 }
 
 html {
@@ -50,314 +7,43 @@ html {
 }
 
 body {
-  font-family: 'MB Empire', 'Inter', system-ui, -apple-system, sans-serif;
-  font-weight: 300; /* MB Empire Light → contenu */
-  color: #1A1A1A;
-  background-color: #FFFFFF;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  overflow-x: hidden;
+  background: #fbfbff;
+  color: #252b4a;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-/* ============================================================
-   TYPOGRAPHIE GLOBALE — MB Empire par rôle
-   Placé dans @layer base pour que les utilities Tailwind
-   puissent le surcharger proprement si besoin.
-   ============================================================ */
-@layer base {
-  /* Toute la page hérite de MB Empire via body */
-  html {
-    font-family: 'MB Empire', 'Inter', system-ui, -apple-system, sans-serif;
-  }
-
-  /* Titres principaux — MB Empire Heavy */
-  h1 {
-    font-family: 'MB Empire', 'Inter', sans-serif;
-    font-weight: 900;
-  }
-
-  /* Sous-titres — MB Empire Bold */
-  h2, h3 {
-    font-family: 'MB Empire', 'Inter', sans-serif;
-    font-weight: 700;
-  }
-
-  /* Intertitres — MB Empire Bold */
-  h4, h5, h6 {
-    font-family: 'MB Empire', 'Inter', sans-serif;
-    font-weight: 700;
-  }
-
-  /* Contenu courant — MB Empire Light */
-  p, li, td, th {
-    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
-    font-weight: 300;
-  }
-
-  /* Champs de formulaire — MB Empire Light */
-  input, select, textarea {
-    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
-    font-weight: 300;
-  }
-
-  /* Boutons — MB Empire Bold (labels toujours lisibles) */
-  button, a {
-    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
-  }
-
-  /* Labels — MB Empire Bold */
-  label {
-    font-family: 'MB Empire', 'Inter', system-ui, sans-serif;
-    font-weight: 700;
-  }
+button,
+input,
+select {
+  font: inherit;
 }
 
-/* Custom Utilities */
-@layer utilities {
-  .text-gradient {
-    background: linear-gradient(135deg, #012e65 0%, #023e85 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, #012e65 0%, #023e85 100%);
-  }
-  
-  .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Component Styles */
-@layer components {
-  /* Buttons */
-  .btn-primary {
-    @apply bg-black text-white px-6 py-3 rounded-md font-semibold
-           transition-all duration-200 hover:bg-gray-800
-           hover:shadow-md hover:-translate-y-0.5
-           focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2;
-  }
-
-  .btn-secondary {
-    @apply bg-transparent border-2 border-primary text-primary px-6 py-3
-           rounded-md font-semibold transition-all duration-200
-           hover:bg-primary hover:text-white
-           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
-  }
-
-  .btn-app-store {
-    @apply bg-secondary text-white px-5 py-2.5 rounded-md
-           inline-flex items-center gap-2 transition-all duration-200
-           hover:bg-black hover:shadow-md
-           focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2;
-  }
-
-  /* Search Input */
-  .search-input {
-    @apply w-full px-5 py-4 border-2 border-gray-200 rounded-full
-           text-base focus:outline-none focus:border-primary
-           focus:ring-4 focus:ring-primary/20 transition-all duration-200;
-  }
-
-  /* Cards */
-  .card {
-    @apply bg-white rounded-md shadow p-6 transition-all duration-200
-           hover:shadow-md;
-  }
-
-  .review-card {
-    @apply bg-white rounded-md shadow p-6 min-w-[300px] max-w-[350px]
-           transition-all duration-200 hover:shadow-md;
-  }
-
-  .stat-card {
-    @apply text-center p-6;
-  }
-
-  /* Section Styles */
-  .section {
-    @apply py-16 md:py-24;
-  }
-
-  .section-title {
-    @apply text-3xl md:text-4xl font-bold text-secondary mb-4;
-  }
-
-  .section-subtitle {
-    @apply text-lg text-secondary-gray max-w-2xl;
-  }
-
-  /* Hero Search Bar */
-  .hero-search-bar {
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-
-    &:focus-within {
-      box-shadow: 0 8px 40px rgba(1, 46, 101, 0.12);
-      transform: translateY(-1px);
-    }
-  }
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* ============================================
-   MICRO-INTERACTIONS GLOBALES
-   ============================================ */
-
-/* --- Boutons : press effect --- */
-button:not(:disabled):active,
-a[role="button"]:active {
-  transform: scale(0.97);
-  transition: transform 80ms ease;
+img {
+  display: block;
+  max-width: 100%;
 }
 
-/* Exceptions : ne pas écraser les transitions existantes sur certains éléments */
-.carousel-btn:active {
-  transform: scale(0.93) !important;
+.app-container {
+  width: min(100% - 48px, var(--container));
+  margin-inline: auto;
 }
 
-/* --- Inputs & selects : focus glow --- */
-input:not([class*="outline-none"]):focus,
-select:not([class*="outline-none"]):focus,
-textarea:not([class*="outline-none"]):focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(1, 46, 101, 0.15);
-  border-color: #012e65;
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
-}
-
-/* --- Cards business : hover élévation douce --- */
-.business-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(1, 46, 101, 0.1);
-  }
-
-  &:active {
-    transform: translateY(-1px);
-  }
-}
-
-/* --- Nav sidebar : item active indicator --- */
-nav a[routerLinkActive*="bg-primary"] {
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 20%;
-    height: 60%;
-    width: 3px;
-    background: #012e65;
-    border-radius: 0 3px 3px 0;
-  }
-}
-
-/* --- Header : scroll effect --- */
-header.scrolled {
-  backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.88) !important;
-  box-shadow: 0 1px 24px rgba(1, 46, 101, 0.07) !important;
-}
-
-/* --- Toast notifications : slide-in depuis la droite --- */
-@keyframes toast-slide-in {
-  from {
-    transform: translateX(110%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes toast-slide-out {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(110%);
-    opacity: 0;
-  }
-}
-
-.toast-enter {
-  animation: toast-slide-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.toast-leave {
-  animation: toast-slide-out 0.25s ease-in forwards;
-}
-
-/* --- Skeleton : pulse plus doux --- */
-@keyframes skeleton-shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-
-.skeleton-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 37%, #f0f0f0 63%);
-  background-size: 800px 100%;
-  animation: skeleton-shimmer 1.4s ease infinite;
-}
-
-/* --- Badges de statut : couleurs sémantiques --- */
-.badge-success { @apply bg-emerald-50 text-emerald-700 border border-emerald-200; }
-.badge-warning { @apply bg-amber-50 text-amber-700 border border-amber-200; }
-.badge-error   { @apply bg-red-50 text-red-700 border border-red-200; }
-.badge-info    { @apply bg-blue-50 text-blue-700 border border-blue-200; }
-.badge-neutral { @apply bg-gray-50 text-gray-700 border border-gray-200; }
-
-/* --- Scrollbar masquée globale pour carousels --- */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* --- Transitions de page : fade-in sur les router-outlets --- */
-@keyframes page-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-router-outlet + * {
-  animation: page-fade-in 0.25s ease forwards;
-}
-
-/* --- Titres de section : kerning amélioré --- */
-.section-title {
-  letter-spacing: -0.02em;
-}
-
-h1 {
-  letter-spacing: -0.025em;
-}
-
-/* --- Links dans nav : underline animé au hover --- */
-nav a:not([class*="bg-"]):not([class*="btn"]) {
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #012e65;
-    border-radius: 1px;
-    transition: width 0.2s ease;
-  }
-
-  &:hover::after {
-    width: 100%;
+@media (max-width: 760px) {
+  .app-container {
+    width: min(100% - 28px, var(--container));
   }
 }

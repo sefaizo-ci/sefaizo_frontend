@@ -1,0 +1,10 @@
+<div class="mb-[22px] flex items-center justify-between gap-4 max-[560px]:flex-col max-[560px]:items-start max-[560px]:gap-2">
+  <h2 class="m-0 text-[clamp(22px,2.4vw,28px)] leading-tight font-black text-ink max-[560px]:text-[22px]">{{ title }}</h2>
+
+  @if (showLink) {
+    <a class="inline-flex items-center gap-2 text-sm font-extrabold text-primary focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-primary/30" href="#" aria-label="{{ linkLabel }} - {{ title }}">
+      {{ linkLabel }}
+      <lucide-icon [img]="icons.chevronRight" [size]="17" [strokeWidth]="2.4" aria-hidden="true" />
+    </a>
+  }
+</div>

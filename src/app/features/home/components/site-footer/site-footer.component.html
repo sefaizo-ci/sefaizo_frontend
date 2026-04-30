@@ -1,0 +1,28 @@
+<footer class="border-t border-border bg-white">
+  <div class="app-container grid grid-cols-[minmax(210px,1.4fr)_repeat(4,minmax(130px,1fr))] gap-8 py-7 max-[920px]:grid-cols-2 max-[560px]:grid-cols-1">
+    <div>
+      <a class="text-[34px] leading-none font-black text-primary" href="#">SEFAIZO</a>
+      <p class="mt-3 mb-4 max-w-[260px] text-sm font-bold text-[#69708a]">La plateforme N°1 de réservation de services beauté à Abidjan.</p>
+      <div class="flex gap-3" aria-label="Réseaux sociaux">
+        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#f0edff] text-[11px] font-black text-[#606680] uppercase" href="#" aria-label="Facebook">f</a>
+        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#f0edff] text-[11px] font-black text-[#606680] uppercase" href="#" aria-label="Instagram">ig</a>
+        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#f0edff] text-[11px] font-black text-[#606680] uppercase" href="#" aria-label="WhatsApp">wa</a>
+        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#f0edff] text-[11px] font-black text-[#606680] uppercase" href="#" aria-label="TikTok">tk</a>
+      </div>
+    </div>
+
+    @for (column of columns; track column.title) {
+      <nav class="grid content-start gap-2" [attr.aria-label]="column.title">
+        <h2 class="m-0 mb-2 text-[13px] font-black text-ink">{{ column.title }}</h2>
+        @for (link of column.links; track link) {
+          <a class="text-sm font-bold text-[#68708b]" href="#">{{ link }}</a>
+        }
+      </nav>
+    }
+  </div>
+
+  <div class="app-container flex min-h-[54px] items-center justify-between gap-4 border-t border-border text-[13px] font-bold text-[#69708a] max-[560px]:flex-col max-[560px]:items-start max-[560px]:justify-center">
+    <span>© 2024 SEFAIZO. Tous droits réservés.</span>
+    <span>Côte d'Ivoire</span>
+  </div>
+</footer>

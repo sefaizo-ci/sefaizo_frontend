@@ -1,0 +1,17 @@
+@if (content$ | async; as content) {
+  <div class="min-h-screen overflow-x-hidden bg-page">
+    <app-site-header />
+    <main>
+      <app-hero-section [hero]="content.hero" />
+      <app-category-strip [categories]="content.categories" />
+      <app-business-section title="Recommandés pour vous" linkLabel="Voir tous les salons" [businesses]="content.recommendedBusinesses" />
+      <app-business-section title="Nouveaux sur Fresha" [businesses]="content.newBusinesses" />
+      <app-trends-section [trends]="content.trends" />
+      <app-testimonials-section [testimonials]="content.testimonials" />
+      <app-app-download-section />
+      <app-stats-section [stats]="content.stats" />
+      <app-cta-section />
+    </main>
+    <app-site-footer [columns]="content.footerColumns" />
+  </div>
+}

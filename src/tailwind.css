@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Inter, "Segoe UI", Arial, sans-serif;
+  --color-primary: #5b35f6;
+  --color-primary-600: #4d28dc;
+  --color-primary-100: #eee9ff;
+  --color-accent: #ffb224;
+  --color-ink: #11152f;
+  --color-text: #252b4a;
+  --color-muted: #727994;
+  --color-border: #e7e9f4;
+  --color-soft: #f7f5ff;
+  --color-page: #fbfbff;
+  --shadow-card: 0 14px 34px rgba(31, 35, 88, 0.12);
+  --shadow-soft: 0 10px 26px rgba(44, 39, 117, 0.1);
+}
