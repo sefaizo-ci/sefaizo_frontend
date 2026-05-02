@@ -29,7 +29,7 @@
       <strong class="text-sm font-black text-[#5b35f6]">À partir de {{ business.startingPrice | homePrice }}</strong>
       <a
         class="inline-flex min-h-9 items-center justify-center rounded-full bg-[#5b35f6] px-[18px] text-xs font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)] transition-transform hover:-translate-y-0.5 hover:bg-[#4d28dc] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#5b35f6]/30 max-[520px]:w-full"
-        href="#"
+        [routerLink]="['/pro', business.slug]"
       >Réserver</a>
     </div>
   </div>

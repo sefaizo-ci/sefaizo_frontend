@@ -4,7 +4,12 @@
 
     <div class="grid grid-cols-5 gap-[18px] max-[1080px]:grid-cols-[repeat(5,210px)] max-[1080px]:overflow-x-auto max-[1080px]:pb-2 max-[560px]:grid-cols-[repeat(5,190px)]">
       @for (trend of trends; track trend.id) {
-        <a class="relative grid min-h-[146px] grid-cols-[minmax(0,1fr)_48%] overflow-hidden rounded-lg border border-[#e7e9f4] bg-[#f8f6ff] shadow-[0_8px_18px_rgba(36,36,80,0.08)]" href="#">
+        <a
+          class="relative grid min-h-[146px] grid-cols-[minmax(0,1fr)_48%] overflow-hidden rounded-lg border border-[#e7e9f4] bg-[#f8f6ff] shadow-[0_8px_18px_rgba(36,36,80,0.08)] transition-transform hover:-translate-y-0.5"
+          [routerLink]="['/recherche']"
+          [queryParams]="{ q: searchKey(trend) }"
+          [attr.aria-label]="'Rechercher ' + trend.title"
+        >
           <span class="absolute top-3 left-3.5 z-10 inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#5b35f6] font-black text-white">{{ trend.rank }}</span>
           <span class="relative z-10 flex min-w-0 flex-col justify-end gap-3 px-2 pb-[18px] pl-[18px] pt-[54px]">
             <strong class="text-base leading-tight font-black text-[#11152f]">{{ trend.title }}</strong>

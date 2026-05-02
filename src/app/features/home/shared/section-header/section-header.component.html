@@ -2,7 +2,9 @@
   <h2 class="m-0 text-[clamp(22px,2.4vw,28px)] leading-tight font-black text-[#11152f] max-[560px]:text-[22px]">{{ title }}</h2>
 
   @if (showLink) {
-    <a class="inline-flex items-center gap-2 text-sm font-extrabold text-[#5b35f6] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#5b35f6]/30" href="#" [attr.aria-label]="linkLabel + ' - ' + title">
+    <a class="inline-flex items-center gap-2 text-sm font-extrabold text-[#5b35f6] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#5b35f6]/30"
+       [routerLink]="link"
+       [attr.aria-label]="linkLabel + ' - ' + title">
       {{ linkLabel }}
       <lucide-icon name="chevron-right" [size]="17" [strokeWidth]="2.4" aria-hidden="true" />
     </a>

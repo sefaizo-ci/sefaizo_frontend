@@ -2,33 +2,73 @@
   <div class="app-container">
     <app-home-section-header title="Ils nous font confiance" linkLabel="Voir tous les avis" />
 
-    <div class="grid grid-cols-3 gap-6 max-[900px]:grid-cols-1">
-      @for (testimonial of testimonials; track testimonial.id) {
-        <article class="min-h-[214px] rounded-lg border border-[#e7e9f4] bg-white p-6">
-          <div class="flex items-center gap-3.5">
-            <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#e9e5ff] to-[#fff0df] text-[13px] font-black text-[#11152f]">{{ testimonial.avatarInitials }}</span>
-            <div>
-              <h3 class="m-0 text-[17px] font-black text-[#11152f]">{{ testimonial.name }}</h3>
-              <p class="m-0 text-sm font-bold text-[#66708d]">{{ testimonial.commune }}</p>
+    <div class="relative">
+      <button
+        (click)="prev()"
+        [disabled]="atStart()"
+        class="absolute left-0 top-[calc(50%-20px)] z-10 -translate-x-1/2 hidden min-[900px]:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#e7e9f4] shadow-[0_4px_14px_rgba(36,36,80,0.14)] text-[#5b35f6] transition-all hover:bg-[#f3f0ff] disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Avis précédent"
+      >
+        <lucide-icon name="chevron-left" [size]="20" [strokeWidth]="2.5" aria-hidden="true" />
+      </button>
+
+      <div
+        #track
+        class="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-3"
+        style="-ms-overflow-style:none;scrollbar-width:none;"
+        (scroll)="onTrackScroll()"
+      >
+        @for (testimonial of testimonials; track testimonial.id) {
+          <article class="shrink-0 snap-start w-[calc(100%-24px)] min-[900px]:w-[calc((100%-40px)/3)] min-h-[214px] rounded-lg border border-[#e7e9f4] bg-white p-6 shadow-[0_4px_14px_rgba(36,36,80,0.05)]">
+            <div class="flex items-center gap-3.5">
+              @if (testimonial.avatarUrl) {
+                <img
+                  class="h-12 w-12 shrink-0 rounded-full object-cover"
+                  [src]="testimonial.avatarUrl"
+                  [alt]="testimonial.name"
+                  loading="lazy"
+                />
+              } @else {
+                <span class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#e9e5ff] to-[#fff0df] text-[13px] font-black text-[#11152f]">{{ testimonial.avatarInitials }}</span>
+              }
+              <div>
+                <h3 class="m-0 text-[17px] font-black text-[#11152f]">{{ testimonial.name }}</h3>
+                <p class="m-0 text-sm font-bold text-[#66708d]">{{ testimonial.commune }}</p>
+              </div>
             </div>
-          </div>
 
-          <div class="my-5 mb-3.5 flex gap-0.5 text-[#ffb224]" aria-label="Note 5 sur 5">
-            @for (star of stars; track star) {
-              <lucide-icon class="fill-[#ffb224]" name="star" [size]="17" [strokeWidth]="2" aria-hidden="true" />
-            }
-          </div>
+            <div class="my-5 mb-3.5 flex gap-0.5 text-[#ffb224]" aria-label="Note 5 sur 5">
+              @for (star of stars; track star) {
+                <lucide-icon class="fill-[#ffb224]" name="star" [size]="17" [strokeWidth]="2" aria-hidden="true" />
+              }
+            </div>
 
-          <blockquote class="m-0 text-[15px] leading-relaxed font-bold text-[#29304e]">{{ testimonial.comment }}</blockquote>
-        </article>
-      }
+            <blockquote class="m-0 text-[15px] leading-relaxed font-bold text-[#29304e]">{{ testimonial.comment }}</blockquote>
+          </article>
+        }
+      </div>
+
+      <button
+        (click)="next()"
+        [disabled]="atEnd()"
+        class="absolute right-0 top-[calc(50%-20px)] z-10 translate-x-1/2 hidden min-[900px]:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#e7e9f4] shadow-[0_4px_14px_rgba(36,36,80,0.14)] text-[#5b35f6] transition-all hover:bg-[#f3f0ff] disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Avis suivant"
+      >
+        <lucide-icon name="chevron-right" [size]="20" [strokeWidth]="2.5" aria-hidden="true" />
+      </button>
     </div>
 
-    <div class="mt-[26px] flex justify-center gap-3" aria-hidden="true">
-      <span class="h-2.5 w-2.5 rounded-full bg-[#5b35f6]"></span>
-      <span class="h-2.5 w-2.5 rounded-full bg-[#d9d8e9]"></span>
-      <span class="h-2.5 w-2.5 rounded-full bg-[#d9d8e9]"></span>
-      <span class="h-2.5 w-2.5 rounded-full bg-[#d9d8e9]"></span>
+    <div class="mt-6 flex justify-center gap-2.5" role="tablist" aria-label="Naviguer entre les avis">
+      @for (testimonial of testimonials; track testimonial.id; let i = $index) {
+        <button
+          (click)="goTo(i)"
+          [ngClass]="currentIndex() === i ? 'w-6 bg-[#5b35f6]' : 'w-2.5 bg-[#d9d8e9]'"
+          class="h-2.5 rounded-full transition-all duration-300"
+          role="tab"
+          [attr.aria-selected]="currentIndex() === i"
+          [attr.aria-label]="'Avis de ' + testimonial.name"
+        ></button>
+      }
     </div>
   </div>
 </section>

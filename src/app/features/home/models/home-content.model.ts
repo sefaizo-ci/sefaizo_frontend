@@ -23,6 +23,8 @@ export interface Category {
 
 export interface Business {
   id: string;
+  /** Slug utilisé dans la route /pro/:slug — doit correspondre à un slug dans MockDataService */
+  slug: string;
   name: string;
   categoryLabel: string;
   location: string;
@@ -47,6 +49,7 @@ export interface Testimonial {
   name: string;
   commune: string;
   avatarInitials: string;
+  avatarUrl?: string;
   comment: string;
 }
 
