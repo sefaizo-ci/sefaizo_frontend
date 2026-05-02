@@ -1,0 +1,34 @@
+<section class="bg-white py-2 pb-9">
+  <div class="app-container">
+    <app-home-section-header title="Ils nous font confiance" linkLabel="Voir tous les avis" />
+
+    <div class="grid grid-cols-3 gap-6 max-[900px]:grid-cols-1">
+      @for (testimonial of testimonials; track testimonial.id) {
+        <article class="min-h-[214px] rounded-lg border border-[#e7e9f4] bg-white p-6">
+          <div class="flex items-center gap-3.5">
+            <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#e9e5ff] to-[#fff0df] text-[13px] font-black text-[#11152f]">{{ testimonial.avatarInitials }}</span>
+            <div>
+              <h3 class="m-0 text-[17px] font-black text-[#11152f]">{{ testimonial.name }}</h3>
+              <p class="m-0 text-sm font-bold text-[#66708d]">{{ testimonial.commune }}</p>
+            </div>
+          </div>
+
+          <div class="my-5 mb-3.5 flex gap-0.5 text-[#ffb224]" aria-label="Note 5 sur 5">
+            @for (star of stars; track star) {
+              <lucide-icon class="fill-[#ffb224]" name="star" [size]="17" [strokeWidth]="2" aria-hidden="true" />
+            }
+          </div>
+
+          <blockquote class="m-0 text-[15px] leading-relaxed font-bold text-[#29304e]">{{ testimonial.comment }}</blockquote>
+        </article>
+      }
+    </div>
+
+    <div class="mt-[26px] flex justify-center gap-3" aria-hidden="true">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#5b35f6]"></span>
+      <span class="h-2.5 w-2.5 rounded-full bg-[#d9d8e9]"></span>
+      <span class="h-2.5 w-2.5 rounded-full bg-[#d9d8e9]"></span>
+      <span class="h-2.5 w-2.5 rounded-full bg-[#d9d8e9]"></span>
+    </div>
+  </div>
+</section>

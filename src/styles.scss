@@ -1,4 +1,42 @@
 /* ============================================================
+   HOME PAGE — Variables & Utilitaires
+   ============================================================ */
+:root {
+  --container: 1184px;
+}
+
+.app-container {
+  width: min(100% - 48px, var(--container));
+  margin-inline: auto;
+}
+
+.wide-container {
+  width: min(100% - 188px, 1348px);
+  margin-inline: auto;
+}
+
+@media (max-width: 760px) {
+  .app-container,
+  .wide-container {
+    width: min(100% - 28px, var(--container));
+  }
+}
+
+/* Panneau image hero (positionnement complexe responsive) */
+.hero-bg-panel {
+  right: max(-110px, calc((100vw - var(--container)) / -2));
+  width: min(48vw, 620px);
+}
+
+@media (max-width: 900px) {
+  .hero-bg-panel {
+    right: 0;
+    width: 100%;
+    opacity: 0.3;
+  }
+}
+
+/* ============================================================
    POLICES MB EMPIRE
    Déposez les fichiers dans /public/fonts/ avec ces noms :
    - MBEmpire-Heavy.woff2 + MBEmpire-Heavy.ttf   (titres h1)
@@ -133,7 +171,7 @@ body {
 @layer components {
   /* Buttons */
   .btn-primary {
-    @apply bg-black text-white px-6 py-3 rounded-md font-semibold
+    @apply bg-black text-white px-6 py-3 rounded-full font-semibold
            transition-all duration-200 hover:bg-gray-800
            hover:shadow-md hover:-translate-y-0.5
            focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2;
@@ -141,13 +179,13 @@ body {
 
   .btn-secondary {
     @apply bg-transparent border-2 border-primary text-primary px-6 py-3
-           rounded-md font-semibold transition-all duration-200
+           rounded-full font-semibold transition-all duration-200
            hover:bg-primary hover:text-white
            focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 
   .btn-app-store {
-    @apply bg-secondary text-white px-5 py-2.5 rounded-md
+    @apply bg-secondary text-white px-5 py-2.5 rounded-full
            inline-flex items-center gap-2 transition-all duration-200
            hover:bg-black hover:shadow-md
            focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2;

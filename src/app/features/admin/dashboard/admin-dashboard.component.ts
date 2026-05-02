@@ -31,8 +31,9 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
         <!-- Salons actifs -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center border border-gray-100 bg-white shadow-sm flex-shrink-0">
-              <lucide-icon name="store" [size]="16" [strokeWidth]="1.75" style="color:#4c0eb7"></lucide-icon>
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                 style="background:linear-gradient(135deg,#4c0eb7,#7c3aed)">
+              <lucide-icon name="store" [size]="16" [strokeWidth]="1.75" style="color:#ffffff"></lucide-icon>
             </div>
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:#fef3c7;color:#d97706">12 en att.</span>
           </div>
