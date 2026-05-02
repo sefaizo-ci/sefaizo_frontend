@@ -299,9 +299,11 @@ export class SearchComponent implements OnInit {
       );
     }
 
-    // Communes
+    // Communes (case-insensitive, partial match pour gérer la saisie libre du hero)
     if (f.communes && f.communes.length > 0) {
-      results = results.filter(b => f.communes!.includes(b.city));
+      results = results.filter(b =>
+        f.communes!.some(c => b.city.toLowerCase().includes(c.toLowerCase()))
+      );
     }
 
     // Price

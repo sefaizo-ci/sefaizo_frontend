@@ -80,18 +80,18 @@ import { filter, map, startWith } from 'rxjs/operators';
                   Déconnexion
                 </button>
               } @else {
-                <!-- Connexion — bordure noire -->
+                <!-- Se connecter — bordure violette -->
                 <a routerLink="/auth/login"
-                   class="hidden sm:flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg border-2 transition-all hover:bg-gray-50"
-                   style="border-color:#111827;color:#111827">
+                   class="hidden sm:flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full border-2 transition-all hover:bg-[#f3f0ff]"
+                   style="border-color:#5b35f6;color:#5b35f6">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  Connexion
+                  Se connecter
                 </a>
                 <!-- Réserver -->
                 <a routerLink="/recherche"
-                   class="hidden sm:flex items-center gap-1.5 text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:opacity-90 active:scale-95"
+                   class="hidden sm:flex items-center gap-1.5 text-sm font-bold px-5 py-2.5 rounded-full text-white transition-all hover:opacity-90 active:scale-95"
                    style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 4px 14px rgba(124,58,237,0.35)">
                   Réserver maintenant
                 </a>
@@ -144,10 +144,10 @@ import { filter, map, startWith } from 'rxjs/operators';
                 } @else {
                   <div class="flex flex-col gap-2 pt-3 border-t mt-2" style="border-color:#f3f4f6">
                     <a routerLink="/auth/login" (click)="mobileMenuOpen=false"
-                       class="px-4 py-2.5 rounded-xl text-sm font-semibold border-2 text-center"
-                       style="border-color:#111827;color:#111827">Connexion</a>
+                       class="px-4 py-2.5 rounded-full text-sm font-semibold border-2 text-center"
+                       style="border-color:#5b35f6;color:#5b35f6">Se connecter</a>
                     <a routerLink="/recherche" (click)="mobileMenuOpen=false"
-                       class="px-4 py-2.5 rounded-xl text-sm font-bold text-white text-center"
+                       class="px-4 py-2.5 rounded-full text-sm font-bold text-white text-center"
                        style="background:linear-gradient(135deg,#7c3aed,#a855f7)">Réserver maintenant</a>
                   </div>
                 }

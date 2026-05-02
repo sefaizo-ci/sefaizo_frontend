@@ -1,0 +1,21 @@
+@if (content$ | async; as content) {
+  <div class="min-h-screen overflow-x-hidden bg-[#fbfbff] font-sans" style="font-family:'MB Empire','Inter',system-ui,sans-serif">
+    <app-home-hero [hero]="content.hero" />
+    <app-home-category-strip [categories]="content.categories" />
+    <app-home-business-section
+      title="Recommandés pour vous"
+      linkLabel="Voir tous les salons"
+      [businesses]="content.recommendedBusinesses"
+    />
+    <app-home-business-section
+      title="Nouveaux sur SEFAIZO"
+      linkLabel="Voir tous les salons"
+      [businesses]="content.newBusinesses"
+    />
+    <app-home-trends [trends]="content.trends" />
+    <app-home-testimonials [testimonials]="content.testimonials" />
+    <app-home-app-download />
+    <app-home-stats [stats]="content.stats" />
+    <app-home-cta />
+  </div>
+}

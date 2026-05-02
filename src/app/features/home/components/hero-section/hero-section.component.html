@@ -1,0 +1,66 @@
+<section class="relative min-h-[358px] overflow-hidden bg-[#f4f0ff] max-[560px]:min-h-0">
+  <div class="app-container relative grid min-h-[358px] grid-cols-[minmax(0,690px)_1fr] items-center max-[900px]:block max-[560px]:min-h-0">
+    <div class="relative z-10 py-[42px] pb-12 max-[560px]:py-8">
+      <h1 class="m-0 max-w-[540px] text-[clamp(42px,5.2vw,58px)] leading-[1.04] font-black break-words text-[#11152f] max-[560px]:max-w-[340px] max-[560px]:text-[31px] max-[560px]:leading-[1.08]">{{ hero.title }}</h1>
+      <p class="mt-4 mb-6 text-[19px] font-bold text-[#626984] max-[560px]:text-base">{{ hero.subtitle }}</p>
+
+      <form
+        class="grid min-h-16 w-full max-w-[720px] grid-cols-[1.25fr_1fr_auto] rounded-xl border border-[#e7e9f4] bg-white p-2 shadow-[0_18px_38px_rgba(41,43,84,0.14)] max-[900px]:grid-cols-1 max-[900px]:gap-1.5"
+        aria-label="Recherche de salon"
+        (submit)="$event.preventDefault(); onSearch(serviceInput.value, communeSelect.value)"
+      >
+        <!-- Champ service (texte libre) -->
+        <label class="flex min-w-0 items-center gap-3 px-3.5 text-[#5b35f6] max-[900px]:min-h-12 max-[900px]:border-b max-[900px]:border-[#e7e9f4]">
+          <span class="sr-only">Service recherché</span>
+          <lucide-icon name="search" [size]="22" [strokeWidth]="2.4" aria-hidden="true" />
+          <input
+            #serviceInput
+            class="w-full min-w-0 border-0 text-[13px] font-bold text-[#11152f] outline-none placeholder:text-[#7b829a] bg-transparent"
+            type="text"
+            [placeholder]="hero.servicePlaceholder"
+          />
+        </label>
+
+        <!-- Sélecteur de commune -->
+        <label class="relative flex min-w-0 items-center gap-3 border-l border-[#e7e9f4] px-3.5 text-[#5b35f6] max-[900px]:min-h-12 max-[900px]:border-l-0 max-[900px]:border-b max-[900px]:border-[#e7e9f4]">
+          <span class="sr-only">Commune</span>
+          <lucide-icon name="map-pin" [size]="22" [strokeWidth]="2.4" class="shrink-0" aria-hidden="true" />
+          <select
+            #communeSelect
+            class="w-full min-w-0 appearance-none border-0 bg-transparent text-[13px] font-bold text-[#11152f] outline-none cursor-pointer pr-1"
+          >
+            <option value="" class="text-[#7b829a] font-normal">Toutes les communes</option>
+            @for (commune of communes; track commune) {
+              <option [value]="commune">{{ commune }}</option>
+            }
+          </select>
+          <lucide-icon class="pointer-events-none shrink-0 text-[#7f86a1]" name="chevron-down" [size]="18" [strokeWidth]="2.4" aria-hidden="true" />
+        </label>
+
+        <button
+          class="inline-flex min-h-12 min-w-[132px] items-center justify-center rounded-full bg-[#5b35f6] px-5 text-[13px] font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)] transition-transform hover:-translate-y-0.5 hover:bg-[#4d28dc] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] max-[900px]:w-full"
+          type="submit"
+        >Rechercher</button>
+      </form>
+
+      <div
+        class="mt-7 flex flex-wrap gap-7 text-sm font-extrabold text-[#303653] max-[560px]:grid max-[560px]:grid-cols-1 max-[560px]:gap-3"
+        aria-label="Indicateurs SEFAIZO"
+      >
+        @for (stat of hero.stats; track stat.value) {
+          <span class="inline-flex items-center gap-2">
+            <lucide-icon class="text-[#5b35f6]" [name]="iconNames[stat.icon]" [size]="18" [strokeWidth]="2.4" aria-hidden="true" />
+            <strong>{{ stat.value }}</strong>
+            @if (stat.label) {
+              {{ stat.label }}
+            }
+          </span>
+        }
+      </div>
+    </div>
+
+    <div class="hero-bg-panel absolute top-0 bottom-0 bg-[#e8e0ff] after:absolute after:inset-0 after:bg-gradient-to-r after:from-[#f4f0ff] after:from-0% after:via-[#f4f0ff]/70 after:via-[25%] after:to-[#f4f0ff]/0 after:to-[65%] after:content-['']" aria-hidden="true">
+      <img class="h-full w-full object-cover object-center" [src]="hero.imageUrl" alt="" />
+    </div>
+  </div>
+</section>
