@@ -1,330 +1,167 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MockDataService } from '../../../core/services/mock-data.service';
-import { Business, SearchFilters } from '../../../core/models';
-import { SearchInputComponent } from '../../../shared/ui/search-input/search-input.component';
-import { StarRatingComponent } from '../../../shared/ui/star-rating/star-rating.component';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
-import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
-import { FcfaPipe } from '../../../shared/pipes/format.pipe';
 import { LucideAngularModule } from 'lucide-angular';
+
+import { MockDataService } from '../../../core/services/mock-data.service';
+import { Business, ServiceCategory } from '../../../core/models';
+import { SearchFiltersComponent, CategoryWithCount } from './components/search-filters/search-filters.component';
+import { SearchResultsToolbarComponent } from './components/search-results-toolbar/search-results-toolbar.component';
+import { SearchSalonCardComponent } from './components/search-salon-card/search-salon-card.component';
 
 @Component({
   selector: 'app-search',
   standalone: true,
   imports: [
-    CommonModule,
-    SearchInputComponent,
-    StarRatingComponent,
-    BadgeComponent,
-    SkeletonComponent,
-    FcfaPipe,
-    LucideAngularModule
+    LucideAngularModule,
+    SearchFiltersComponent,
+    SearchResultsToolbarComponent,
+    SearchSalonCardComponent,
   ],
   template: `
-    <!-- Header with Search -->
-    <div class="bg-gradient-primary py-10">
-      <div class="container-custom">
-        <div class="max-w-3xl mx-auto">
-          <h1 class="text-2xl md:text-3xl font-bold text-white mb-5 tracking-tight">Recherche</h1>
-          <app-search-input
-            [value]="searchQuery()"
-            placeholder="Rechercher un salon, un service..."
-            (search)="onSearch($event)">
-          </app-search-input>
+    <div class="min-h-screen bg-white text-[#11152f]">
+
+      <!-- Barre de recherche compacte -->
+      <div class="border-b border-[#e7e9f4] bg-[#f7f5ff] py-5">
+        <div class="container-custom">
+          <form
+            class="flex h-12 max-w-[640px] items-center overflow-hidden rounded-full border border-[#e7e9f4] bg-white shadow-[0_4px_14px_rgba(36,36,80,0.09)]"
+            (submit)="$event.preventDefault(); onSearch(searchInput.value)"
+          >
+            <lucide-icon class="ml-4 shrink-0 text-[#5b35f6]" name="search" [size]="20" [strokeWidth]="2.2" aria-hidden="true" />
+            <input
+              #searchInput
+              class="flex-1 border-0 bg-transparent px-3 text-[13px] font-bold text-[#11152f] outline-none placeholder:text-[#7b829a]"
+              type="text"
+              [value]="searchQuery()"
+              placeholder="Quel service ? (coiffure, tresses...)"
+            />
+            <button
+              class="mr-1.5 inline-flex h-9 min-w-[100px] items-center justify-center rounded-full bg-[#5b35f6] px-5 text-xs font-extrabold text-white transition-all hover:bg-[#4d28dc]"
+              type="submit"
+            >Rechercher</button>
+          </form>
         </div>
       </div>
-    </div>
 
-    <div class="container-custom py-8">
-      <div class="flex flex-col lg:flex-row gap-7">
+      <!-- Contenu principal : filtres + résultats -->
+      <div class="container-custom grid grid-cols-[306px_minmax(0,1fr)] gap-8 max-[1040px]:grid-cols-1 max-[1040px]:gap-6">
 
-        <!-- Filters Sidebar -->
-        <aside class="lg:w-60 flex-shrink-0">
-          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 sticky top-24">
-            <div class="flex justify-between items-center mb-5">
-              <div class="flex items-center gap-2">
-                <lucide-icon name="sliders-horizontal" [size]="16" [strokeWidth]="2" class="text-secondary"></lucide-icon>
-                <h2 class="font-semibold text-secondary text-sm">Filtres</h2>
-                @if (hasActiveFilters()) {
-                  <span class="bg-primary text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{{ getActiveFiltersCount() }}</span>
-                }
+        <app-search-filters
+          [categories]="categoriesWithCount()"
+          [communes]="communes"
+          [selectedCategories]="selectedCategories()"
+          [selectedCommune]="selectedCommune()"
+          [minRating]="minRating()"
+          [maxPrice]="maxPrice()"
+          [businessType]="businessType()"
+          [resultCount]="filteredResults().length"
+          (communeChange)="selectedCommune.set($event)"
+          (categoryToggle)="toggleCategory($event)"
+          (ratingChange)="minRating.set($event)"
+          (priceChange)="maxPrice.set($event)"
+          (businessTypeToggle)="toggleBusinessType($event)"
+          (reset)="resetFilters()"
+        />
+
+        <section class="min-w-0 pt-7 pb-10">
+          <app-search-results-toolbar
+            [resultCount]="filteredResults().length"
+            [searchQuery]="searchQuery()"
+            [sortBy]="sortBy()"
+            (sortChange)="sortBy.set($any($event))"
+          />
+
+          @if (filteredResults().length === 0) {
+            <div class="flex flex-col items-center py-20 text-center">
+              <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl border border-[#e7e9f4] bg-[#f7f5ff]">
+                <lucide-icon name="search-x" [size]="36" [strokeWidth]="1.5" class="text-[#c5c7d9]" aria-hidden="true" />
               </div>
-              @if (hasActiveFilters()) {
-                <button (click)="resetFilters()" class="text-xs text-primary hover:text-primary-dark font-medium flex items-center gap-1">
-                  <lucide-icon name="x" [size]="12" [strokeWidth]="2.5"></lucide-icon>
-                  Effacer
-                </button>
-              }
-            </div>
-
-            <!-- Category Filter -->
-            <div class="mb-5 pb-5 border-b border-gray-100">
-              <h3 class="text-xs font-bold text-secondary-gray uppercase tracking-wider mb-3">Catégories</h3>
-              <div class="space-y-2">
-                @for (category of categories; track category.id) {
-                  <label class="flex items-center gap-2.5 cursor-pointer group">
-                    <input type="checkbox"
-                      [checked]="filters().categories?.includes(category.name)"
-                      (change)="toggleCategory(category.name)"
-                      class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary accent-primary">
-                    <span class="text-sm text-secondary group-hover:text-primary transition-colors">{{ category.name }}</span>
-                  </label>
-                }
-              </div>
-            </div>
-
-            <!-- Commune Filter -->
-            <div class="mb-5 pb-5 border-b border-gray-100">
-              <h3 class="text-xs font-bold text-secondary-gray uppercase tracking-wider mb-3">Communes</h3>
-              <div class="space-y-2">
-                @for (commune of communes; track commune) {
-                  <label class="flex items-center gap-2.5 cursor-pointer group">
-                    <input type="checkbox"
-                      [checked]="filters().communes?.includes(commune)"
-                      (change)="toggleCommune(commune)"
-                      class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary accent-primary">
-                    <span class="text-sm text-secondary group-hover:text-primary transition-colors">{{ commune }}</span>
-                  </label>
-                }
-              </div>
-            </div>
-
-            <!-- Price Range -->
-            <div class="mb-5 pb-5 border-b border-gray-100">
-              <h3 class="text-xs font-bold text-secondary-gray uppercase tracking-wider mb-3">Prix maximum</h3>
-              <input type="range" [min]="0" [max]="50000" [step]="1000"
-                [value]="filters().maxPrice || 50000"
-                (input)="onPriceChange($event)"
-                class="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer accent-primary">
-              <div class="flex justify-between text-xs text-secondary-gray mt-2">
-                <span>0 FCFA</span>
-                <span class="font-semibold text-primary">{{ (filters().maxPrice || 50000).toLocaleString() }} FCFA</span>
-              </div>
-            </div>
-
-            <!-- Minimum Rating -->
-            <div class="mb-5 pb-5 border-b border-gray-100">
-              <h3 class="text-xs font-bold text-secondary-gray uppercase tracking-wider mb-3">Note minimum</h3>
-              <div class="space-y-2">
-                @for (rating of [4, 3, 2, 1]; track rating) {
-                  <label class="flex items-center gap-2.5 cursor-pointer group">
-                    <input type="radio" name="minRating"
-                      [checked]="filters().minRating === rating"
-                      (change)="setMinRating(rating)"
-                      class="w-4 h-4 text-primary border-gray-300 focus:ring-primary accent-primary">
-                    <app-star-rating [rating]="rating" size="0.8rem" />
-                    <span class="text-xs text-secondary-gray">& plus</span>
-                  </label>
-                }
-                <label class="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="radio" name="minRating"
-                    [checked]="!filters().minRating"
-                    (change)="setMinRating(undefined)"
-                    class="w-4 h-4 text-primary border-gray-300 focus:ring-primary accent-primary">
-                  <span class="text-sm text-secondary">Toutes les notes</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Business Type -->
-            <div>
-              <h3 class="text-xs font-bold text-secondary-gray uppercase tracking-wider mb-3">Type</h3>
-              <div class="space-y-2">
-                <label class="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="checkbox"
-                    [checked]="filters().businessType === 'SALON'"
-                    (change)="toggleBusinessType('SALON')"
-                    class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary accent-primary">
-                  <div class="flex items-center gap-1.5">
-                    <lucide-icon name="store" [size]="13" [strokeWidth]="2" class="text-secondary-gray"></lucide-icon>
-                    <span class="text-sm text-secondary">Salon</span>
-                  </div>
-                </label>
-                <label class="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="checkbox"
-                    [checked]="filters().businessType === 'FREELANCE'"
-                    (change)="toggleBusinessType('FREELANCE')"
-                    class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary accent-primary">
-                  <div class="flex items-center gap-1.5">
-                    <lucide-icon name="user-round" [size]="13" [strokeWidth]="2" class="text-secondary-gray"></lucide-icon>
-                    <span class="text-sm text-secondary">Freelance</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Results -->
-        <main class="flex-1">
-          <!-- Results Header -->
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-            <div>
-              <h2 class="text-base font-semibold text-secondary">
-                @if (loading()) {
-                  <span class="flex items-center gap-2">
-                    <lucide-icon name="loader" [size]="16" [strokeWidth]="2" class="animate-spin text-primary"></lucide-icon>
-                    Recherche en cours...
-                  </span>
-                } @else {
-                  <span class="text-primary font-bold">{{ resultsCount() }}</span>
-                  résultat{{ resultsCount() > 1 ? 's' : '' }} trouvé{{ resultsCount() > 1 ? 's' : '' }}
-                }
-              </h2>
-              @if (searchQuery()) {
-                <p class="text-sm text-secondary-gray">pour "<strong>{{ searchQuery() }}</strong>"</p>
-              }
-            </div>
-
-            <!-- Sort -->
-            <div class="flex items-center gap-2">
-              <lucide-icon name="arrow-up-down" [size]="14" [strokeWidth]="2" class="text-secondary-gray"></lucide-icon>
-              <select [value]="filters().sortBy" (change)="onSortChange($event)"
-                class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white">
-                <option value="RELEVANCE">Pertinence</option>
-                <option value="RATING">Meilleures notes</option>
-                <option value="PRICE_ASC">Prix croissant</option>
-                <option value="PRICE_DESC">Prix décroissant</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Results Grid -->
-          @if (loading()) {
-            <div class="grid md:grid-cols-2 gap-5">
-              @for (item of [1,2,3,4,5,6]; track item) {
-                <app-skeleton variant="card" />
-              }
-            </div>
-          } @else if (filteredResults().length === 0) {
-            <!-- Empty State -->
-            <div class="text-center py-20">
-              <div class="w-20 h-20 mx-auto mb-5 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100">
-                <lucide-icon name="search-x" [size]="36" [strokeWidth]="1.5" class="text-gray-300"></lucide-icon>
-              </div>
-              <h3 class="text-lg font-semibold text-secondary mb-2">Aucun résultat trouvé</h3>
-              <p class="text-secondary-gray text-sm mb-6 max-w-xs mx-auto">Essayez d'élargir vos critères ou de modifier les filtres.</p>
-              <button (click)="resetFilters()"
-                class="inline-flex items-center gap-2 btn-primary text-sm">
-                <lucide-icon name="refresh-cw" [size]="14" [strokeWidth]="2.5"></lucide-icon>
+              <h3 class="mb-2 text-lg font-black text-[#11152f]">Aucun salon trouvé</h3>
+              <p class="mb-6 max-w-xs text-sm font-bold text-[#66708d]">
+                Essayez d'élargir vos critères ou de modifier les filtres.
+              </p>
+              <button
+                (click)="resetFilters()"
+                class="inline-flex items-center gap-2 rounded-full bg-[#5b35f6] px-6 py-3 text-sm font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)] transition-transform hover:-translate-y-0.5"
+              >
+                <lucide-icon name="refresh-cw" [size]="14" [strokeWidth]="2.5" aria-hidden="true" />
                 Réinitialiser les filtres
               </button>
             </div>
           } @else {
-            <div class="grid md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-2 gap-x-5 gap-y-[22px] max-[900px]:grid-cols-1">
               @for (business of filteredResults(); track business.id) {
-                <div (click)="viewBusiness(business.slug)"
-                     class="business-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer group">
-                  <div class="flex">
-                    <!-- Image -->
-                    <div class="w-36 h-36 flex-shrink-0 relative overflow-hidden">
-                      <img
-                        [src]="business.coverImage || business.avatar || 'https://via.placeholder.com/200x200?text=Salon'"
-                        [alt]="business.name"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy">
-                      @if (business.isVerified) {
-                        <div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
-                          <lucide-icon name="badge-check" [size]="14" [strokeWidth]="2" class="text-primary"></lucide-icon>
-                        </div>
-                      }
-                    </div>
-
-                    <!-- Content -->
-                    <div class="flex-1 p-4 flex flex-col justify-between min-w-0">
-                      <div>
-                        <h3 class="font-semibold text-secondary mb-1.5 group-hover:text-primary transition-colors truncate text-sm">
-                          {{ business.name }}
-                        </h3>
-                        <div class="flex items-center gap-1.5 mb-2">
-                          <app-star-rating [rating]="business.rating" size="0.8rem" />
-                          <span class="text-xs text-secondary-gray">({{ business.reviewCount }})</span>
-                        </div>
-                        <div class="flex items-center gap-1 text-xs text-secondary-gray mb-2.5">
-                          <lucide-icon name="map-pin" [size]="11" [strokeWidth]="2" class="flex-shrink-0"></lucide-icon>
-                          {{ business.city }}
-                        </div>
-                        <div class="flex flex-wrap gap-1">
-                          @for (cat of business.categories.slice(0, 2); track cat) {
-                            <span class="text-xs px-2 py-0.5 bg-primary/8 text-primary rounded-full font-medium">{{ cat }}</span>
-                          }
-                        </div>
-                      </div>
-                      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
-                        <span class="text-xs text-secondary-gray">À partir de</span>
-                        <span class="text-primary font-bold text-sm">{{ getMinPrice(business) | fcfa }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <app-search-salon-card [business]="business" />
               }
             </div>
           }
-        </main>
+        </section>
+
       </div>
     </div>
   `,
-  styles: []
+  styles: [],
 })
 export class SearchComponent implements OnInit {
-  loading = signal(false);
-  searchQuery = signal('');
-  filters = signal<SearchFilters>({});
   allBusinesses: Business[] = [];
-  categories: any[] = [];
+  categories: ServiceCategory[] = [];
   communes: string[] = [];
 
-  resultsCount = computed(() => this.filteredResults().length);
-  
+  searchQuery    = signal('');
+  selectedCategories = signal<string[]>([]);
+  selectedCommune    = signal('');
+  minRating          = signal(0);
+  maxPrice           = signal(50000);
+  businessType       = signal<'SALON' | 'FREELANCE' | null>(null);
+  sortBy             = signal<'RELEVANCE' | 'RATING' | 'PRICE_ASC' | 'PRICE_DESC'>('RELEVANCE');
+
+  categoriesWithCount = computed<CategoryWithCount[]>(() =>
+    this.categories.map(cat => ({
+      name: cat.name,
+      count: this.allBusinesses.filter(b => b.categories.includes(cat.name)).length,
+    }))
+  );
+
   filteredResults = computed(() => {
     let results = [...this.allBusinesses];
-    const f = this.filters();
 
-    // Search query
-    if (this.searchQuery()) {
-      const query = this.searchQuery().toLowerCase();
+    const q = this.searchQuery().trim().toLowerCase();
+    if (q) {
       results = results.filter(b =>
-        b.name.toLowerCase().includes(query) ||
-        b.categories.some(c => c.toLowerCase().includes(query)) ||
-        b.city.toLowerCase().includes(query)
+        b.name.toLowerCase().includes(q) ||
+        b.categories.some(c => c.toLowerCase().includes(q)) ||
+        b.city.toLowerCase().includes(q)
       );
     }
 
-    // Categories
-    if (f.categories && f.categories.length > 0) {
-      results = results.filter(b =>
-        f.categories!.some(cat => b.categories.includes(cat))
-      );
+    const cats = this.selectedCategories();
+    if (cats.length > 0) {
+      results = results.filter(b => cats.some(cat => b.categories.includes(cat)));
     }
 
-    // Communes (case-insensitive, partial match pour gérer la saisie libre du hero)
-    if (f.communes && f.communes.length > 0) {
-      results = results.filter(b =>
-        f.communes!.some(c => b.city.toLowerCase().includes(c.toLowerCase()))
-      );
+    const commune = this.selectedCommune().toLowerCase();
+    if (commune) {
+      results = results.filter(b => b.city.toLowerCase().includes(commune));
     }
 
-    // Price
-    if (f.maxPrice) {
-      results = results.filter(b =>
-        b.services.some(s => s.price <= (f.maxPrice || Infinity))
-      );
+    const rating = this.minRating();
+    if (rating > 0) {
+      results = results.filter(b => b.rating >= rating);
     }
 
-    // Rating
-    if (f.minRating) {
-      results = results.filter(b => b.rating >= (f.minRating || 0));
+    const price = this.maxPrice();
+    if (price < 50000) {
+      results = results.filter(b => b.services.some(s => s.price <= price));
     }
 
-    // Business Type
-    if (f.businessType) {
-      results = results.filter(b => b.businessType === f.businessType);
+    const type = this.businessType();
+    if (type === 'SALON') {
+      results = results.filter(b => b.businessType === 'SALON');
+    } else if (type === 'FREELANCE') {
+      results = results.filter(b => b.businessType === 'FREELANCE' || b.businessType === 'HYBRID');
     }
 
-    // Sort
-    switch (f.sortBy) {
+    switch (this.sortBy()) {
       case 'RATING':
         results.sort((a, b) => b.rating - a.rating);
         break;
@@ -342,108 +179,47 @@ export class SearchComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private mockData: MockDataService
+    private mockData: MockDataService,
   ) {}
 
   ngOnInit(): void {
     this.categories = this.mockData.getCategories();
-    this.communes = this.mockData.getCommunes();
+    this.communes   = this.mockData.getCommunes();
     this.allBusinesses = this.mockData.getBusinesses();
 
-    // Get query params
     this.route.queryParams.subscribe(params => {
-      if (params['q']) {
-        this.searchQuery.set(params['q']);
-      }
-      if (params['category']) {
-        this.filters.update(f => ({ ...f, categories: [params['category']] }));
-      }
-      if (params['commune']) {
-        this.filters.update(f => ({ ...f, communes: [params['commune']] }));
-      }
+      if (params['q'])        this.searchQuery.set(params['q']);
+      if (params['category']) this.selectedCategories.set([params['category']]);
+      if (params['commune'])  this.selectedCommune.set(params['commune']);
     });
-
   }
 
   onSearch(query: string): void {
-    this.searchQuery.set(query);
+    this.searchQuery.set(query.trim());
   }
 
   toggleCategory(category: string): void {
-    this.filters.update(f => {
-      const categories = f.categories || [];
-      const newCategories = categories.includes(category)
-        ? categories.filter(c => c !== category)
-        : [...categories, category];
-      return { ...f, categories: newCategories };
-    });
-  }
-
-  toggleCommune(commune: string): void {
-    this.filters.update(f => {
-      const communes = f.communes || [];
-      const newCommunes = communes.includes(commune)
-        ? communes.filter(c => c !== commune)
-        : [...communes, commune];
-      return { ...f, communes: newCommunes };
-    });
-  }
-
-  onPriceChange(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.filters.update(f => ({ ...f, maxPrice: parseInt(value, 10) }));
-  }
-
-  setMinRating(rating: number | undefined): void {
-    this.filters.update(f => ({ ...f, minRating: rating }));
-  }
-
-  toggleBusinessType(type: 'SALON' | 'FREELANCE'): void {
-    this.filters.update(f => ({
-      ...f,
-      businessType: f.businessType === type ? undefined : type
-    }));
-  }
-
-  onSortChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value as SearchFilters['sortBy'];
-    this.filters.update(f => ({ ...f, sortBy: value }));
-  }
-
-  resetFilters(): void {
-    this.filters.set({});
-    this.searchQuery.set('');
-  }
-
-  hasActiveFilters(): boolean {
-    const f = this.filters();
-    return !!(
-      f.categories?.length ||
-      f.communes?.length ||
-      f.maxPrice ||
-      f.minRating ||
-      f.businessType ||
-      f.sortBy
+    this.selectedCategories.update(cats =>
+      cats.includes(category) ? cats.filter(c => c !== category) : [...cats, category]
     );
   }
 
-  getActiveFiltersCount(): number {
-    const f = this.filters();
-    let count = 0;
-    if (f.categories?.length) count += f.categories.length;
-    if (f.communes?.length) count += f.communes.length;
-    if (f.maxPrice) count++;
-    if (f.minRating) count++;
-    if (f.businessType) count++;
-    return count;
+  toggleBusinessType(type: 'SALON' | 'FREELANCE'): void {
+    this.businessType.update(current => current === type ? null : type);
   }
 
-  viewBusiness(slug: string): void {
-    this.router.navigate(['/pro', slug]);
+  resetFilters(): void {
+    this.searchQuery.set('');
+    this.selectedCategories.set([]);
+    this.selectedCommune.set('');
+    this.minRating.set(0);
+    this.maxPrice.set(50000);
+    this.businessType.set(null);
+    this.sortBy.set('RELEVANCE');
   }
 
-  getMinPrice(business: Business): number {
-    if (!business.services || business.services.length === 0) return 0;
+  private getMinPrice(business: Business): number {
+    if (!business.services?.length) return 0;
     return Math.min(...business.services.map(s => s.price));
   }
 }
