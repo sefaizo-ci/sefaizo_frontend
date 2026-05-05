@@ -1,0 +1,29 @@
+<header class="mb-7 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-6 max-[760px]:grid-cols-1">
+  <div>
+    <h1 class="m-0 text-[24px] leading-tight font-black text-[#11152f]">
+      {{ resultCount }} salon{{ resultCount > 1 ? 's' : '' }} trouvé{{ resultCount > 1 ? 's' : '' }}
+    </h1>
+    @if (searchQuery) {
+      <p class="mt-1 text-sm font-bold text-[#69708a]">
+        Résultats pour <span class="text-[#5b35f6]">"{{ searchQuery }}"</span>
+      </p>
+    }
+  </div>
+
+  <div class="flex flex-wrap items-center justify-end gap-3 max-[760px]:justify-start">
+    <span class="text-sm font-bold text-[#66708d]">Trier par :</span>
+    <div class="relative">
+      <select
+        class="h-9 min-w-[148px] appearance-none rounded-full border border-[#e7e9f4] bg-white pl-4 pr-8 text-sm font-bold text-[#303653] outline-none cursor-pointer focus:border-[#5b35f6] focus:ring-2 focus:ring-[#5b35f6]/20"
+        [value]="sortBy"
+        (change)="sortChange.emit($any($event.target).value)"
+      >
+        <option value="RELEVANCE">Pertinence</option>
+        <option value="RATING">Meilleures notes</option>
+        <option value="PRICE_ASC">Prix croissant</option>
+        <option value="PRICE_DESC">Prix décroissant</option>
+      </select>
+      <lucide-icon class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#59617b]" name="chevron-down" [size]="15" [strokeWidth]="2.2" aria-hidden="true" />
+    </div>
+  </div>
+</header>

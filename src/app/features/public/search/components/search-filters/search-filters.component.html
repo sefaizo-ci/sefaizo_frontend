@@ -1,0 +1,128 @@
+<aside class="min-w-0 border-r border-[#e7e9f4] pt-7 pr-8 pb-10 max-[1040px]:border-r-0 max-[1040px]:pr-0 max-[1040px]:pb-6">
+
+  <!-- En-tête filtres -->
+  <div class="mb-6 flex min-w-0 items-center justify-between gap-4">
+    <h2 class="m-0 text-[22px] leading-tight font-black text-[#11152f]">Filtres</h2>
+    <button class="shrink-0 whitespace-nowrap text-xs font-extrabold text-[#5b35f6] hover:underline" type="button" (click)="reset.emit()">Réinitialiser</button>
+  </div>
+
+  <!-- Localisation -->
+  <section class="mb-[22px]" aria-labelledby="filter-commune-title">
+    <h3 id="filter-commune-title" class="mb-3.5 text-[13px] font-black text-[#11152f]">Localisation</h3>
+    <div class="relative">
+      <lucide-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#59617b]" name="map-pin" [size]="18" [strokeWidth]="2" aria-hidden="true" />
+      <select
+        class="h-10 w-full min-w-0 appearance-none rounded-full border border-[#e7e9f4] bg-white pl-9 pr-8 text-sm font-bold text-[#303653] outline-none cursor-pointer focus:border-[#5b35f6] focus:ring-2 focus:ring-[#5b35f6]/20"
+        [value]="selectedCommune"
+        (change)="communeChange.emit($any($event.target).value)"
+      >
+        <option value="">Toutes les communes</option>
+        @for (commune of communes; track commune) {
+          <option [value]="commune">{{ commune }}</option>
+        }
+      </select>
+      <lucide-icon class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#59617b]" name="chevron-down" [size]="16" [strokeWidth]="2.2" aria-hidden="true" />
+    </div>
+  </section>
+
+  <!-- Catégories -->
+  <section class="mb-[22px]" aria-labelledby="filter-category-title">
+    <h3 id="filter-category-title" class="mb-3 text-[13px] font-black text-[#11152f]">Catégorie</h3>
+    <div class="grid gap-3">
+      @for (category of categories; track category.name) {
+        <button
+          class="grid min-w-0 grid-cols-[18px_minmax(0,1fr)_34px] items-center gap-3 text-left text-sm font-bold text-[#202641]"
+          type="button"
+          (click)="categoryToggle.emit(category.name)"
+        >
+          <span
+            class="inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] border text-white transition-colors"
+            [class.border-[#5b35f6]]="selectedCategories.includes(category.name)"
+            [class.bg-[#5b35f6]]="selectedCategories.includes(category.name)"
+            [class.border-[#d9dbe9]]="!selectedCategories.includes(category.name)"
+            [class.bg-white]="!selectedCategories.includes(category.name)"
+          >
+            @if (selectedCategories.includes(category.name)) {
+              <lucide-icon name="check" [size]="13" [strokeWidth]="3" aria-hidden="true" />
+            }
+          </span>
+          <span class="truncate">{{ category.name }}</span>
+          <span class="justify-self-end rounded-md bg-[#f0f1f6] px-2.5 py-1 text-xs font-black text-[#69708a]">{{ category.count }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Note minimum -->
+  <section class="mb-[22px]" aria-labelledby="filter-rating-title">
+    <h3 id="filter-rating-title" class="mb-3 text-[13px] font-black text-[#11152f]">Note minimum</h3>
+    <div class="flex items-center gap-1.5">
+      @for (star of [1, 2, 3, 4, 5]; track star) {
+        <button
+          class="text-[26px] leading-none transition-transform hover:scale-110"
+          type="button"
+          [class.text-[#ffb224]]="star <= minRating"
+          [class.text-[#cfd2dc]]="star > minRating"
+          (click)="onRatingClick(star)"
+          [attr.aria-label]="star + ' étoile(s) minimum'"
+        >★</button>
+      }
+      @if (minRating > 0) {
+        <span class="ml-2 text-xs font-black text-[#11152f]">& plus</span>
+      }
+    </div>
+  </section>
+
+  <!-- Prix maximum -->
+  <section class="mb-[22px]" aria-labelledby="filter-price-title">
+    <h3 id="filter-price-title" class="mb-3 text-[13px] font-black text-[#11152f]">Prix maximum</h3>
+    <p class="mb-3 text-sm font-bold text-[#202641]">{{ maxPrice.toLocaleString('fr-FR') }} FCFA</p>
+    <input
+      type="range"
+      [min]="0"
+      [max]="MAX_PRICE"
+      [step]="1000"
+      [value]="maxPrice"
+      (input)="priceChange.emit(+$any($event.target).value)"
+      class="w-full h-1.5 appearance-none rounded-full bg-[#e7e9f4] cursor-pointer accent-[#5b35f6]"
+      aria-label="Prix maximum"
+    />
+    <div class="mt-2 flex justify-between text-xs font-bold text-[#66708d]">
+      <span>0 FCFA</span>
+      <span>{{ MAX_PRICE.toLocaleString('fr-FR') }} FCFA</span>
+    </div>
+  </section>
+
+  <!-- Type RDV -->
+  <section aria-labelledby="filter-rdv-title">
+    <h3 id="filter-rdv-title" class="mb-3 text-[13px] font-black text-[#11152f]">Type RDV</h3>
+    <div class="grid grid-cols-2 gap-2 max-[760px]:grid-cols-1">
+      @for (type of rdvTypes; track type.id) {
+        <button
+          class="flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-full border px-2 text-sm font-bold transition-all"
+          type="button"
+          [class.border-[#5b35f6]]="businessType === type.id"
+          [class.bg-[#f3f0ff]]="businessType === type.id"
+          [class.text-[#5b35f6]]="businessType === type.id"
+          [class.border-[#e7e9f4]]="businessType !== type.id"
+          [class.bg-white]="businessType !== type.id"
+          [class.text-[#69708a]]="businessType !== type.id"
+          (click)="businessTypeToggle.emit(type.id)"
+        >
+          <lucide-icon class="shrink-0" [name]="type.icon" [size]="17" [strokeWidth]="2" aria-hidden="true" />
+          <span class="truncate">{{ type.label }}</span>
+          @if (businessType === type.id) {
+            <span class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#5b35f6] text-white">
+              <lucide-icon name="check" [size]="12" [strokeWidth]="3" aria-hidden="true" />
+            </span>
+          }
+        </button>
+      }
+    </div>
+
+    <div class="mt-[26px] flex h-11 w-full items-center justify-center rounded-full bg-[#5b35f6] px-4 text-sm font-extrabold text-white shadow-[0_12px_24px_rgba(91,53,246,0.22)]">
+      {{ resultCount }} résultat{{ resultCount > 1 ? 's' : '' }}
+    </div>
+  </section>
+
+</aside>
