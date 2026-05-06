@@ -10,9 +10,17 @@
   <section class="mb-[22px]" aria-labelledby="filter-commune-title">
     <h3 id="filter-commune-title" class="mb-3.5 text-[13px] font-black text-[#11152f]">Localisation</h3>
     <div class="relative">
-      <lucide-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#59617b]" name="map-pin" [size]="18" [strokeWidth]="2" aria-hidden="true" />
+      <!-- Icône map-pin en violet pour la distinguer clairement du texte du select -->
+      <lucide-icon
+        class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7c3aed]"
+        name="map-pin"
+        [size]="15"
+        [strokeWidth]="2.2"
+        aria-hidden="true"
+      />
+      <!-- bg-none supprime la flèche SVG ajoutée par @tailwindcss/forms (qui crée la duplication) -->
       <select
-        class="h-10 w-full min-w-0 appearance-none rounded-full border border-[#e7e9f4] bg-white pl-9 pr-8 text-sm font-bold text-[#303653] outline-none cursor-pointer focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20"
+        class="h-10 w-full min-w-0 appearance-none bg-none bg-white rounded-full border border-[#e7e9f4] pl-9 pr-8 text-sm font-bold text-[#303653] outline-none cursor-pointer focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20"
         [value]="selectedCommune"
         (change)="communeChange.emit($any($event.target).value)"
       >
@@ -100,20 +108,15 @@
     </div>
   </section>
 
-  <!-- Type RDV -->
+  <!-- Type RDV : grid-cols-1 pour éviter les problèmes de texte tronqué -->
+  <!-- Classes retournées par getRdvBtnClass() pour que Tailwind JIT les scanne depuis le .ts -->
   <section aria-labelledby="filter-rdv-title">
     <h3 id="filter-rdv-title" class="mb-3 text-[13px] font-black text-[#11152f]">Type RDV</h3>
-    <div class="grid grid-cols-2 gap-2 max-[760px]:grid-cols-1">
+    <div class="grid grid-cols-1 gap-2">
       @for (type of rdvTypes; track type.id) {
         <button
-          class="flex h-11 items-center justify-center gap-1 rounded-full border px-2 text-[13px] font-bold transition-all"
+          [class]="getRdvBtnClass(type.id)"
           type="button"
-          [class.border-[#7c3aed]]="businessType === type.id"
-          [class.bg-[#f3f0ff]]="businessType === type.id"
-          [class.text-[#7c3aed]]="businessType === type.id"
-          [class.border-[#e7e9f4]]="businessType !== type.id"
-          [class.bg-white]="businessType !== type.id"
-          [class.text-[#69708a]]="businessType !== type.id"
           (click)="businessTypeToggle.emit(type.id)"
         >
           <lucide-icon class="shrink-0" [name]="type.icon" [size]="15" [strokeWidth]="2" aria-hidden="true" />

@@ -69,40 +69,132 @@ import { LucideAngularModule } from 'lucide-angular';
           </div>
         </div>
 
-        <!-- ─── Étape 6 : Confirmation pleine largeur ─── -->
+        <!-- ─── Étape 6 : Confirmation ─── -->
         @if (currentStep() === 6) {
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-            <div class="text-center py-4">
-              <div class="w-20 h-20 mx-auto mb-6 bg-emerald-50 rounded-full flex items-center justify-center">
-                <lucide-icon name="circle-check-big" [size]="40" [strokeWidth]="1.5" class="text-emerald-500"></lucide-icon>
-              </div>
-              <h2 class="text-2xl font-bold text-secondary mb-2">Réservation confirmée !</h2>
-              <p class="text-secondary-gray mb-8">Votre rendez-vous a été réservé avec succès</p>
-              <div class="bg-gray-50 rounded-xl p-6 max-w-md mx-auto mb-8 text-left border border-gray-100">
-                <div class="text-center mb-5">
-                  <div class="text-xs text-secondary-gray uppercase tracking-wide mb-1">Numéro de réservation</div>
-                  <div class="text-2xl font-bold text-primary">{{ bookingNumber() }}</div>
-                </div>
-                <div class="space-y-3 text-sm">
-                  <div class="flex justify-between py-2 border-b border-gray-100">
-                    <span class="text-secondary-gray">Service</span>
-                    <span class="font-medium">{{ selectedService()?.name }}</span>
-                  </div>
-                  <div class="flex justify-between py-2 border-b border-gray-100">
-                    <span class="text-secondary-gray">Date</span>
-                    <span class="font-medium">{{ selectedDate() | dateFormat: 'long' }} à {{ selectedTime() }}</span>
-                  </div>
-                  <div class="flex justify-between py-2">
-                    <span class="text-secondary-gray">Total payé</span>
-                    <span class="font-bold text-primary text-base">{{ totalPrice() | fcfa }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-wrap justify-center gap-4">
-                <button (click)="goHome()" class="btn-secondary">Retour à l'accueil</button>
-                <button (click)="goToBookings()" class="btn-primary">Mes réservations</button>
-              </div>
+          <div class="mx-auto w-full max-w-[590px] overflow-hidden px-4 pt-8 pb-12 text-center max-[520px]:px-0">
+
+            <!-- Cercle vert avec checkmark + éléments décoratifs -->
+            <div class="relative mx-auto flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#10b45e] text-white shadow-[0_18px_38px_rgba(16,180,94,0.22)] max-[520px]:h-24 max-[520px]:w-24">
+              <lucide-icon name="check" [size]="58" [strokeWidth]="4" aria-hidden="true"></lucide-icon>
+              <span class="absolute -top-1 -left-16 h-2 w-2 rotate-45 rounded-[2px] border border-[#9ee3bf]" aria-hidden="true"></span>
+              <span class="absolute top-6 -right-20 h-2 w-2 rounded-full bg-[#bcebd0]" aria-hidden="true"></span>
+              <span class="absolute -right-12 bottom-1 h-2 w-2 rotate-45 rounded-[2px] border border-[#9ee3bf]" aria-hidden="true"></span>
+              <span class="absolute bottom-7 -left-24 h-2 w-2 rotate-45 rounded-[2px] border border-[#9ee3bf]" aria-hidden="true"></span>
             </div>
+
+            <!-- Titre et sous-titre -->
+            <h1 class="mx-auto mt-7 mb-0 text-[32px] leading-tight font-black text-[#12a85a] max-[520px]:text-[24px]">Réservation confirmée !</h1>
+            <p class="mx-auto mt-3 max-w-[480px] text-base font-bold text-[#626985] max-[520px]:text-sm">
+              Votre rendez-vous a bien été enregistré. Un récapitulatif vous sera envoyé par SMS.
+            </p>
+
+            <!-- Numéro de réservation cliquable pour copier -->
+            <button
+              class="mx-auto mt-6 inline-flex min-h-14 items-center justify-center gap-5 rounded-lg border border-[#bfe9d2] bg-[#f3fff8] px-10 text-xl font-black text-[#12a85a] transition-opacity hover:opacity-80 max-[520px]:w-full max-[520px]:max-w-[330px] max-[520px]:text-lg"
+              type="button"
+              (click)="copyReference()"
+            >
+              {{ bookingNumber() }}
+              <lucide-icon name="copy" [size]="22" [strokeWidth]="2.4" aria-hidden="true"></lucide-icon>
+            </button>
+
+            <!-- Carte récapitulatif -->
+            <article class="mt-5 rounded-lg border border-gray-100 bg-white px-6 py-1 text-left shadow-sm max-[520px]:mx-auto max-[520px]:w-full max-[520px]:max-w-[340px] max-[520px]:px-4">
+
+              <!-- Salon -->
+              <div class="grid min-h-[58px] grid-cols-[36px_1fr_auto] items-center gap-3 border-b border-gray-100 py-2 max-[520px]:grid-cols-[32px_1fr]">
+                <span class="flex h-9 w-9 items-center justify-center text-primary flex-shrink-0">
+                  <lucide-icon name="store" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+                </span>
+                <span class="text-sm font-bold text-[#626985]">Salon</span>
+                <div class="min-w-0 text-right max-[520px]:col-span-2 max-[520px]:pl-11 max-[520px]:text-left">
+                  <strong class="block text-base font-extrabold text-[#11152f]">{{ business()?.name }}</strong>
+                  <span class="mt-0.5 block text-sm font-bold text-secondary-gray">{{ business()?.city }}</span>
+                </div>
+              </div>
+
+              <!-- Service(s) -->
+              <div class="border-b border-gray-100 py-2">
+                <div class="grid min-h-[42px] grid-cols-[36px_1fr_auto] items-start gap-3 max-[520px]:grid-cols-[32px_1fr]">
+                  <span class="flex h-9 w-9 items-center justify-center text-primary flex-shrink-0 mt-0.5">
+                    <lucide-icon name="scissors" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+                  </span>
+                  <span class="text-sm font-bold text-[#626985] pt-1.5">Service{{ selectedServices().length > 1 ? 's' : '' }}</span>
+                  <div class="min-w-0 text-right max-[520px]:col-span-2 max-[520px]:pl-11 max-[520px]:text-left">
+                    @for (s of selectedServices(); track s.id) {
+                      <strong class="block text-base font-extrabold text-[#11152f]">{{ s.name }}</strong>
+                      <span class="block text-xs font-bold text-secondary-gray mb-1">{{ s.duration }} min · {{ s.price | fcfa }}</span>
+                    }
+                    @if (selectedServices().length > 1) {
+                      <span class="mt-1 block text-sm font-bold text-[#626985]">Durée totale : {{ totalDuration() }} min</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Date & heure -->
+              <div class="grid min-h-[58px] grid-cols-[36px_1fr_auto] items-center gap-3 border-b border-gray-100 py-2 max-[520px]:grid-cols-[32px_1fr]">
+                <span class="flex h-9 w-9 items-center justify-center text-primary flex-shrink-0">
+                  <lucide-icon name="calendar-days" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+                </span>
+                <span class="text-sm font-bold text-[#626985]">Date & heure</span>
+                <div class="min-w-0 text-right max-[520px]:col-span-2 max-[520px]:pl-11 max-[520px]:text-left">
+                  <strong class="block text-base font-extrabold text-[#11152f]">{{ selectedDate() | dateFormat: 'long' }}</strong>
+                  <span class="mt-0.5 block text-sm font-bold text-secondary-gray">{{ selectedTime() }}</span>
+                </div>
+              </div>
+
+              <!-- Lieu -->
+              <div class="grid min-h-[58px] grid-cols-[36px_1fr_auto] items-center gap-3 border-b border-gray-100 py-2 max-[520px]:grid-cols-[32px_1fr]">
+                <span class="flex h-9 w-9 items-center justify-center text-primary flex-shrink-0">
+                  <lucide-icon [name]="bookingType() === 'SALON' ? 'store' : 'home'" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+                </span>
+                <span class="text-sm font-bold text-[#626985]">Lieu</span>
+                <div class="min-w-0 text-right max-[520px]:col-span-2 max-[520px]:pl-11 max-[520px]:text-left">
+                  <strong class="block text-base font-extrabold text-[#11152f]">{{ bookingType() === 'SALON' ? 'Au salon' : 'À domicile' }}</strong>
+                  @if (bookingType() === 'HOME' && selectedCommune()) {
+                    <span class="mt-0.5 block text-sm font-bold text-secondary-gray">{{ selectedCommune() }}</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Total payé -->
+              <div class="grid min-h-[58px] grid-cols-[36px_1fr_auto] items-center gap-3 py-2 max-[520px]:grid-cols-[32px_1fr]">
+                <span class="flex h-9 w-9 items-center justify-center text-primary flex-shrink-0">
+                  <lucide-icon name="banknote" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+                </span>
+                <span class="text-sm font-bold text-[#626985]">Total payé</span>
+                <div class="min-w-0 text-right max-[520px]:col-span-2 max-[520px]:pl-11 max-[520px]:text-left">
+                  <strong class="block text-2xl font-black text-[#7c3aed]">{{ totalPrice() | fcfa }}</strong>
+                </div>
+              </div>
+
+            </article>
+
+            <!-- Boutons d'action -->
+            <div class="mt-7 grid grid-cols-2 gap-5 max-[640px]:grid-cols-1 max-[520px]:mx-auto max-[520px]:w-full max-[520px]:max-w-[340px]">
+              <button
+                (click)="goToBookings()"
+                class="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#7c3aed] px-6 text-base font-extrabold text-white shadow-[0_14px_30px_rgba(124,58,237,0.28)] transition-transform hover:-translate-y-0.5 hover:bg-[#6d28d9]"
+              >
+                Mes réservations
+                <lucide-icon name="arrow-right" [size]="20" [strokeWidth]="2.4" aria-hidden="true"></lucide-icon>
+              </button>
+              <button
+                (click)="goHome()"
+                class="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border border-[#7c3aed] bg-white px-6 text-base font-extrabold text-[#7c3aed] transition-transform hover:-translate-y-0.5"
+              >
+                Retour à l'accueil
+                <lucide-icon name="home" [size]="19" [strokeWidth]="2.3" aria-hidden="true"></lucide-icon>
+              </button>
+            </div>
+
+            <!-- Label sécurité -->
+            <p class="mt-8 inline-flex items-center justify-center gap-2.5 text-sm font-bold text-[#626985]">
+              <lucide-icon class="text-[#69718b]" name="shield-check" [size]="20" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+              Réservation sécurisée et confirmée
+            </p>
+
           </div>
         }
 
@@ -117,13 +209,14 @@ import { LucideAngularModule } from 'lucide-angular';
 
                 <!-- Étape 1 : Service -->
                 @if (currentStep() === 1) {
-                  <h2 class="text-xl font-bold text-secondary mb-5">Sélectionnez un service</h2>
+                  <h2 class="text-xl font-bold text-secondary mb-1">Sélectionnez vos services</h2>
+                  <p class="text-sm text-secondary-gray mb-5">Vous pouvez sélectionner plusieurs services</p>
                   <div class="space-y-3">
                     @for (service of business()?.services; track service.id) {
-                      <div (click)="selectService(service)"
+                      <div (click)="toggleService(service)"
                            [class]="getServiceClass(service.id)"
                            class="flex justify-between items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
-                        <div class="flex items-start gap-3 flex-1">
+                        <div class="flex items-start gap-3 flex-1 min-w-0">
                           <div class="w-9 h-9 rounded-lg bg-primary/8 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <lucide-icon name="scissors" [size]="16" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
                           </div>
@@ -140,12 +233,34 @@ import { LucideAngularModule } from 'lucide-angular';
                             </div>
                           </div>
                         </div>
-                        <div class="text-right ml-4 flex-shrink-0">
-                          <span class="text-lg font-bold text-primary">{{ service.price | fcfa }}</span>
+                        <div class="flex flex-col items-end gap-2 ml-4 flex-shrink-0">
+                          <div [class]="isServiceSelected(service.id)
+                            ? 'w-6 h-6 rounded-full bg-primary flex items-center justify-center'
+                            : 'w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center'">
+                            @if (isServiceSelected(service.id)) {
+                              <lucide-icon name="check" [size]="12" [strokeWidth]="3" class="text-white"></lucide-icon>
+                            } @else {
+                              <lucide-icon name="plus" [size]="12" [strokeWidth]="2.5" class="text-gray-400"></lucide-icon>
+                            }
+                          </div>
+                          <span class="text-base font-bold text-primary">{{ service.price | fcfa }}</span>
                         </div>
                       </div>
                     }
                   </div>
+
+                  <!-- Barre de total en cours -->
+                  @if (selectedServiceIds().length > 0) {
+                    <div class="mt-4 p-4 bg-primary/5 rounded-xl border border-primary/15 flex items-center justify-between">
+                      <div class="text-sm text-secondary-gray">
+                        <span class="font-bold text-secondary">{{ selectedServiceIds().length }}</span>
+                        service{{ selectedServiceIds().length > 1 ? 's' : '' }} sélectionné{{ selectedServiceIds().length > 1 ? 's' : '' }}
+                        <span class="mx-1">·</span>
+                        <span>{{ totalDuration() }} min</span>
+                      </div>
+                      <div class="text-base font-bold text-primary">{{ servicesSubtotal() | fcfa }}</div>
+                    </div>
+                  }
                 }
 
                 <!-- Étape 2 : Date & heure -->
@@ -240,17 +355,35 @@ import { LucideAngularModule } from 'lucide-angular';
                 @if (currentStep() === 4) {
                   <h2 class="text-xl font-bold text-secondary mb-5">Récapitulatif</h2>
                   <div class="space-y-3">
-                    <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                      <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <lucide-icon name="scissors" [size]="18" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
+                    <!-- Services sélectionnés -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                      <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <lucide-icon name="scissors" [size]="18" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
+                        </div>
+                        <div>
+                          <div class="text-xs text-secondary-gray uppercase tracking-wide font-semibold">
+                            {{ selectedServices().length }} service{{ selectedServices().length > 1 ? 's' : '' }}
+                          </div>
+                          <div class="text-xs text-secondary-gray">{{ totalDuration() }} min total</div>
+                        </div>
                       </div>
-                      <div class="flex-1">
-                        <div class="text-xs text-secondary-gray uppercase tracking-wide font-semibold mb-0.5">Service</div>
-                        <div class="font-semibold text-secondary">{{ selectedService()?.name }}</div>
-                        <div class="text-sm text-secondary-gray">{{ selectedService()?.duration }} min</div>
+                      <div class="space-y-2">
+                        @for (s of selectedServices(); track s.id) {
+                          <div class="flex justify-between items-center text-sm">
+                            <span class="text-secondary">{{ s.name }}</span>
+                            <span class="font-semibold text-primary">{{ s.price | fcfa }}</span>
+                          </div>
+                        }
+                        @if (selectedServices().length > 1) {
+                          <div class="border-t border-gray-200 pt-2 flex justify-between items-center text-sm">
+                            <span class="text-secondary-gray font-medium">Sous-total services</span>
+                            <span class="font-bold text-secondary">{{ servicesSubtotal() | fcfa }}</span>
+                          </div>
+                        }
                       </div>
-                      <div class="font-bold text-primary text-lg">{{ selectedService()?.price | fcfa }}</div>
                     </div>
+
                     <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
                       <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                         <lucide-icon name="calendar-days" [size]="18" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
@@ -356,21 +489,24 @@ import { LucideAngularModule } from 'lucide-angular';
 
                 <!-- Lignes de détail -->
                 <div class="space-y-3 mb-4">
-                  <!-- Service -->
+                  <!-- Services -->
                   <div class="flex items-start gap-3">
                     <lucide-icon name="scissors" [size]="14" [strokeWidth]="2" class="text-secondary-gray mt-0.5 flex-shrink-0"></lucide-icon>
                     <div class="flex-1 min-w-0">
-                      <div class="text-xs text-secondary-gray">Service</div>
-                      @if (selectedService()) {
-                        <div class="text-sm font-semibold text-secondary truncate">{{ selectedService()?.name }}</div>
-                        <div class="text-xs text-secondary-gray">{{ selectedService()?.duration }} min</div>
-                      } @else {
+                      <div class="text-xs text-secondary-gray mb-1">Service{{ selectedServices().length > 1 ? 's' : '' }}</div>
+                      @if (selectedServices().length === 0) {
                         <div class="text-xs text-gray-300 italic">Non sélectionné</div>
                       }
+                      @for (s of selectedServices(); track s.id) {
+                        <div class="flex justify-between items-baseline gap-1">
+                          <span class="text-sm font-medium text-secondary truncate">{{ s.name }}</span>
+                          <span class="text-xs font-bold text-primary flex-shrink-0">{{ s.price | fcfa }}</span>
+                        </div>
+                      }
+                      @if (selectedServices().length > 0) {
+                        <div class="text-xs text-secondary-gray mt-0.5">{{ totalDuration() }} min total</div>
+                      }
                     </div>
-                    @if (selectedService()) {
-                      <div class="text-sm font-bold text-primary flex-shrink-0">{{ selectedService()?.price | fcfa }}</div>
-                    }
                   </div>
 
                   <!-- Date -->
@@ -453,7 +589,7 @@ export class BookingComponent implements OnInit {
   ];
 
   businessId = signal<string | null>(null);
-  selectedServiceId = signal<string | null>(null);
+  selectedServiceIds = signal<string[]>([]);
   selectedDate = signal<string | null>(null);
   selectedTime = signal<string | null>(null);
   bookingType = signal<'SALON' | 'HOME'>('SALON');
@@ -466,6 +602,30 @@ export class BookingComponent implements OnInit {
   homeServiceCommunes: HomeServiceCommune[] = [];
 
   next7Days: any[] = [];
+
+  selectedServices = computed(() => {
+    const ids = this.selectedServiceIds();
+    const services = this.business()?.services || [];
+    return services.filter(s => ids.includes(s.id));
+  });
+
+  servicesSubtotal = computed(() =>
+    this.selectedServices().reduce((sum, s) => sum + s.price, 0)
+  );
+
+  totalDuration = computed(() =>
+    this.selectedServices().reduce((sum, s) => sum + s.duration, 0)
+  );
+
+  homeServiceFee = computed(() => {
+    if (this.bookingType() !== 'HOME' || !this.selectedCommune()) return 0;
+    const commune = this.homeServiceCommunes.find(c => c.commune === this.selectedCommune());
+    return commune?.fee || 0;
+  });
+
+  totalPrice = computed(() => this.servicesSubtotal() + this.homeServiceFee());
+
+  progressPct = computed(() => Math.round((Math.min(this.currentStep(), 5) / 5) * 100));
 
   constructor(
     private router: Router,
@@ -483,11 +643,10 @@ export class BookingComponent implements OnInit {
         this.homeServiceCommunes = business?.homeServiceCommunes || [];
       }
       if (params['service']) {
-        this.selectedServiceId.set(params['service']);
+        this.selectedServiceIds.set([params['service']]);
       }
     });
 
-    // Generate next 7 days
     const today = new Date();
     const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
     for (let i = 0; i < 7; i++) {
@@ -501,12 +660,17 @@ export class BookingComponent implements OnInit {
     }
   }
 
-  businessServices() {
-    return this.business()?.services || [];
+  isServiceSelected(id: string): boolean {
+    return this.selectedServiceIds().includes(id);
   }
 
-  selectedService() {
-    return this.business()?.services.find(s => s.id === this.selectedServiceId());
+  toggleService(service: Service): void {
+    const ids = this.selectedServiceIds();
+    if (ids.includes(service.id)) {
+      this.selectedServiceIds.set(ids.filter(id => id !== service.id));
+    } else {
+      this.selectedServiceIds.set([...ids, service.id]);
+    }
   }
 
   canHomeService() {
@@ -514,36 +678,18 @@ export class BookingComponent implements OnInit {
     return type === 'FREELANCE' || type === 'HYBRID';
   }
 
-  homeServiceFee = computed(() => {
-    if (this.bookingType() !== 'HOME' || !this.selectedCommune()) return 0;
-    const commune = this.homeServiceCommunes.find(c => c.commune === this.selectedCommune());
-    return commune?.fee || 0;
-  });
-
-  totalPrice = computed(() => {
-    const servicePrice = this.selectedService()?.price || 0;
-    return servicePrice + this.homeServiceFee();
-  });
-
-  progressPct = computed(() => Math.round((Math.min(this.currentStep(), 5) / 5) * 100));
-
   getStepClass(stepId: number): string {
-    if (stepId < this.currentStep()) {
-      return 'bg-green-500 text-white';
-    } else if (stepId === this.currentStep()) {
-      return 'bg-primary text-white';
-    } else {
-      return 'bg-gray-200 text-gray-500';
-    }
+    if (stepId < this.currentStep()) return 'bg-green-500 text-white';
+    if (stepId === this.currentStep()) return 'bg-primary text-white';
+    return 'bg-gray-200 text-gray-500';
   }
 
   getProgressLineClass(index: number): string {
-    const completedSteps = this.currentStep() - 1;
-    return index < completedSteps ? 'bg-green-500' : 'bg-gray-200';
+    return index < this.currentStep() - 1 ? 'bg-green-500' : 'bg-gray-200';
   }
 
   getServiceClass(serviceId: string): string {
-    return this.selectedServiceId() === serviceId
+    return this.isServiceSelected(serviceId)
       ? 'border-primary bg-primary/5'
       : 'border-gray-200 hover:border-primary/50';
   }
@@ -572,10 +718,6 @@ export class BookingComponent implements OnInit {
       : 'border-gray-200 hover:border-primary/50';
   }
 
-  selectService(service: Service): void {
-    this.selectedServiceId.set(service.id);
-  }
-
   selectDate(date: string): void {
     this.selectedDate.set(date);
     this.selectedTime.set(null);
@@ -601,14 +743,11 @@ export class BookingComponent implements OnInit {
   canProceed(): boolean {
     switch (this.currentStep()) {
       case 1:
-        return !!this.selectedServiceId();
+        return this.selectedServiceIds().length > 0;
       case 2:
         return !!this.selectedDate() && !!this.selectedTime();
       case 3:
-        if (this.bookingType() === 'HOME') {
-          return !!this.selectedCommune();
-        }
-        return true;
+        return this.bookingType() === 'SALON' || !!this.selectedCommune();
       case 4:
         return true;
       case 5:
@@ -633,24 +772,25 @@ export class BookingComponent implements OnInit {
   }
 
   confirmBooking(): void {
-    const service = this.selectedService();
-    if (!service || !this.selectedDate() || !this.selectedTime()) return;
+    const services = this.selectedServices();
+    const firstService = services[0];
+    if (!firstService || !this.selectedDate() || !this.selectedTime()) return;
 
     const booking = this.mockData.createBooking({
       businessId: this.businessId()!,
       professionalId: this.business()?.professionalId,
-      serviceId: service.id,
-      service,
+      serviceId: firstService.id,
+      service: firstService,
       businessName: this.business()?.name,
       professionalName: this.business()?.name,
       date: new Date(this.selectedDate()!),
       time: this.selectedTime()!,
-      duration: service.duration,
+      duration: this.totalDuration(),
       type: this.bookingType(),
-      clientAddress: this.bookingType() === 'HOME' ? undefined : undefined,
+      clientAddress: undefined,
       clientPhone: '+225 07 07 07 07 07',
       clientName: 'Aminata Kouassi',
-      subtotal: service.price,
+      subtotal: this.servicesSubtotal(),
       homeServiceFee: this.homeServiceFee(),
       total: this.totalPrice(),
       paymentMethod: this.paymentMethod()
@@ -659,6 +799,12 @@ export class BookingComponent implements OnInit {
     this.bookingNumber.set(booking.bookingNumber);
     this.toast.success('Réservation confirmée avec succès !');
     this.currentStep.set(6);
+  }
+
+  copyReference(): void {
+    navigator.clipboard.writeText(this.bookingNumber()).then(() => {
+      this.toast.success('Numéro copié !');
+    }).catch(() => {});
   }
 
   goHome(): void {

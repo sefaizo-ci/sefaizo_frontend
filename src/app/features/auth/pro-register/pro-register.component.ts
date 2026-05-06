@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -6,7 +6,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../shared/ui/toast/toast.component';
 
 type Step = 'compte' | 'verification' | 'profil';
-type Mode = 'phone' | 'email' | 'google';
 
 @Component({
   selector: 'app-pro-register',
@@ -26,7 +25,6 @@ type Mode = 'phone' | 'email' | 'google';
         <div class="absolute top-1/3 right-0 w-64 h-64 rounded-full opacity-10 translate-x-1/3"
              style="background:radial-gradient(circle,#c084fc,transparent)"></div>
 
-        <!-- Illustration -->
         <div class="absolute bottom-0 right-0 w-[55%] h-[78%] pointer-events-none overflow-hidden">
           <img src="/img portailles/register.jpg"
                alt="" class="w-full h-full object-cover object-top"
@@ -39,7 +37,6 @@ type Mode = 'phone' | 'email' | 'google';
           <a href="/"><img src="/Splash.png" alt="SEFAIZO" class="h-10 w-auto brightness-0 invert"></a>
 
           <div class="flex-1 flex flex-col justify-center py-8">
-            <!-- Badge pro -->
             <div class="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full text-xs font-semibold self-start"
                  style="background:rgba(255,255,255,.12);color:#c084fc">
               <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -55,7 +52,6 @@ type Mode = 'phone' | 'email' | 'google';
             </h1>
             <p class="text-white/40 text-sm mb-8 mt-2">+500 professionnels actifs à Abidjan</p>
 
-            <!-- Stats -->
             <div class="grid grid-cols-2 gap-3 mb-8">
               @for (stat of stats; track stat.val) {
                 <div class="rounded-xl p-4" style="background:rgba(255,255,255,.08)">
@@ -83,7 +79,6 @@ type Mode = 'phone' | 'email' | 'google';
             </ul>
           </div>
 
-          <!-- Satisfaction pros -->
           <div class="flex items-center gap-3 pb-2">
             <div class="flex -space-x-2">
               @for (av of proAvatars; track av) {
@@ -109,7 +104,6 @@ type Mode = 'phone' | 'email' | 'google';
       <div class="flex-1 flex items-center justify-center px-8 py-8 bg-white overflow-y-auto">
         <div class="w-full max-w-[430px]">
 
-          <!-- Logo + Stepper -->
           <div class="flex flex-col items-center mb-6">
             <img src="/Splash.png" alt="SEFAIZO" class="h-9 mb-5">
 
@@ -139,177 +133,56 @@ type Mode = 'phone' | 'email' | 'google';
 
             <h2 class="text-2xl font-bold text-secondary">Inscrire mon activité</h2>
             <p class="text-secondary-gray text-sm mt-1">
-              @if (step === 'compte') { Choisissez votre méthode d'inscription }
+              @if (step === 'compte') { Entrez votre numéro de téléphone professionnel }
               @else if (step === 'verification') { Vérifiez votre numéro de téléphone }
               @else { Informations de votre salon / activité }
             </p>
           </div>
 
-          <!-- ── ÉTAPE 1 : COMPTE ── -->
+          <!-- ── ÉTAPE 1 : TÉLÉPHONE + PIN ── -->
           @if (step === 'compte') {
             <div class="space-y-4">
 
-              <!-- Tabs mode -->
-              <div class="flex gap-1 p-1 bg-gray-100 rounded-xl">
-                @for (tab of modeTabs; track tab.key) {
-                  <button type="button" (click)="switchMode(tab.key)"
-                          class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all"
-                          [class]="mode === tab.key ? 'bg-white text-secondary shadow-sm' : 'text-secondary-gray'">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                      <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="tab.icon"/>
-                    </svg>
-                    {{ tab.label }}
-                  </button>
-                }
+              <div>
+                <label class="block text-xs font-medium text-secondary-gray mb-1.5">Numéro de téléphone professionnel</label>
+                <div class="flex rounded-xl border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent transition-all">
+                  <div class="flex items-center gap-2 px-3 bg-gray-50 border-r border-gray-200 flex-shrink-0">
+                    <span class="text-lg leading-none">🇨🇮</span>
+                    <span class="text-sm font-semibold text-secondary">+225</span>
+                  </div>
+                  <input type="tel" [(ngModel)]="phone" name="phone" maxlength="10"
+                         placeholder="07 00 00 00 00" (input)="fmtPhone($event)"
+                         class="flex-1 px-4 py-3 text-sm text-secondary placeholder-gray-400 focus:outline-none bg-white">
+                </div>
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  @for (d of demoPhones; track d.phone) {
+                    <button type="button" (click)="fillPhone(d)"
+                            class="text-xs px-2.5 py-1 rounded-lg border border-dashed transition-all hover:border-purple-400 hover:text-purple-600"
+                            [class]="phone === d.phone ? 'border-purple-500 text-purple-600 bg-purple-50' : 'border-gray-300 text-gray-500'">
+                      {{ d.label }} · {{ d.display }}
+                    </button>
+                  }
+                </div>
               </div>
 
-              <!-- MODE TÉLÉPHONE -->
-              @if (mode === 'phone') {
-                <div class="space-y-4">
-                  <div>
-                    <label class="block text-xs font-medium text-secondary-gray mb-1.5">Numéro de téléphone professionnel</label>
-                    <div class="flex rounded-xl border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent transition-all">
-                      <div class="flex items-center gap-2 px-3 bg-gray-50 border-r border-gray-200 flex-shrink-0">
-                        <span class="text-lg leading-none">🇨🇮</span>
-                        <span class="text-sm font-semibold text-secondary">+225</span>
-                      </div>
-                      <input type="tel" [(ngModel)]="phone" name="phone" maxlength="10"
-                             placeholder="07 00 00 00 00" (input)="fmtPhone($event)"
-                             class="flex-1 px-4 py-3 text-sm text-secondary placeholder-gray-400 focus:outline-none bg-white">
-                    </div>
-                    <!-- Quick-fill téléphones démo pro -->
-                    <div class="mt-2 flex flex-wrap gap-1.5">
-                      @for (d of demoPhones; track d.phone) {
-                        <button type="button" (click)="fillPhone(d)"
-                                class="text-xs px-2.5 py-1 rounded-lg border border-dashed transition-all hover:border-purple-400 hover:text-purple-600"
-                                [class]="phone === d.phone ? 'border-purple-500 text-purple-600 bg-purple-50' : 'border-gray-300 text-gray-500'">
-                          {{ d.label }} · {{ d.display }}
-                        </button>
-                      }
-                    </div>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-medium text-secondary-gray mb-1.5">
-                      Créez votre code PIN à 4 chiffres
-                      <span class="text-gray-400 font-normal ml-1">(connexions futures)</span>
-                    </label>
-                    <div class="flex gap-3">
-                      @for (d of pinDigits; track $index; let i = $index) {
-                        <input type="password" maxlength="1" inputmode="numeric"
-                               [value]="pinDigits[i]"
-                               (input)="onPinInput($event, i)"
-                               (keydown)="onPinKeydown($event, i)"
-                               class="w-13 text-center text-2xl font-bold border-2 rounded-xl focus:outline-none transition-all"
-                               style="width:52px;height:52px"
-                               [style.border-color]="pinDigits[i] ? '#7c3aed' : '#e5e7eb'"
-                               [style.background]="pinDigits[i] ? '#faf5ff' : 'white'">
-                      }
-                    </div>
-                  </div>
-                </div>
-              }
-
-              <!-- MODE EMAIL -->
-              @if (mode === 'email') {
-                <div class="space-y-3">
-                  <div>
-                    <div class="relative">
-                      <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                      </span>
-                      <input type="email" [(ngModel)]="emailVal" name="emailVal" placeholder="Email professionnel"
-                             class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-3 text-sm text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
-                    </div>
-                    <div class="mt-2 flex flex-wrap gap-1.5">
-                      @for (d of demoEmails; track d.email) {
-                        <button type="button" (click)="fillEmail(d)"
-                                class="text-xs px-2.5 py-1 rounded-lg border border-dashed transition-all hover:border-purple-400 hover:text-purple-600"
-                                [class]="emailVal === d.email ? 'border-purple-500 text-purple-600 bg-purple-50' : 'border-gray-300 text-gray-500'">
-                          {{ d.label }}
-                        </button>
-                      }
-                    </div>
-                  </div>
-                  <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                      </svg>
-                    </span>
-                    <input [type]="showPwd ? 'text' : 'password'"
-                           [(ngModel)]="passwordVal" name="passwordVal" placeholder="Mot de passe (min. 6 car.)"
-                           class="w-full border border-gray-200 rounded-xl pl-9 pr-10 py-3 text-sm text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
-                    <button type="button" (click)="showPwd = !showPwd"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                      </svg>
-                    </button>
-                  </div>
-                  @if (passwordVal.length > 0) {
-                    <div>
-                      <div class="flex gap-1.5 mb-1">
-                        @for (seg of [1,2,3]; track seg) {
-                          <div class="flex-1 h-1.5 rounded-full transition-all"
-                               [style.background]="seg <= pwdStrength() ? pwdColor() : '#e5e7eb'"></div>
-                        }
-                      </div>
-                      <p class="text-xs" [style.color]="pwdColor()">{{ pwdLabel() }}</p>
-                    </div>
+              <div>
+                <label class="block text-xs font-medium text-secondary-gray mb-1.5">
+                  Créez votre code PIN à 4 chiffres
+                  <span class="text-gray-400 font-normal ml-1">(connexions futures)</span>
+                </label>
+                <div class="flex gap-3">
+                  @for (d of pinDigits; track $index; let i = $index) {
+                    <input type="password" maxlength="1" inputmode="numeric"
+                           [value]="pinDigits[i]"
+                           (input)="onPinInput($event, i)"
+                           (keydown)="onPinKeydown($event, i)"
+                           class="text-center text-2xl font-bold border-2 rounded-xl focus:outline-none transition-all"
+                           style="width:52px;height:52px"
+                           [style.border-color]="pinDigits[i] ? '#7c3aed' : '#e5e7eb'"
+                           [style.background]="pinDigits[i] ? '#faf5ff' : 'white'">
                   }
-                  <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                      </svg>
-                    </span>
-                    <input [type]="showPwd ? 'text' : 'password'"
-                           [(ngModel)]="confirmPwd" name="confirmPwd" placeholder="Confirmer le mot de passe"
-                           class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-3 text-sm text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                           [class.border-red-400]="confirmPwd && passwordVal !== confirmPwd">
-                  </div>
                 </div>
-              }
-
-              <!-- MODE GOOGLE -->
-              @if (mode === 'google') {
-                <div class="space-y-3">
-                  <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                    <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                    </svg>
-                    <div>
-                      <p class="text-sm font-medium text-secondary">Inscription avec Google</p>
-                      <p class="text-xs text-secondary-gray">Compte professionnel Google</p>
-                    </div>
-                  </div>
-                  <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                      </svg>
-                    </span>
-                    <input type="email" [(ngModel)]="googleEmail" name="googleEmail"
-                           placeholder="votre@gmail.com"
-                           class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-3 text-sm text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
-                  </div>
-                  <div class="flex flex-wrap gap-1.5">
-                    @for (d of demoGoogle; track d.email) {
-                      <button type="button" (click)="googleEmail = d.email"
-                              class="text-xs px-2.5 py-1 rounded-lg border border-dashed transition-all hover:border-purple-400 hover:text-purple-600"
-                              [class]="googleEmail === d.email ? 'border-purple-500 text-purple-600 bg-purple-50' : 'border-gray-300 text-gray-500'">
-                        {{ d.label }}
-                      </button>
-                    }
-                  </div>
-                </div>
-              }
+              </div>
 
               @if (errorMsg) {
                 <p class="text-red-500 text-xs flex items-center gap-1.5">
@@ -332,9 +205,7 @@ type Mode = 'phone' | 'email' | 'google';
                   </svg>
                   Envoi…
                 } @else {
-                  @if (mode === 'phone') { Continuer — Recevoir l'OTP }
-                  @else if (mode === 'email') { Continuer }
-                  @else { S'inscrire avec Google }
+                  Continuer — Recevoir l'OTP
                 }
               </button>
 
@@ -430,14 +301,12 @@ type Mode = 'phone' | 'email' | 'google';
           @if (step === 'profil') {
             <form (ngSubmit)="submitProfil()" class="space-y-3">
 
-              @if (mode === 'phone') {
-                <div class="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>
-                  <p class="text-xs text-green-700 font-medium">Numéro +225 {{ phone }} vérifié ✓</p>
-                </div>
-              }
+              <div class="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <p class="text-xs text-green-700 font-medium">Numéro +225 {{ phone }} vérifié ✓</p>
+              </div>
 
               <!-- Type d'activité -->
               <div>
@@ -491,19 +360,17 @@ type Mode = 'phone' | 'email' | 'google';
                 </div>
               </div>
 
-              <!-- Email si non email mode -->
-              @if (mode !== 'email') {
-                <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                  </span>
-                  <input type="email" [(ngModel)]="profil.email" name="profilEmail" required
-                         placeholder="Email professionnel"
-                         class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2.5 text-sm text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
-                </div>
-              }
+              <!-- Email professionnel -->
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </span>
+                <input type="email" [(ngModel)]="profil.email" name="profilEmail" required
+                       placeholder="Email professionnel *"
+                       class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2.5 text-sm text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+              </div>
 
               <!-- Commune -->
               <div class="relative">
@@ -537,7 +404,7 @@ type Mode = 'phone' | 'email' | 'google';
                 </div>
               </div>
 
-              <!-- Upload pièce d'identité (optionnel) -->
+              <!-- Upload pièce d'identité -->
               <div class="rounded-2xl p-4" style="background:#faf5ff;border:1px dashed #c4b5fd">
                 <div class="flex items-start gap-2.5 mb-3">
                   <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -556,7 +423,6 @@ type Mode = 'phone' | 'email' | 'google';
                     </p>
                   </div>
                 </div>
-
                 @if (idDocName) {
                   <div class="flex items-center gap-2 px-3 py-2 rounded-xl mb-2"
                        style="background:white;border:1px solid #e5e7eb">
@@ -568,7 +434,6 @@ type Mode = 'phone' | 'email' | 'google';
                             class="text-xs" style="color:#9ca3af">✕</button>
                   </div>
                 }
-
                 <label class="flex items-center gap-2 cursor-pointer">
                   <div class="flex-1 px-3 py-2 rounded-xl text-xs"
                        style="background:white;border:1px solid #e5e7eb;color:#9ca3af">
@@ -576,8 +441,7 @@ type Mode = 'phone' | 'email' | 'google';
                   </div>
                   <span class="px-3 py-2 rounded-xl text-xs font-bold flex-shrink-0"
                         style="background:#a855f7;color:white">Parcourir</span>
-                  <input type="file" accept="image/*,.pdf" class="hidden"
-                         (change)="onIdDocChange($event)">
+                  <input type="file" accept="image/*,.pdf" class="hidden" (change)="onIdDocChange($event)">
                 </label>
               </div>
 
@@ -595,7 +459,6 @@ type Mode = 'phone' | 'email' | 'google';
 
               @if (errorMsg) { <p class="text-red-500 text-xs text-center">{{ errorMsg }}</p> }
 
-              <!-- Bouton Créer -->
               <button type="submit"
                       [disabled]="loading || !canSubmitProfil()"
                       class="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all
@@ -615,7 +478,7 @@ type Mode = 'phone' | 'email' | 'google';
                 }
               </button>
 
-              <button type="button" (click)="goBackToPrev()"
+              <button type="button" (click)="step = 'verification'; errorMsg = ''"
                       class="w-full text-center text-xs text-secondary-gray hover:text-secondary flex items-center justify-center gap-1 transition-colors">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
@@ -654,72 +517,35 @@ type Mode = 'phone' | 'email' | 'google';
 })
 export class ProRegisterComponent {
   step: Step = 'compte';
-  mode: Mode = 'phone';
   loading = false;
-  showPwd = false;
   showToast = true;
   errorMsg = '';
 
-  // Compte
   phone = '';
   pinDigits = ['', '', '', ''];
-  emailVal = '';
-  passwordVal = '';
-  confirmPwd = '';
-  googleEmail = '';
-
-  // Vérification
   otpDigits = ['', '', '', '', '', ''];
   mockOtp = '';
   otpCooldown = 0;
 
-  // Profil pro
   profil = {
     bizType: 'SALON' as 'SALON' | 'FREELANCE' | 'HYBRID',
-    bizName: '',
-    firstName: '', lastName: '',
-    email: '', city: ''
+    bizName: '', firstName: '', lastName: '', email: '', city: ''
   };
   selectedServices: string[] = [];
   acceptTerms = false;
-
-  // Pièce d'identité (optionnel)
   idDocName = '';
   idDocFile: File | null = null;
-
-  onIdDocChange(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) { this.idDocName = file.name; this.idDocFile = file; }
-  }
 
   communes = ['Cocody','Plateau','Yopougon','Marcory','Treichville','Adjamé','Abobo','Port-Bouët','Attécoubé','Koumassi'];
   serviceOptions = ['Coiffure','Esthétique','Manucure','Pédicure','Barbier','Maquillage','Soins du visage','Massage'];
   bizTypes = [{ value: 'SALON', label: 'Salon' }, { value: 'FREELANCE', label: 'Freelance' }, { value: 'HYBRID', label: 'Hybride' }];
-
   stats = [{ val: '500+', label: 'Professionnels actifs' }, { val: '8 000+', label: 'Clientes satisfaites' }];
 
-  // ── Données mock téléphone pro (opérateurs CI) ───────────────
   demoPhones = [
     { label: 'Orange',  display: '07 22 33 44 55', phone: '0722334455', pin: '1234' },
     { label: 'MTN',     display: '05 88 99 00 11', phone: '0588990011', pin: '5678' },
     { label: 'Moov',    display: '01 44 55 66 77', phone: '0144556677', pin: '9012' },
     { label: 'Wave',    display: '07 00 11 22 33', phone: '0700112233', pin: '3456' },
-  ];
-
-  // ── Données mock email pro ────────────────────────────────────
-  demoEmails = [
-    { label: 'Jean K.',     email: 'jean.koffi@sefaizo.ci',      pwd: 'Jean@2025!' },
-    { label: 'Moussa O.',   email: 'moussa.ouattara@gmail.com',  pwd: 'Moussa#9876' },
-    { label: 'Awa S.',      email: 'awa.soro@beaute-ci.com',     pwd: 'Awa@Salon!' },
-    { label: 'Issouf C.',   email: 'issouf.coulibaly@gmail.com', pwd: 'Issouf@7777' },
-  ];
-
-  // ── Données mock Google pro ───────────────────────────────────
-  demoGoogle = [
-    { label: 'jean@gmail',   email: 'jean.koffi@gmail.com'      },
-    { label: 'moussa@gmail', email: 'moussa.ouattara@gmail.com' },
-    { label: 'awa@gmail',    email: 'awa.soro@gmail.com'        },
-    { label: 'pro (démo)',   email: 'pro@sefaizo.ci'            },
   ];
 
   leftItems = [
@@ -729,17 +555,10 @@ export class ProRegisterComponent {
   ];
 
   proAvatars = ['/avatars/Moussa Ouattara.jpg', '/avatars/Issouf Coulibaly.jpg', '/avatars/clarisse-yao.jpg', '/avatars/mariam-bamba.jpg'];
-
   stepperDef = [
     { id: 1, key: 'compte' as Step, label: 'Compte' },
     { id: 2, key: 'verification' as Step, label: 'Vérification' },
     { id: 3, key: 'profil' as Step, label: 'Profil' },
-  ];
-
-  modeTabs = [
-    { key: 'phone' as Mode, label: 'Téléphone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' },
-    { key: 'email' as Mode, label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
-    { key: 'google' as Mode, label: 'Google', icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9' },
   ];
 
   constructor(private authService: AuthService, private toast: ToastService, private router: Router) {}
@@ -749,30 +568,10 @@ export class ProRegisterComponent {
   pinVal(): string { return this.pinDigits.join(''); }
   cleanPhone(): string { return this.phone.replace(/\s/g, ''); }
 
-  pwdStrength = computed(() => {
-    const p = this.passwordVal; if (!p) return 0;
-    let s = 0;
-    if (p.length >= 8) s++;
-    if (/[A-Z0-9]/.test(p)) s++;
-    if (/[^A-Za-z0-9]/.test(p) || p.length >= 12) s++;
-    return Math.max(1, s);
-  });
-  pwdLabel = computed(() => ['','Faible','Moyen','Fort'][this.pwdStrength()]);
-  pwdColor = computed(() => ['','#ef4444','#f59e0b','#22c55e'][this.pwdStrength()]);
-
-  switchMode(m: Mode): void { this.mode = m; this.errorMsg = ''; }
-
   fillPhone(d: { phone: string; pin: string }): void {
     this.phone = d.phone;
     const digits = d.pin.split('');
     this.pinDigits = [digits[0] ?? '', digits[1] ?? '', digits[2] ?? '', digits[3] ?? ''];
-    this.errorMsg = '';
-  }
-
-  fillEmail(d: { email: string; pwd: string }): void {
-    this.emailVal    = d.email;
-    this.passwordVal = d.pwd;
-    this.confirmPwd  = d.pwd;
     this.errorMsg = '';
   }
 
@@ -797,33 +596,29 @@ export class ProRegisterComponent {
   toggleSvc(s: string): void { const i = this.selectedServices.indexOf(s); i >= 0 ? this.selectedServices.splice(i, 1) : this.selectedServices.push(s); }
   isSvcSelected(s: string): boolean { return this.selectedServices.includes(s); }
 
+  onIdDocChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) { this.idDocName = file.name; this.idDocFile = file; }
+  }
+
   canGoStep2(): boolean {
-    if (this.mode === 'phone') return this.cleanPhone().length === 10 && this.pinVal().length === 4;
-    if (this.mode === 'email') return !!this.emailVal && this.passwordVal.length >= 6 && this.passwordVal === this.confirmPwd;
-    return !!this.googleEmail;
+    return this.cleanPhone().length === 10 && this.pinVal().length === 4;
   }
 
   canSubmitProfil(): boolean {
-    const emailOk = this.mode === 'email' ? !!this.emailVal : !!this.profil.email;
-    return !!(this.profil.bizName && this.profil.firstName && this.profil.lastName && this.profil.city && emailOk && this.acceptTerms);
+    return !!(this.profil.bizName && this.profil.firstName && this.profil.lastName && this.profil.city && this.profil.email && this.acceptTerms);
   }
 
   goToStep2(): void {
     this.errorMsg = '';
-    if (this.mode === 'phone') {
-      this.loading = true;
-      setTimeout(() => {
-        this.mockOtp = String(Math.floor(100000 + Math.random() * 900000));
-        this.toast.success(`OTP envoyé au +225 ${this.phone} (démo : ${this.mockOtp})`);
-        this.step = 'verification';
-        this.loading = false;
-        this.startCooldown();
-      }, 700);
-    } else {
-      if (this.mode === 'google') this.profil.email = this.googleEmail;
-      if (this.mode === 'email') this.profil.email = this.emailVal;
-      this.step = 'profil';
-    }
+    this.loading = true;
+    setTimeout(() => {
+      this.mockOtp = String(Math.floor(100000 + Math.random() * 900000));
+      this.toast.success(`OTP envoyé au +225 ${this.phone} (démo : ${this.mockOtp})`);
+      this.step = 'verification';
+      this.loading = false;
+      this.startCooldown();
+    }, 700);
   }
 
   onOtpInput(e: Event, i: number): void {
@@ -865,24 +660,17 @@ export class ProRegisterComponent {
     const t = setInterval(() => { if (--this.otpCooldown <= 0) clearInterval(t); }, 1000);
   }
 
-  goBackToPrev(): void {
-    this.errorMsg = '';
-    this.step = this.mode === 'phone' ? 'verification' : 'compte';
-  }
-
   submitProfil(): void {
     if (!this.canSubmitProfil()) return;
     this.loading = true;
     this.errorMsg = '';
 
-    const email = this.profil.email || this.emailVal || `pro_${Date.now()}@sefaizo.temp`;
-    const pwd = this.passwordVal || 'password123';
-
     this.authService.register({
-      email, password: pwd,
+      email: this.profil.email,
+      password: 'password123',
       firstName: this.profil.firstName,
       lastName: this.profil.lastName,
-      phone: this.mode === 'phone' ? `+225${this.cleanPhone()}` : '',
+      phone: `+225${this.cleanPhone()}`,
       role: 'PRO'
     }).then(() => {
       localStorage.setItem('pro_business_name', this.profil.bizName);

@@ -56,4 +56,12 @@ export class SearchFiltersComponent {
   onRatingClick(star: number): void {
     this.ratingChange.emit(this.minRating === star ? 0 : star);
   }
+
+  getRdvBtnClass(typeId: string): string {
+    const base = 'flex h-11 w-full items-center justify-center gap-1.5 rounded-full border text-[13px] font-bold transition-all px-3';
+    if (this.businessType === typeId) {
+      return `${base} border-[#7c3aed] bg-[#f3f0ff] text-[#7c3aed]`;
+    }
+    return `${base} border-[#e7e9f4] bg-white text-[#69708a]`;
+  }
 }
