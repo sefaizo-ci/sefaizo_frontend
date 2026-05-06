@@ -4,6 +4,7 @@ import { LucideAngularModule } from 'lucide-angular';
 export interface CategoryWithCount {
   name: string;
   count: number;
+  icon?: string;
 }
 
 @Component({
@@ -35,6 +36,22 @@ export class SearchFiltersComponent {
     { id: 'SALON', label: 'En salon', icon: 'store' },
     { id: 'FREELANCE', label: 'À domicile', icon: 'home' },
   ];
+
+  // Mapping des icônes de ServiceCategory vers les noms d'icônes Lucide
+  readonly categoryIconNames: Record<string, string> = {
+    'cut':      'scissors',
+    'sparkles': 'sparkles',
+    'hand':     'paintbrush',
+    'foot':     'footprints',
+    'user':     'user-round',
+    'brush':    'wand-sparkles',
+    'face':     'smile',
+    'spa':      'flower',
+  };
+
+  getCategoryIcon(icon?: string): string {
+    return (icon && this.categoryIconNames[icon]) || 'scissors';
+  }
 
   onRatingClick(star: number): void {
     this.ratingChange.emit(this.minRating === star ? 0 : star);

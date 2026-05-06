@@ -27,7 +27,7 @@ import { SearchSalonCardComponent } from './components/search-salon-card/search-
             class="flex h-12 max-w-[640px] items-center overflow-hidden rounded-full border border-[#e7e9f4] bg-white shadow-[0_4px_14px_rgba(36,36,80,0.09)]"
             (submit)="$event.preventDefault(); onSearch(searchInput.value)"
           >
-            <lucide-icon class="ml-4 shrink-0 text-[#5b35f6]" name="search" [size]="20" [strokeWidth]="2.2" aria-hidden="true" />
+            <lucide-icon class="ml-4 shrink-0 text-[#7c3aed]" name="search" [size]="20" [strokeWidth]="2.2" aria-hidden="true" />
             <input
               #searchInput
               class="flex-1 border-0 bg-transparent px-3 text-[13px] font-bold text-[#11152f] outline-none placeholder:text-[#7b829a]"
@@ -36,7 +36,7 @@ import { SearchSalonCardComponent } from './components/search-salon-card/search-
               placeholder="Quel service ? (coiffure, tresses...)"
             />
             <button
-              class="mr-1.5 inline-flex h-9 min-w-[100px] items-center justify-center rounded-full bg-[#5b35f6] px-5 text-xs font-extrabold text-white transition-all hover:bg-[#4d28dc]"
+              class="mr-1.5 inline-flex h-9 min-w-[100px] items-center justify-center rounded-full bg-[#7c3aed] px-5 text-xs font-extrabold text-white transition-all hover:bg-[#6d28d9]"
               type="submit"
             >Rechercher</button>
           </form>
@@ -68,7 +68,9 @@ import { SearchSalonCardComponent } from './components/search-salon-card/search-
             [resultCount]="filteredResults().length"
             [searchQuery]="searchQuery()"
             [sortBy]="sortBy()"
+            [viewMode]="viewMode()"
             (sortChange)="sortBy.set($any($event))"
+            (viewModeChange)="viewMode.set($event)"
           />
 
           @if (filteredResults().length === 0) {
@@ -82,16 +84,20 @@ import { SearchSalonCardComponent } from './components/search-salon-card/search-
               </p>
               <button
                 (click)="resetFilters()"
-                class="inline-flex items-center gap-2 rounded-full bg-[#5b35f6] px-6 py-3 text-sm font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)] transition-transform hover:-translate-y-0.5"
+                class="inline-flex items-center gap-2 rounded-full bg-[#7c3aed] px-6 py-3 text-sm font-extrabold text-white shadow-[0_10px_22px_rgba(124,58,237,0.25)] transition-transform hover:-translate-y-0.5"
               >
                 <lucide-icon name="refresh-cw" [size]="14" [strokeWidth]="2.5" aria-hidden="true" />
                 Réinitialiser les filtres
               </button>
             </div>
           } @else {
-            <div class="grid grid-cols-2 gap-x-5 gap-y-[22px] max-[900px]:grid-cols-1">
+            <div
+              [class]="viewMode() === 'GRID'
+                ? 'grid grid-cols-2 gap-x-5 gap-y-[22px] max-[900px]:grid-cols-1'
+                : 'flex flex-col gap-4'"
+            >
               @for (business of filteredResults(); track business.id) {
-                <app-search-salon-card [business]="business" />
+                <app-search-salon-card [business]="business" [viewMode]="viewMode()" />
               }
             </div>
           }
@@ -114,11 +120,13 @@ export class SearchComponent implements OnInit {
   maxPrice           = signal(50000);
   businessType       = signal<'SALON' | 'FREELANCE' | null>(null);
   sortBy             = signal<'RELEVANCE' | 'RATING' | 'PRICE_ASC' | 'PRICE_DESC'>('RELEVANCE');
+  viewMode           = signal<'GRID' | 'LIST'>('GRID');
 
   categoriesWithCount = computed<CategoryWithCount[]>(() =>
     this.categories.map(cat => ({
       name: cat.name,
       count: this.allBusinesses.filter(b => b.categories.includes(cat.name)).length,
+      icon: cat.icon,
     }))
   );
 

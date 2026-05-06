@@ -5,7 +5,7 @@
     </h1>
     @if (searchQuery) {
       <p class="mt-1 text-sm font-bold text-[#69708a]">
-        Résultats pour <span class="text-[#5b35f6]">"{{ searchQuery }}"</span>
+        Résultats pour <span class="text-[#7c3aed]">"{{ searchQuery }}"</span>
       </p>
     }
   </div>
@@ -14,7 +14,7 @@
     <span class="text-sm font-bold text-[#66708d]">Trier par :</span>
     <div class="relative">
       <select
-        class="h-9 min-w-[148px] appearance-none rounded-full border border-[#e7e9f4] bg-white pl-4 pr-8 text-sm font-bold text-[#303653] outline-none cursor-pointer focus:border-[#5b35f6] focus:ring-2 focus:ring-[#5b35f6]/20"
+        class="h-9 min-w-[148px] appearance-none rounded-full border border-[#e7e9f4] bg-white pl-4 pr-8 text-sm font-bold text-[#303653] outline-none cursor-pointer focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20"
         [value]="sortBy"
         (change)="sortChange.emit($any($event.target).value)"
       >
@@ -24,6 +24,32 @@
         <option value="PRICE_DESC">Prix décroissant</option>
       </select>
       <lucide-icon class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#59617b]" name="chevron-down" [size]="15" [strokeWidth]="2.2" aria-hidden="true" />
+    </div>
+
+    <!-- Toggle vue Liste / Cartes -->
+    <div class="flex h-9 overflow-hidden rounded-full border border-[#e7e9f4] bg-white">
+      <button
+        class="inline-flex w-9 items-center justify-center transition-colors"
+        [class.bg-[#7c3aed]]="viewMode === 'GRID'"
+        [class.text-white]="viewMode === 'GRID'"
+        [class.text-[#66708d]]="viewMode !== 'GRID'"
+        type="button"
+        aria-label="Vue grille"
+        (click)="viewModeChange.emit('GRID')"
+      >
+        <lucide-icon name="layout-grid" [size]="16" [strokeWidth]="2.1" aria-hidden="true" />
+      </button>
+      <button
+        class="inline-flex w-9 items-center justify-center border-l border-[#e7e9f4] transition-colors"
+        [class.bg-[#7c3aed]]="viewMode === 'LIST'"
+        [class.text-white]="viewMode === 'LIST'"
+        [class.text-[#66708d]]="viewMode !== 'LIST'"
+        type="button"
+        aria-label="Vue liste"
+        (click)="viewModeChange.emit('LIST')"
+      >
+        <lucide-icon name="list" [size]="17" [strokeWidth]="2.1" aria-hidden="true" />
+      </button>
     </div>
   </div>
 </header>

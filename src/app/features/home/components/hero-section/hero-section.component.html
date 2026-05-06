@@ -10,7 +10,7 @@
         (submit)="$event.preventDefault(); onSearch(serviceInput.value, communeSelect.value)"
       >
         <!-- Champ service (texte libre) -->
-        <label class="flex min-w-0 items-center gap-3 px-3.5 text-[#5b35f6] max-[900px]:min-h-12 max-[900px]:border-b max-[900px]:border-[#e7e9f4]">
+        <label class="flex min-w-0 items-center gap-3 px-3.5 text-[#7c3aed] max-[900px]:min-h-12 max-[900px]:border-b max-[900px]:border-[#e7e9f4]">
           <span class="sr-only">Service recherché</span>
           <lucide-icon name="search" [size]="22" [strokeWidth]="2.4" aria-hidden="true" />
           <input
@@ -22,7 +22,7 @@
         </label>
 
         <!-- Sélecteur de commune -->
-        <label class="relative flex min-w-0 items-center gap-3 border-l border-[#e7e9f4] px-3.5 text-[#5b35f6] max-[900px]:min-h-12 max-[900px]:border-l-0 max-[900px]:border-b max-[900px]:border-[#e7e9f4]">
+        <label class="relative flex min-w-0 items-center gap-3 border-l border-[#e7e9f4] px-3.5 text-[#7c3aed] max-[900px]:min-h-12 max-[900px]:border-l-0 max-[900px]:border-b max-[900px]:border-[#e7e9f4]">
           <span class="sr-only">Commune</span>
           <lucide-icon name="map-pin" [size]="22" [strokeWidth]="2.4" class="shrink-0" aria-hidden="true" />
           <select
@@ -38,7 +38,7 @@
         </label>
 
         <button
-          class="inline-flex min-h-12 min-w-[132px] items-center justify-center rounded-full bg-[#5b35f6] px-5 text-[13px] font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)] transition-transform hover:-translate-y-0.5 hover:bg-[#4d28dc] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] max-[900px]:w-full"
+          class="inline-flex min-h-12 min-w-[132px] items-center justify-center rounded-full bg-[#7c3aed] px-5 text-[13px] font-extrabold text-white shadow-[0_10px_22px_rgba(124,58,237,0.25)] transition-transform hover:-translate-y-0.5 hover:bg-[#6d28d9] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] max-[900px]:w-full"
           type="submit"
         >Rechercher</button>
       </form>
@@ -49,7 +49,7 @@
       >
         @for (stat of hero.stats; track stat.value) {
           <span class="inline-flex items-center gap-2">
-            <lucide-icon class="text-[#5b35f6]" [name]="iconNames[stat.icon]" [size]="18" [strokeWidth]="2.4" aria-hidden="true" />
+            <lucide-icon class="text-[#7c3aed]" [name]="iconNames[stat.icon]" [size]="18" [strokeWidth]="2.4" aria-hidden="true" />
             <strong>{{ stat.value }}</strong>
             @if (stat.label) {
               {{ stat.label }}

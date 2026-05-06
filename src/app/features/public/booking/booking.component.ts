@@ -183,7 +183,12 @@ import { LucideAngularModule } from 'lucide-angular';
 
                 <!-- Étape 3 : Lieu -->
                 @if (currentStep() === 3) {
-                  <h2 class="text-xl font-bold text-secondary mb-5">Type de prestation</h2>
+                  <div class="flex items-center gap-2 mb-5">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary flex-shrink-0">
+                      <lucide-icon name="map-pin" [size]="18" [strokeWidth]="1.75"></lucide-icon>
+                    </span>
+                    <h2 class="text-xl font-bold text-secondary m-0">Type de prestation</h2>
+                  </div>
                   <div class="grid md:grid-cols-2 gap-4 mb-6">
                     <button (click)="selectBookingType('SALON')"
                             [class]="getTypeClass('SALON')"

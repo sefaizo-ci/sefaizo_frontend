@@ -1000,6 +1000,26 @@ export class MockDataService {
       }
     }
 
+    // Reviews pour les nouveaux prestataires (business-new-1 à business-new-7)
+    for (let i = 1; i <= 7; i++) {
+      const numReviews = Math.floor(Math.random() * 3) + 2; // 2–4 avis
+      for (let j = 0; j < numReviews; j++) {
+        const profile = profiles[(i * 2 + j + 5) % profiles.length];
+        reviews.push({
+          id: `review-new-${i}-${j}`,
+          bookingId: `booking-mock-new-${i}-${j}`,
+          businessId: `business-new-${i}`,
+          clientId: `client-mock-new-${j}`,
+          clientName: profile.name,
+          clientAvatar: profile.avatar,
+          rating: Math.floor(Math.random() * 2) + 4,
+          comment: comments[(i + j * 2 + 3) % comments.length],
+          isReported: false,
+          createdAt: new Date(Date.now() - Math.random() * 45 * 24 * 60 * 60 * 1000)
+        });
+      }
+    }
+
     return reviews;
   }
 

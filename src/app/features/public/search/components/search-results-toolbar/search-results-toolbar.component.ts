@@ -11,6 +11,8 @@ export class SearchResultsToolbarComponent {
   @Input({ required: true }) resultCount = 0;
   @Input() searchQuery = '';
   @Input() sortBy = 'RELEVANCE';
+  @Input() viewMode: 'GRID' | 'LIST' = 'GRID';
 
   @Output() sortChange = new EventEmitter<string>();
+  @Output() viewModeChange = new EventEmitter<'GRID' | 'LIST'>();
 }
