@@ -13,6 +13,7 @@ import { FcfaPipe } from '../../../../../shared/pipes/format.pipe';
 })
 export class SearchSalonCardComponent {
   @Input({ required: true }) business!: Business;
+  @Input() viewMode: 'GRID' | 'LIST' = 'GRID';
 
   get minPrice(): number {
     if (!this.business.services?.length) return 0;

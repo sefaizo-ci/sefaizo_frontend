@@ -6,7 +6,7 @@
       <button
         (click)="prev()"
         [disabled]="atStart()"
-        class="absolute left-0 top-[calc(50%-20px)] z-10 -translate-x-1/2 hidden min-[900px]:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#e7e9f4] shadow-[0_4px_14px_rgba(36,36,80,0.14)] text-[#5b35f6] transition-all hover:bg-[#f3f0ff] disabled:opacity-30 disabled:cursor-not-allowed"
+        class="absolute left-0 top-[calc(50%-20px)] z-10 -translate-x-1/2 hidden min-[900px]:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#e7e9f4] shadow-[0_4px_14px_rgba(36,36,80,0.14)] text-[#7c3aed] transition-all hover:bg-[#f3f0ff] disabled:opacity-30 disabled:cursor-not-allowed"
         aria-label="Avis précédent"
       >
         <lucide-icon name="chevron-left" [size]="20" [strokeWidth]="2.5" aria-hidden="true" />
@@ -51,7 +51,7 @@
       <button
         (click)="next()"
         [disabled]="atEnd()"
-        class="absolute right-0 top-[calc(50%-20px)] z-10 translate-x-1/2 hidden min-[900px]:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#e7e9f4] shadow-[0_4px_14px_rgba(36,36,80,0.14)] text-[#5b35f6] transition-all hover:bg-[#f3f0ff] disabled:opacity-30 disabled:cursor-not-allowed"
+        class="absolute right-0 top-[calc(50%-20px)] z-10 translate-x-1/2 hidden min-[900px]:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#e7e9f4] shadow-[0_4px_14px_rgba(36,36,80,0.14)] text-[#7c3aed] transition-all hover:bg-[#f3f0ff] disabled:opacity-30 disabled:cursor-not-allowed"
         aria-label="Avis suivant"
       >
         <lucide-icon name="chevron-right" [size]="20" [strokeWidth]="2.5" aria-hidden="true" />
@@ -62,7 +62,7 @@
       @for (testimonial of testimonials; track testimonial.id; let i = $index) {
         <button
           (click)="goTo(i)"
-          [ngClass]="currentIndex() === i ? 'w-6 bg-[#5b35f6]' : 'w-2.5 bg-[#d9d8e9]'"
+          [ngClass]="currentIndex() === i ? 'w-6 bg-[#7c3aed]' : 'w-2.5 bg-[#d9d8e9]'"
           class="h-2.5 rounded-full transition-all duration-300"
           role="tab"
           [attr.aria-selected]="currentIndex() === i"

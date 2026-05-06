@@ -83,7 +83,7 @@ import { filter, map, startWith } from 'rxjs/operators';
                 <!-- Se connecter — bordure violette -->
                 <a routerLink="/auth/login"
                    class="hidden sm:flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full border-2 transition-all hover:bg-[#f3f0ff]"
-                   style="border-color:#5b35f6;color:#5b35f6">
+                   style="border-color:#7c3aed;color:#7c3aed">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
@@ -145,7 +145,7 @@ import { filter, map, startWith } from 'rxjs/operators';
                   <div class="flex flex-col gap-2 pt-3 border-t mt-2" style="border-color:#f3f4f6">
                     <a routerLink="/auth/login" (click)="mobileMenuOpen=false"
                        class="px-4 py-2.5 rounded-full text-sm font-semibold border-2 text-center"
-                       style="border-color:#5b35f6;color:#5b35f6">Se connecter</a>
+                       style="border-color:#7c3aed;color:#7c3aed">Se connecter</a>
                     <a routerLink="/recherche" (click)="mobileMenuOpen=false"
                        class="px-4 py-2.5 rounded-full text-sm font-bold text-white text-center"
                        style="background:linear-gradient(135deg,#7c3aed,#a855f7)">Réserver maintenant</a>

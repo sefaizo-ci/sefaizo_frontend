@@ -1,9 +1,9 @@
 <article class="overflow-hidden rounded-lg border border-[#e7e9f4] bg-white shadow-[0_10px_26px_rgba(44,39,117,0.1)]">
   <div class="relative h-[164px] bg-[#ded8ff] after:absolute after:inset-0 after:bg-gradient-to-b after:from-[#0c0e22]/10 after:to-[#0c0e22]/0 after:content-[''] max-[520px]:h-44">
     <img class="h-full w-full object-cover" [src]="business.imageUrl" [alt]="business.name" loading="lazy" />
-    <span class="absolute top-3.5 left-3.5 z-10 min-h-7 rounded-md bg-[#5b35f6] px-2.5 py-1.5 text-xs leading-tight font-extrabold text-white">{{ business.badge || business.categoryLabel }}</span>
+    <span class="absolute top-3.5 left-3.5 z-10 min-h-7 rounded-md bg-[#7c3aed] px-2.5 py-1.5 text-xs leading-tight font-extrabold text-white">{{ business.badge || business.categoryLabel }}</span>
     <button
-      class="absolute top-3 right-3 z-10 inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border-0 bg-white/95 text-[#6c7289] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#5b35f6]/30"
+      class="absolute top-3 right-3 z-10 inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border-0 bg-white/95 text-[#6c7289] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#7c3aed]/30"
       type="button"
       [attr.aria-label]="'Ajouter ' + business.name + ' aux favoris'"
     >
@@ -26,9 +26,9 @@
     </p>
 
     <div class="flex items-center justify-between gap-3 max-[520px]:flex-col max-[520px]:items-stretch">
-      <strong class="text-sm font-black text-[#5b35f6]">À partir de {{ business.startingPrice | homePrice }}</strong>
+      <strong class="text-sm font-black text-[#7c3aed]">À partir de {{ business.startingPrice | homePrice }}</strong>
       <a
-        class="inline-flex min-h-9 items-center justify-center rounded-full bg-[#5b35f6] px-[18px] text-xs font-extrabold text-white shadow-[0_10px_22px_rgba(91,53,246,0.25)] transition-transform hover:-translate-y-0.5 hover:bg-[#4d28dc] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#5b35f6]/30 max-[520px]:w-full"
+        class="inline-flex min-h-9 items-center justify-center rounded-full bg-[#7c3aed] px-[18px] text-xs font-extrabold text-white shadow-[0_10px_22px_rgba(124,58,237,0.25)] transition-transform hover:-translate-y-0.5 hover:bg-[#6d28d9] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#7c3aed]/30 max-[520px]:w-full"
         [routerLink]="['/pro', business.slug]"
       >Réserver</a>
     </div>
