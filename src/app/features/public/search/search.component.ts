@@ -20,29 +20,6 @@ import { SearchSalonCardComponent } from './components/search-salon-card/search-
   template: `
     <div class="min-h-screen bg-white text-[#11152f]">
 
-      <!-- Barre de recherche compacte -->
-      <div class="border-b border-[#e7e9f4] bg-[#f7f5ff] py-5">
-        <div class="container-custom">
-          <form
-            class="flex h-12 max-w-[640px] items-center overflow-hidden rounded-full border border-[#e7e9f4] bg-white shadow-[0_4px_14px_rgba(36,36,80,0.09)]"
-            (submit)="$event.preventDefault(); onSearch(searchInput.value)"
-          >
-            <lucide-icon class="ml-4 shrink-0 text-[#7c3aed]" name="search" [size]="20" [strokeWidth]="2.2" aria-hidden="true" />
-            <input
-              #searchInput
-              class="flex-1 border-0 bg-transparent px-3 text-[13px] font-bold text-[#11152f] outline-none placeholder:text-[#7b829a]"
-              type="text"
-              [value]="searchQuery()"
-              placeholder="Quel service ? (coiffure, tresses...)"
-            />
-            <button
-              class="mr-1.5 inline-flex h-9 min-w-[100px] items-center justify-center rounded-full bg-[#7c3aed] px-5 text-xs font-extrabold text-white transition-all hover:bg-[#6d28d9]"
-              type="submit"
-            >Rechercher</button>
-          </form>
-        </div>
-      </div>
-
       <!-- Contenu principal : filtres + résultats -->
       <div class="container-custom grid grid-cols-[306px_minmax(0,1fr)] gap-8 max-[1040px]:grid-cols-1 max-[1040px]:gap-6">
 
