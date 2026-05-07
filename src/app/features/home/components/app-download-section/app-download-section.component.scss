@@ -1,0 +1,731 @@
+/* ================================================================
+   APP DOWNLOAD SECTION — styles scoped au composant
+   ================================================================ */
+
+/* ---- Carte principale ---- */
+.download-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  min-height: 420px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #6844f6 0%, #8f70ff 55%, #b6a3ff 100%);
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+/* ---- Côté gauche (texte + badges) ---- */
+.download-left {
+  position: relative;
+  z-index: 10;
+  padding: 44px 52px;
+  color: #fff;
+
+  @media (max-width: 600px) {
+    padding: 28px 24px;
+  }
+}
+
+.download-title {
+  margin: 0 0 14px;
+  font-family: 'MB Empire', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: clamp(26px, 3.2vw, 38px);
+  line-height: 1.12;
+  color: #fff;
+}
+
+.download-desc {
+  margin: 0 0 28px;
+  font-family: 'MB Empire', 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.88);
+  max-width: 420px;
+}
+
+/* ---- Badges store ---- */
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: #0d0e1d;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: transform 0.2s ease, background 0.2s ease;
+  min-width: 152px;
+
+  &:hover {
+    background: #1a1c2e;
+    transform: translateY(-2px);
+  }
+
+  svg { flex-shrink: 0; }
+
+  .badge-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+
+    small {
+      font-family: 'MB Empire', 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+    }
+
+    strong {
+      font-family: 'MB Empire', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+    }
+  }
+}
+
+/* ---- Côté droit (phone seul) ---- */
+.download-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 860px) {
+    display: none;
+  }
+}
+
+/* ---- Téléphone (mockup) vertical centré ---- */
+.phone-device {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 172px;
+  height: 358px;
+  background: #11152f;
+  border-radius: 32px;
+  border: 6px solid #11152f;
+  box-shadow:
+    0 28px 56px rgba(17,21,47,0.55),
+    0 0 0 1px rgba(255,255,255,0.08);
+  z-index: 10;
+
+  /* Encoche (notch) */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 13px;
+    background: #11152f;
+    border-radius: 7px;
+    z-index: 30;
+  }
+}
+
+.phone-screen {
+  position: absolute;
+  inset: 0;
+  background: #f9f7ff;
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+/* ---- Système de slides ---- */
+.phone-slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  animation: slide-enter 0.42s cubic-bezier(0.34,1.2,0.64,1) both;
+}
+
+@keyframes slide-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Éléments communs dans les slides ---- */
+.pslide {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 9px;
+  font-family: 'MB Empire', 'Inter', sans-serif;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 22px 10px 8px;
+    border-bottom: 1px solid #eee;
+    font-weight: 700;
+    font-size: 11px;
+    color: #11152f;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 12px;
+    color: #11152f;
+    margin: 0 0 2px;
+  }
+
+  &__body {
+    flex: 1;
+    overflow: hidden;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  &__logo {
+    height: 22px;
+    width: auto;
+  }
+}
+
+/* ---- Formulaires dans le phone ---- */
+.pfield {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &__label {
+    font-size: 8px;
+    font-weight: 700;
+    color: #7c3aed;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__input {
+    padding: 5px 8px;
+    border: 1px solid #e0d9ff;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 9px;
+    font-weight: 300;
+    color: #11152f;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+/* ---- Bouton dans le phone ---- */
+.pbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  border-radius: 14px;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  border: none;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.pbtn--outline {
+  background: transparent;
+  border: 1px solid #7c3aed;
+  color: #7c3aed;
+}
+
+.pbtn--green {
+  background: #10b981;
+}
+
+.pbtn--dark {
+  background: #11152f;
+}
+
+/* ---- Animations typing ---- */
+@keyframes type-in {
+  from { max-width: 0; }
+  to   { max-width: 200px; }
+}
+
+.type-1 { display: inline-block; overflow: hidden; white-space: nowrap; max-width: 0; animation: type-in 1s ease 0.4s both; }
+.type-2 { display: inline-block; overflow: hidden; white-space: nowrap; max-width: 0; animation: type-in 1s ease 1.6s both; }
+.type-3 { display: inline-block; overflow: hidden; white-space: nowrap; max-width: 0; animation: type-in 0.9s ease 2.7s both; }
+
+/* ---- Animation bouton press ---- */
+@keyframes btn-press {
+  0%, 75%  { transform: scale(1); background: #7c3aed; }
+  85%      { transform: scale(0.93); background: #6d28d9; }
+  100%     { transform: scale(1); background: #7c3aed; }
+}
+.btn-press { animation: btn-press 0.5s ease 3.4s both; }
+
+@keyframes btn-press-green {
+  0%, 75%  { transform: scale(1); background: #10b981; }
+  85%      { transform: scale(0.93); background: #059669; }
+  100%     { transform: scale(1); background: #10b981; }
+}
+.btn-press-green { animation: btn-press-green 0.5s ease 3.4s both; }
+
+/* ---- Icône succès pop ---- */
+@keyframes success-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  65%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.success-pop { animation: success-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s both; }
+
+/* ---- Logo pulse (transition) ---- */
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.09); opacity: 0.88; }
+}
+.logo-pulse { animation: logo-pulse 1.6s ease-in-out infinite; }
+
+/* ---- Tagline apparition (transition) ---- */
+@keyframes tagline-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tagline-in { animation: tagline-in 0.8s ease 1.6s both; }
+
+/* ---- Notification slide-in ---- */
+@keyframes notif-slide {
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.notif-slide { animation: notif-slide 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.4s both; }
+
+/* ---- Revenus counter ---- */
+@keyframes counter-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.counter-up { animation: counter-up 0.6s ease 0.6s both; }
+
+/* ---- Carte apparition en cascade ---- */
+@keyframes card-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.card-in-1 { animation: card-in 0.4s ease 0.3s both; }
+.card-in-2 { animation: card-in 0.4s ease 0.8s both; }
+.card-in-3 { animation: card-in 0.4s ease 1.3s both; }
+
+/* ---- Sélection d'un créneau ---- */
+@keyframes slot-select {
+  0%, 60% { background: #eee9ff; color: #7c3aed; }
+  70%, 100% { background: #7c3aed; color: #fff; }
+}
+.slot-select { animation: slot-select 0.4s ease 2.2s both; }
+
+/* ---- Splash dots loader ---- */
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1); opacity: 1; }
+}
+.dot-1 { animation: dot-bounce 1s ease-in-out 0.1s infinite; }
+.dot-2 { animation: dot-bounce 1s ease-in-out 0.2s infinite; }
+.dot-3 { animation: dot-bounce 1s ease-in-out 0.3s infinite; }
+
+/* ---- Mini carte salon ---- */
+.psalon-card {
+  border: 1px solid #e7e9f4;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+
+  &__img {
+    height: 44px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  &__body {
+    padding: 5px 7px;
+  }
+
+  &__name {
+    font-size: 9px;
+    font-weight: 700;
+    color: #11152f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    font-size: 8px;
+    color: #727994;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+  }
+
+  &__price {
+    font-size: 8px;
+    font-weight: 700;
+    color: #7c3aed;
+  }
+}
+
+/* ---- Time slot grid ---- */
+.pslot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background: #eee9ff;
+  color: #7c3aed;
+  font-size: 8px;
+  font-weight: 700;
+  border: 1px solid #ddd3ff;
+}
+
+.pslot--off {
+  background: #f5f5f5;
+  color: #aaa;
+  border-color: #e8e8e8;
+  text-decoration: line-through;
+}
+
+/* ---- Stat box (dashboard) ---- */
+.pstat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  background: #f3f0ff;
+  border-radius: 8px;
+
+  &__val {
+    font-size: 12px;
+    font-weight: 700;
+    color: #7c3aed;
+  }
+
+  &__label {
+    font-size: 7px;
+    color: #727994;
+    text-align: center;
+  }
+}
+
+/* ---- Appointment row ---- */
+.pappt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px;
+  background: #f9f7ff;
+  border-radius: 6px;
+  border-left: 2px solid #7c3aed;
+
+  &__time {
+    font-size: 8px;
+    font-weight: 700;
+    color: #7c3aed;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__name {
+    font-size: 8px;
+    font-weight: 700;
+    color: #11152f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__service {
+    font-size: 7px;
+    color: #727994;
+  }
+}
+
+/* ---- Star rating ---- */
+.pstars {
+  color: #ffb224;
+  font-size: 8px;
+  letter-spacing: -1px;
+}
+
+/* ---- Écran de confirmation/succès ---- */
+.psuccess {
+  background: linear-gradient(135deg, #6844f6, #8f70ff);
+  color: #fff;
+
+  &__icon {
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  &__title {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__sub {
+    font-size: 9px;
+    font-weight: 300;
+    text-align: center;
+    opacity: 0.85;
+  }
+}
+
+/* ---- Écran transition pro ---- */
+.ptransition {
+  background: #11152f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 100%;
+  padding: 20px;
+
+  &__logo {
+    height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  &__tagline {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  &__sub {
+    font-size: 9px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+  }
+}
+
+/* ---- Payment methods ---- */
+.pmethod {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    background: #fff;
+    border: 1.5px solid #e0d9ff;
+    border-radius: 7px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #11152f;
+
+    &.selected {
+      border-color: #7c3aed;
+      background: #f3f0ff;
+    }
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid #7c3aed;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #7c3aed;
+    }
+  }
+}
+
+/* ---- Wallet screen ---- */
+.pwallet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px;
+  background: linear-gradient(135deg, #7c3aed, #6844f6);
+  border-radius: 10px;
+  color: #fff;
+  flex-shrink: 0;
+
+  &__label {
+    font-size: 8px;
+    opacity: 0.8;
+    font-weight: 300;
+  }
+
+  &__amount {
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+/* ---- Notification toast (wallet screen) ---- */
+.pnotif-toast {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 8px;
+  font-size: 8px;
+  font-weight: 700;
+  color: #065f46;
+}
+
+/* ---- Calendar week ---- */
+.pcal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+
+  &__day {
+    font-size: 7px;
+    font-weight: 700;
+    color: #727994;
+    padding: 3px 0;
+  }
+
+  &__day--active {
+    background: #7c3aed;
+    color: #fff;
+    border-radius: 4px;
+  }
+}
+
+/* ---- Phone prefix row ---- */
+.pphone-row {
+  display: flex;
+  border: 1px solid #e0d9ff;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.pphone-prefix {
+  display: flex;
+  align-items: center;
+  padding: 5px 6px;
+  background: #f3f0ff;
+  border-right: 1px solid #e0d9ff;
+  font-size: 8px;
+  font-weight: 700;
+  color: #7c3aed;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pphone-number {
+  flex: 1;
+  padding: 5px 7px;
+  font-size: 9px;
+  font-weight: 300;
+  color: #11152f;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ---- OTP 6 boxes ---- */
+.potp-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.potp-box {
+  width: 20px;
+  height: 26px;
+  border: 1.5px solid #7c3aed;
+  border-radius: 5px;
+  background: #f3f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+/* ---- PIN 4 boxes ---- */
+.ppin-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.ppin-box {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid #7c3aed;
+  border-radius: 6px;
+  background: #f3f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #7c3aed;
+}
+
+/* ---- Digit pop-in animations (OTP / PIN) ---- */
+@keyframes digit-pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.otp-d1 { animation: digit-pop 0.2s ease 0.4s both; }
+.otp-d2 { animation: digit-pop 0.2s ease 0.7s both; }
+.otp-d3 { animation: digit-pop 0.2s ease 1.0s both; }
+.otp-d4 { animation: digit-pop 0.2s ease 1.3s both; }
+.otp-d5 { animation: digit-pop 0.2s ease 1.6s both; }
+.otp-d6 { animation: digit-pop 0.2s ease 1.9s both; }
+
+.pin-d1 { animation: digit-pop 0.25s ease 0.5s both; }
+.pin-d2 { animation: digit-pop 0.25s ease 0.9s both; }
+.pin-d3 { animation: digit-pop 0.25s ease 1.3s both; }
+.pin-d4 { animation: digit-pop 0.25s ease 1.7s both; }

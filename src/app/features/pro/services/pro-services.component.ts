@@ -1,12 +1,11 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
 import { MockDataService } from '../../../core/services/mock-data.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Service, Business, HomeServiceCommune } from '../../../core/models';
 import { FcfaPipe } from '../../../shared/pipes/format.pipe';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
-import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { ToastService } from '../../../shared/ui/toast/toast.component';
 
@@ -16,154 +15,146 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
   imports: [
     CommonModule,
     FormsModule,
+    LucideAngularModule,
     FcfaPipe,
-    BadgeComponent,
-    ButtonComponent,
     ModalComponent
   ],
   template: `
     <div>
-      <div class="flex justify-between items-center mb-6">
+      <!-- En-tête -->
+      <div class="mb-8 flex items-start justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-secondary mb-2">Mes Services</h1>
-          <p class="text-secondary-gray">Gérez vos prestations et vos tarifs</p>
+          <h1 class="text-[28px] font-black text-[#11152f] m-0">Mes Services</h1>
+          <p class="mt-1 text-base text-[#69708a]">Gérez vos prestations et vos tarifs</p>
         </div>
-        <button class="btn-primary" (click)="openAddModal()">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-          </svg>
+        <button (click)="openAddModal()"
+          class="flex items-center gap-2 h-10 px-5 rounded-full bg-[#7c3aed] text-white text-sm font-black hover:bg-[#6d28d9] transition-colors flex-shrink-0">
+          <lucide-icon name="plus" [size]="16" [strokeWidth]="2.5"></lucide-icon>
           Ajouter un service
         </button>
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white rounded-md shadow p-4">
-          <div class="text-2xl font-bold text-secondary">{{ services().length }}</div>
-          <div class="text-sm text-secondary-gray">Total services</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
+        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
+          <div class="text-[28px] font-black text-[#11152f]">{{ services().length }}</div>
+          <div class="text-sm font-bold text-[#69708a] mt-0.5">Total services</div>
         </div>
-        <div class="bg-white rounded-md shadow p-4">
-          <div class="text-2xl font-bold text-green-600">{{ publishedCount() }}</div>
-          <div class="text-sm text-secondary-gray">Publiés</div>
+        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
+          <div class="text-[28px] font-black text-[#10b45e]">{{ publishedCount() }}</div>
+          <div class="text-sm font-bold text-[#69708a] mt-0.5">Publiés</div>
         </div>
-        <div class="bg-white rounded-md shadow p-4">
-          <div class="text-2xl font-bold text-yellow-600">{{ draftCount() }}</div>
-          <div class="text-sm text-secondary-gray">Brouillons</div>
+        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
+          <div class="text-[28px] font-black text-[#d97706]">{{ draftCount() }}</div>
+          <div class="text-sm font-bold text-[#69708a] mt-0.5">Brouillons</div>
         </div>
-        <div class="bg-white rounded-md shadow p-4">
-          <div class="text-2xl font-bold text-primary">{{ referrableCount() }}</div>
-          <div class="text-sm text-secondary-gray">Référençables</div>
+        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
+          <div class="text-[28px] font-black text-[#7c3aed]">{{ referrableCount() }}</div>
+          <div class="text-sm font-bold text-[#69708a] mt-0.5">Référençables</div>
         </div>
       </div>
 
       <!-- Info Box -->
-      <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-        <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <div class="text-sm text-blue-800">
-            <strong>Conseil:</strong> Publiez vos services pour qu'ils soient visibles sur la marketplace. 
-            Activez l'option "Référençable" pour gagner des points de parrainage lorsqu'un client recommande vos services.
-          </div>
-        </div>
+      <div class="flex items-start gap-3 bg-[#f0f7ff] border border-blue-200 rounded-2xl p-4 mb-6">
+        <lucide-icon name="info" [size]="18" [strokeWidth]="2" class="text-blue-500 flex-shrink-0 mt-0.5"></lucide-icon>
+        <p class="text-sm font-bold text-blue-800 m-0">
+          Publiez vos services pour qu'ils soient visibles sur la marketplace.
+          Activez "Référençable" pour gagner des points de parrainage.
+        </p>
       </div>
 
-      <!-- Services List -->
-      <div class="bg-white rounded-md shadow">
-        <div class="divide-y">
-          @for (service of services(); track service.id) {
-            <div class="p-6">
-              <div class="flex justify-between items-center">
-                <div class="flex-1">
-                  <div class="flex items-center gap-3 mb-2">
-                    <h3 class="font-semibold text-secondary text-lg">{{ service.name }}</h3>
-                    <app-badge [variant]="service.isPublished ? 'success' : 'neutral'">
-                      {{ service.isPublished ? 'Publié' : 'Brouillon' }}
-                    </app-badge>
-                    @if (service.isReferrable) {
-                      <app-badge variant="info">
-                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                        {{ service.referralPoints }} pts
-                      </app-badge>
-                    }
-                  </div>
-                  <p class="text-secondary-gray text-sm mb-2">{{ service.description || 'Aucune description' }}</p>
-                  <div class="flex items-center gap-4 text-sm text-secondary-gray">
-                    <span class="flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                      </svg>
-                      {{ service.categoryName }}
-                    </span>
-                    <span class="flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                      {{ service.duration }} min
-                    </span>
-                    @if (service.isHomeService) {
-                      <span class="flex items-center gap-1 text-primary">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        À domicile (+{{ service.homeServiceMarkup | fcfa:false }})
-                      </span>
-                    }
-                  </div>
-                  @if (service.serviceAreas && service.serviceAreas.length > 0) {
-                    <div class="mt-2 flex flex-wrap gap-1">
-                      @for (area of service.serviceAreas.slice(0, 5); track area) {
-                        <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                          {{ area }}
-                        </span>
+      <!-- Table services -->
+      <div class="bg-white rounded-2xl border border-[#e7e9f4] overflow-hidden">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-[#e7e9f4]">
+              <th class="px-6 py-4 text-left text-[13px] font-black text-[#69708a] uppercase tracking-wide">Service</th>
+              <th class="px-4 py-4 text-left text-[13px] font-black text-[#69708a] uppercase tracking-wide hidden md:table-cell">Catégorie</th>
+              <th class="px-4 py-4 text-left text-[13px] font-black text-[#69708a] uppercase tracking-wide hidden md:table-cell">Durée</th>
+              <th class="px-4 py-4 text-right text-[13px] font-black text-[#69708a] uppercase tracking-wide">Prix</th>
+              <th class="px-4 py-4 text-center text-[13px] font-black text-[#69708a] uppercase tracking-wide">Publié</th>
+              <th class="px-6 py-4 text-right text-[13px] font-black text-[#69708a] uppercase tracking-wide">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#e7e9f4]">
+            @for (service of services(); track service.id) {
+              <tr class="hover:bg-[#faf9ff] transition-colors">
+                <!-- Nom + description -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-[#f3e8ff] flex items-center justify-center flex-shrink-0">
+                      <lucide-icon name="scissors" [size]="16" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
+                    </div>
+                    <div>
+                      <div class="text-sm font-black text-[#11152f]">{{ service.name }}</div>
+                      @if (service.description) {
+                        <div class="text-xs font-bold text-[#69708a] mt-0.5 max-w-[240px] truncate">{{ service.description }}</div>
                       }
-                      @if (service.serviceAreas.length > 5) {
-                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          +{{ service.serviceAreas.length - 5 }} zones
-                        </span>
+                      @if (service.isHomeService) {
+                        <div class="flex items-center gap-1 mt-1">
+                          <lucide-icon name="home" [size]="11" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
+                          <span class="text-[11px] font-black text-[#7c3aed]">À domicile</span>
+                        </div>
                       }
                     </div>
+                  </div>
+                </td>
+                <!-- Catégorie -->
+                <td class="px-4 py-4 hidden md:table-cell">
+                  <span class="inline-flex items-center rounded-full bg-[#f0f1f6] px-3 py-1 text-xs font-black text-[#69708a]">
+                    {{ service.categoryName }}
+                  </span>
+                </td>
+                <!-- Durée -->
+                <td class="px-4 py-4 hidden md:table-cell">
+                  <div class="flex items-center gap-1.5 text-sm font-bold text-[#69708a]">
+                    <lucide-icon name="clock" [size]="14" [strokeWidth]="2"></lucide-icon>
+                    {{ service.duration }} min
+                  </div>
+                </td>
+                <!-- Prix -->
+                <td class="px-4 py-4 text-right">
+                  <div class="text-base font-black text-[#7c3aed]">{{ service.price | fcfa }}</div>
+                  @if (service.isHomeService && service.homeServiceMarkup) {
+                    <div class="text-[11px] font-bold text-[#69708a]">+{{ service.homeServiceMarkup | fcfa:false }} dom.</div>
                   }
-                </div>
-                <div class="flex items-center gap-4">
-                  <div class="text-right">
-                    <span class="text-2xl font-bold text-primary">{{ service.price | fcfa }}</span>
-                    @if (service.isHomeService) {
-                      <div class="text-xs text-secondary-gray">
-                        +{{ service.homeServiceMarkup | fcfa:false }} FCFA à domicile
-                      </div>
-                    }
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <button
-                      (click)="togglePublish(service)"
-                      [class]="service.isPublished ? 'btn-secondary' : 'btn-primary'"
-                      class="text-sm py-2 px-4">
-                      {{ service.isPublished ? 'Dépublier' : 'Publier' }}
+                </td>
+                <!-- Toggle publié -->
+                <td class="px-4 py-4 text-center">
+                  <button (click)="togglePublish(service)" type="button"
+                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none"
+                    [style.background]="service.isPublished ? '#7c3aed' : '#d9dbe9'"
+                    [attr.aria-label]="service.isPublished ? 'Dépublier' : 'Publier'">
+                    <span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform"
+                      [style.transform]="service.isPublished ? 'translateX(22px)' : 'translateX(4px)'">
+                    </span>
+                  </button>
+                </td>
+                <!-- Actions -->
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button (click)="editService(service)"
+                      class="w-8 h-8 rounded-full border border-[#e7e9f4] flex items-center justify-center text-[#69708a] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors">
+                      <lucide-icon name="pencil" [size]="14" [strokeWidth]="2"></lucide-icon>
                     </button>
-                    <button
-                      (click)="editService(service)"
-                      class="p-2 text-secondary-gray hover:text-primary transition-colors">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                      </svg>
-                    </button>
-                    <button
-                      (click)="deleteService(service)"
-                      class="p-2 text-secondary-gray hover:text-red-600 transition-colors">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                      </svg>
+                    <button (click)="deleteService(service)"
+                      class="w-8 h-8 rounded-full border border-[#e7e9f4] flex items-center justify-center text-[#69708a] hover:border-red-300 hover:text-red-500 transition-colors">
+                      <lucide-icon name="trash-2" [size]="14" [strokeWidth]="2"></lucide-icon>
                     </button>
                   </div>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (services().length === 0) {
+          <div class="py-16 text-center">
+            <lucide-icon name="scissors" [size]="40" [strokeWidth]="1.5" class="text-[#d9dbe9] mx-auto mb-3"></lucide-icon>
+            <p class="text-base font-bold text-[#69708a]">Aucun service configuré</p>
+            <p class="text-sm font-bold text-[#69708a] mt-1">Cliquez sur "Ajouter un service" pour commencer</p>
+          </div>
+        }
       </div>
     </div>
 
@@ -174,282 +165,157 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
       [showFooter]="false"
       size="lg"
       (closed)="closeServiceModal()">
-      <form (ngSubmit)="saveService()" class="space-y-4">
+      <form (ngSubmit)="saveService()" class="space-y-5">
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-secondary-gray mb-2">
-              Nom du service *
-            </label>
-            <input
-              type="text"
-              [(ngModel)]="formData.name"
-              name="name"
-              required
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            <label class="block text-sm font-black text-[#11152f] mb-2">Nom du service *</label>
+            <input type="text" [(ngModel)]="formData.name" name="name" required
+              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
           </div>
-
           <div>
-            <label class="block text-sm font-medium text-secondary-gray mb-2">
-              Catégorie *
-            </label>
-            <select
-              [(ngModel)]="formData.categoryName"
-              name="categoryName"
-              required
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            <label class="block text-sm font-black text-[#11152f] mb-2">Catégorie *</label>
+            <select [(ngModel)]="formData.categoryName" name="categoryName" required
+              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 cursor-pointer">
               <option value="">Sélectionner</option>
-              @for (cat of categories; track cat) {
-                <option [value]="cat">{{ cat }}</option>
-              }
+              @for (cat of categories; track cat) { <option [value]="cat">{{ cat }}</option> }
             </select>
           </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-secondary-gray mb-2">
-            Description
-          </label>
-          <textarea
-            [(ngModel)]="formData.description"
-            name="description"
-            rows="3"
+          <label class="block text-sm font-black text-[#11152f] mb-2">Description</label>
+          <textarea [(ngModel)]="formData.description" name="description" rows="2"
             placeholder="Décrivez votre service..."
-            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+            class="w-full rounded-xl border border-[#e7e9f4] px-4 py-2.5 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 resize-none"></textarea>
         </div>
 
         <div class="grid md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-secondary-gray mb-2">
-              Prix de base (FCFA) *
-            </label>
-            <input
-              type="number"
-              [(ngModel)]="formData.price"
-              name="price"
-              required
-              min="0"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            <label class="block text-sm font-black text-[#11152f] mb-2">Prix de base (FCFA) *</label>
+            <input type="number" [(ngModel)]="formData.price" name="price" required min="0"
+              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
           </div>
-
           <div>
-            <label class="block text-sm font-medium text-secondary-gray mb-2">
-              Durée (min) *
-            </label>
-            <input
-              type="number"
-              [(ngModel)]="formData.duration"
-              name="duration"
-              required
-              min="15"
-              step="15"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            <label class="block text-sm font-black text-[#11152f] mb-2">Durée (min) *</label>
+            <input type="number" [(ngModel)]="formData.duration" name="duration" required min="15" step="15"
+              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
           </div>
-
           <div>
-            <label class="block text-sm font-medium text-secondary-gray mb-2">
-              Points de parrainage
-            </label>
-            <input
-              type="number"
-              [(ngModel)]="formData.referralPoints"
-              name="referralPoints"
-              min="0"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            <label class="block text-sm font-black text-[#11152f] mb-2">Points parrainage</label>
+            <input type="number" [(ngModel)]="formData.referralPoints" name="referralPoints" min="0"
+              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
           </div>
         </div>
 
-        <!-- Service Location Options -->
-        <div class="bg-gray-50 rounded-md p-4">
-          <h3 class="font-semibold text-secondary mb-4">Lieu de prestation</h3>
-          
-          <div class="space-y-3">
-            <label class="flex items-center gap-3 p-3 border-2 rounded-md cursor-pointer transition-all"
-                   [class.border-primary]="formData.locationType === 'SALON'"
-                   [class.bg-primary]="formData.locationType === 'SALON'">
-              <input
-                type="radio"
-                name="locationType"
-                value="SALON"
-                [(ngModel)]="formData.locationType"
-                class="w-4 h-4 text-primary">
-              <div class="flex-1">
-                <div class="font-medium" [class.text-white]="formData.locationType === 'SALON'">Au salon uniquement</div>
-                <div class="text-xs" [class.text-white]="formData.locationType === 'SALON'">Le client se déplace dans votre établissement</div>
-              </div>
-              <svg class="w-6 h-6" [class.text-white]="formData.locationType === 'SALON'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-              </svg>
-            </label>
-
-            <label class="flex items-center gap-3 p-3 border-2 rounded-md cursor-pointer transition-all"
-                   [class.border-primary]="formData.locationType === 'HOME'"
-                   [class.bg-primary]="formData.locationType === 'HOME'">
-              <input
-                type="radio"
-                name="locationType"
-                value="HOME"
-                [(ngModel)]="formData.locationType"
-                class="w-4 h-4 text-primary">
-              <div class="flex-1">
-                <div class="font-medium" [class.text-white]="formData.locationType === 'HOME'">À domicile uniquement</div>
-                <div class="text-xs" [class.text-white]="formData.locationType === 'HOME'">Vous vous déplacez chez le client</div>
-              </div>
-              <svg class="w-6 h-6" [class.text-white]="formData.locationType === 'HOME'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-              </svg>
-            </label>
-
-            <label class="flex items-center gap-3 p-3 border-2 rounded-md cursor-pointer transition-all"
-                   [class.border-primary]="formData.locationType === 'BOTH'"
-                   [class.bg-primary]="formData.locationType === 'BOTH'">
-              <input
-                type="radio"
-                name="locationType"
-                value="BOTH"
-                [(ngModel)]="formData.locationType"
-                class="w-4 h-4 text-primary">
-              <div class="flex-1">
-                <div class="font-medium" [class.text-white]="formData.locationType === 'BOTH'">Les deux options</div>
-                <div class="text-xs" [class.text-white]="formData.locationType === 'BOTH'">Au salon ET à domicile</div>
-              </div>
-              <svg class="w-6 h-6" [class.text-white]="formData.locationType === 'BOTH'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-            </label>
+        <!-- Lieu de prestation -->
+        <div class="bg-[#f7f5ff] rounded-2xl p-4">
+          <h3 class="text-sm font-black text-[#11152f] mb-3">Lieu de prestation</h3>
+          <div class="grid grid-cols-3 gap-2">
+            @for (loc of locationOptions; track loc.value) {
+              <label class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all text-center"
+                     [class.border-[#7c3aed]]="formData.locationType === loc.value"
+                     [class.bg-white]="formData.locationType === loc.value"
+                     [class.border-[#e7e9f4]]="formData.locationType !== loc.value">
+                <input type="radio" name="locationType" [value]="loc.value"
+                  [(ngModel)]="formData.locationType" class="sr-only">
+                <lucide-icon [name]="loc.icon" [size]="20" [strokeWidth]="1.75"
+                  [class.text-[#7c3aed]]="formData.locationType === loc.value"
+                  [class.text-[#69708a]]="formData.locationType !== loc.value"></lucide-icon>
+                <span class="text-xs font-black"
+                  [class.text-[#7c3aed]]="formData.locationType === loc.value"
+                  [class.text-[#69708a]]="formData.locationType !== loc.value">{{ loc.label }}</span>
+              </label>
+            }
           </div>
         </div>
 
-        <!-- Home Service Markup -->
+        <!-- Majoration domicile -->
         @if (formData.locationType === 'HOME' || formData.locationType === 'BOTH') {
-          <div class="bg-primary/5 border border-primary/20 rounded-md p-4">
-            <h3 class="font-semibold text-secondary mb-4">Majoration pour service à domicile</h3>
-            
+          <div class="bg-[#f3e8ff] border border-[#ddd6fe] rounded-2xl p-4">
+            <h3 class="text-sm font-black text-[#11152f] mb-3">Majoration à domicile</h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-secondary-gray mb-2">
-                  Majoration fixe (FCFA)
-                </label>
-                <input
-                  type="number"
-                  [(ngModel)]="formData.homeServiceMarkup"
-                  name="homeServiceMarkup"
-                  min="0"
-                  placeholder="Ex: 3000"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                <p class="text-xs text-secondary-gray mt-1">
-                  Montant ajouté au prix de base pour les prestations à domicile
-                </p>
+                <label class="block text-xs font-black text-[#69708a] mb-1.5">Montant fixe (FCFA)</label>
+                <input type="number" [(ngModel)]="formData.homeServiceMarkup" name="homeServiceMarkup" min="0" placeholder="Ex: 3000"
+                  class="w-full h-10 rounded-xl border border-[#ddd6fe] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
               </div>
-
               <div>
-                <label class="block text-sm font-medium text-secondary-gray mb-2">
-                  Ou majoration en %
-                </label>
-                <input
-                  type="number"
-                  [(ngModel)]="formData.homeServiceMarkupPercent"
-                  name="homeServiceMarkupPercent"
-                  min="0"
-                  max="100"
-                  placeholder="Ex: 20"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                <p class="text-xs text-secondary-gray mt-1">
-                  Pourcentage ajouté au prix de base
-                </p>
+                <label class="block text-xs font-black text-[#69708a] mb-1.5">Ou en % du prix</label>
+                <input type="number" [(ngModel)]="formData.homeServiceMarkupPercent" name="homeServiceMarkupPercent" min="0" max="100" placeholder="Ex: 20"
+                  class="w-full h-10 rounded-xl border border-[#ddd6fe] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
               </div>
             </div>
-
             @if (formData.homeServiceMarkup || formData.homeServiceMarkupPercent) {
-              <div class="mt-4 p-3 bg-white rounded-md border">
-                <div class="text-sm text-secondary-gray">Prix total à domicile :</div>
-                <div class="text-xl font-bold text-primary">
-                  {{ calculateHomeServicePrice() | fcfa }}
-                </div>
+              <div class="mt-3 bg-white rounded-xl p-3 flex items-center justify-between">
+                <span class="text-sm font-bold text-[#69708a]">Prix total à domicile</span>
+                <span class="text-base font-black text-[#7c3aed]">{{ calculateHomeServicePrice() | fcfa }}</span>
               </div>
             }
           </div>
         }
 
-        <!-- Service Areas -->
+        <!-- Zones de desserte -->
         @if (formData.locationType === 'HOME' || formData.locationType === 'BOTH') {
           <div>
-            <label class="block text-sm font-medium text-secondary-gray mb-2">
-              Zones de desserte (Communes & Quartiers)
-            </label>
-            
-            <div class="border border-gray-300 rounded-md p-4">
+            <label class="block text-sm font-black text-[#11152f] mb-2">Zones de desserte</label>
+            <div class="border border-[#e7e9f4] rounded-2xl p-4">
               <div class="flex flex-wrap gap-2 mb-3">
                 @for (area of formData.serviceAreas; track area; let i = $index) {
-                  <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                  <span class="inline-flex items-center gap-1.5 bg-[#f3e8ff] text-[#7c3aed] px-3 py-1 rounded-full text-xs font-black">
                     {{ area }}
-                    <button type="button" (click)="removeServiceArea(i)" class="hover:text-red-600">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
+                    <button type="button" (click)="removeServiceArea(i)"
+                      class="w-3.5 h-3.5 rounded-full hover:bg-[#7c3aed] hover:text-white flex items-center justify-center transition-colors">
+                      <lucide-icon name="x" [size]="9" [strokeWidth]="3"></lucide-icon>
                     </button>
                   </span>
                 }
               </div>
-
-              <div class="flex gap-2">
-                <input
-                  type="text"
-                  [(ngModel)]="newAreaInput"
-                  (keydown.enter)="addServiceAreaFromInput()"
-                  placeholder="Ajouter une commune ou quartier (ex: Cocody Riviera)"
-                  class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                <button
-                  type="button"
-                  (click)="addServiceAreaFromInput()"
-                  class="btn-primary px-4">
+              <div class="flex gap-2 mb-3">
+                <input type="text" [(ngModel)]="newAreaInput" (keydown.enter)="addServiceAreaFromInput()"
+                  placeholder="Ajouter une commune ou quartier..."
+                  class="flex-1 h-9 rounded-full border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
+                <button type="button" (click)="addServiceAreaFromInput()"
+                  class="h-9 px-4 rounded-full bg-[#7c3aed] text-white text-xs font-black hover:bg-[#6d28d9] transition-colors">
                   Ajouter
                 </button>
               </div>
-
-              <!-- Quick Select Communes -->
-              <div class="mt-3">
-                <p class="text-xs text-secondary-gray mb-2">Communes populaires à Abidjan :</p>
-                <div class="flex flex-wrap gap-2">
-                  @for (commune of communes; track commune) {
-                    <button
-                      type="button"
-                      (click)="addServiceAreaByName(commune)"
-                      [class]="formData.serviceAreas.includes(commune) ? 'bg-primary text-white' : 'bg-gray-100 text-secondary hover:bg-gray-200'"
-                      class="px-3 py-1 rounded-full text-xs transition-colors">
-                      {{ commune }}
-                    </button>
-                  }
-                </div>
+              <div class="flex flex-wrap gap-1.5">
+                @for (commune of communes; track commune) {
+                  <button type="button" (click)="addServiceAreaByName(commune)"
+                    class="px-3 py-1 rounded-full text-xs font-bold transition-colors"
+                    [class.bg-[#7c3aed]]="formData.serviceAreas.includes(commune)"
+                    [class.text-white]="formData.serviceAreas.includes(commune)"
+                    [class.bg-[#f0f1f6]]="!formData.serviceAreas.includes(commune)"
+                    [class.text-[#69708a]]="!formData.serviceAreas.includes(commune)">
+                    {{ commune }}
+                  </button>
+                }
               </div>
             </div>
           </div>
         }
 
-        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-md">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              [(ngModel)]="formData.isPublished"
-              name="isPublished"
-              class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
-            <span class="text-sm font-medium text-secondary">Publier immédiatement</span>
+        <!-- Options -->
+        <div class="flex flex-wrap items-center gap-6 p-4 bg-[#f7f5ff] rounded-2xl">
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="formData.isPublished" name="isPublished"
+              class="w-4 h-4 accent-[#7c3aed]">
+            <span class="text-sm font-black text-[#11152f]">Publier immédiatement</span>
           </label>
-
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              [(ngModel)]="formData.isReferrable"
-              name="isReferrable"
-              class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
-            <span class="text-sm font-medium text-secondary">Service référençable (gagner des points)</span>
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="formData.isReferrable" name="isReferrable"
+              class="w-4 h-4 accent-[#7c3aed]">
+            <span class="text-sm font-black text-[#11152f]">Service référençable</span>
           </label>
         </div>
 
-        <div class="flex justify-end gap-3 pt-4 border-t">
-          <button type="button" (click)="closeServiceModal()" class="px-6 py-2 text-secondary font-medium hover:bg-gray-100 rounded-md transition-colors">
+        <div class="flex justify-end gap-3 pt-4 border-t border-[#e7e9f4]">
+          <button type="button" (click)="closeServiceModal()"
+            class="h-10 px-5 rounded-full border border-[#e7e9f4] text-sm font-bold text-[#69708a] hover:bg-[#f0f1f6] transition-colors">
             Annuler
           </button>
-          <button type="submit" class="btn-primary">
+          <button type="submit"
+            class="h-10 px-5 rounded-full bg-[#7c3aed] text-white text-sm font-black hover:bg-[#6d28d9] transition-colors">
             {{ editingService() ? 'Mettre à jour' : 'Créer le service' }}
           </button>
         </div>
@@ -464,6 +330,12 @@ export class ProServicesComponent implements OnInit {
   editingService = signal<Service | null>(null);
   
   categories = ['Coiffure', 'Esthétique', 'Manucure', 'Pédicure', 'Barbier', 'Maquillage', 'Soins du visage', 'Massage'];
+
+  readonly locationOptions: { value: 'SALON' | 'HOME' | 'BOTH'; label: string; icon: string }[] = [
+    { value: 'SALON', label: 'Au salon', icon: 'store' },
+    { value: 'HOME',  label: 'À domicile', icon: 'home' },
+    { value: 'BOTH',  label: 'Les deux', icon: 'map-pin' },
+  ];
   
   communes = [
     'Cocody', 'Plateau', 'Yopougon', 'Marcory', 'Treichville',

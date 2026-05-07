@@ -633,8 +633,8 @@ export class MockDataService {
         status: 'ACTIVE' as const,
         latitude: 5.3515,
         longitude: -4.0236,
-        coverImage: '/Recommandés/téléchargement (1).jpg',
-        avatar: '/Recommandés/téléchargement (1).jpg'
+        coverImage: '/Nouveaux sur SEFAIZO/Institut-Moreno.jpeg',
+        avatar: '/Nouveaux sur SEFAIZO/Institut-Moreno.jpeg'
       },
       {
         name: 'Glow Up Abobo',
