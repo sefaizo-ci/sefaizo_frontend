@@ -418,21 +418,83 @@ import { LucideAngularModule } from 'lucide-angular';
 
                 <!-- Étape 5 : Paiement -->
                 @if (currentStep() === 5) {
-                  <h2 class="text-xl font-bold text-secondary mb-5">Mode de paiement</h2>
+                  <h2 class="text-xl font-bold text-secondary mb-1">Mode de paiement</h2>
+                  <p class="text-sm text-secondary-gray mb-5">Choisissez votre moyen de paiement préféré</p>
                   <div class="space-y-3 mb-5">
-                    <button (click)="selectPaymentMethod('MOBILE_MONEY')"
-                            [class]="getPaymentClass('MOBILE_MONEY')"
-                            class="w-full p-4 rounded-xl border-2 text-left transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
-                      <div class="flex items-center gap-4">
+
+                    <!-- Orange Money -->
+                    <button (click)="selectPaymentMethod('ORANGE_MONEY')"
+                            [class]="getPaymentClass('ORANGE_MONEY')"
+                            class="w-full rounded-xl border-2 text-left transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
+                      <div class="flex items-center gap-4 p-4">
                         <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
                           <lucide-icon name="smartphone" [size]="22" [strokeWidth]="1.75" class="text-orange-500"></lucide-icon>
                         </div>
-                        <div>
-                          <div class="font-semibold text-secondary">Mobile Money</div>
-                          <div class="text-sm text-secondary-gray">Orange Money · MTN Money · Wave</div>
+                        <div class="flex-1 min-w-0">
+                          <div class="font-semibold text-secondary">Orange Money</div>
+                          <div class="text-sm text-secondary-gray">Paiement mobile Orange</div>
                         </div>
+                        @if (paymentMethod() === 'ORANGE_MONEY') {
+                          <div class="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
+                            <lucide-icon name="check" [size]="12" [strokeWidth]="3" class="text-white"></lucide-icon>
+                          </div>
+                        }
+                      </div>
+                      @if (paymentMethod() === 'ORANGE_MONEY') {
+                        <div class="px-4 pb-4 pt-0 border-t border-orange-100">
+                          <label class="block text-xs font-semibold text-secondary-gray uppercase tracking-wide mb-2 mt-3">Numéro de téléphone</label>
+                          <input
+                            type="tel"
+                            class="w-full border border-orange-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 bg-white"
+                            [value]="phoneNumber()"
+                            (input)="phoneNumber.set($any($event.target).value)"
+                            placeholder="+225 07 XX XX XX XX"
+                          />
+                        </div>
+                      }
+                    </button>
+
+                    <!-- Wave -->
+                    <button (click)="selectPaymentMethod('WAVE')"
+                            [class]="getPaymentClass('WAVE')"
+                            class="w-full p-4 rounded-xl border-2 text-left transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
+                      <div class="flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                          <lucide-icon name="send" [size]="22" [strokeWidth]="1.75" class="text-blue-500"></lucide-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <div class="font-semibold text-secondary">Wave</div>
+                          <div class="text-sm text-secondary-gray">Paiement mobile Wave</div>
+                        </div>
+                        @if (paymentMethod() === 'WAVE') {
+                          <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                            <lucide-icon name="check" [size]="12" [strokeWidth]="3" class="text-white"></lucide-icon>
+                          </div>
+                        }
                       </div>
                     </button>
+
+                    <!-- MTN Mobile Money -->
+                    <button (click)="selectPaymentMethod('MTN_MONEY')"
+                            [class]="getPaymentClass('MTN_MONEY')"
+                            class="w-full p-4 rounded-xl border-2 text-left transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
+                      <div class="flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-yellow-50 flex items-center justify-center flex-shrink-0">
+                          <lucide-icon name="smartphone" [size]="22" [strokeWidth]="1.75" class="text-yellow-500"></lucide-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <div class="font-semibold text-secondary">MTN Mobile Money</div>
+                          <div class="text-sm text-secondary-gray">Paiement mobile MTN</div>
+                        </div>
+                        @if (paymentMethod() === 'MTN_MONEY') {
+                          <div class="w-5 h-5 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
+                            <lucide-icon name="check" [size]="12" [strokeWidth]="3" class="text-white"></lucide-icon>
+                          </div>
+                        }
+                      </div>
+                    </button>
+
+                    <!-- Espèces à l'arrivée -->
                     <button (click)="selectPaymentMethod('CASH')"
                             [class]="getPaymentClass('CASH')"
                             class="w-full p-4 rounded-xl border-2 text-left transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
@@ -440,13 +502,23 @@ import { LucideAngularModule } from 'lucide-angular';
                         <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
                           <lucide-icon name="banknote" [size]="22" [strokeWidth]="1.75" class="text-emerald-600"></lucide-icon>
                         </div>
-                        <div>
-                          <div class="font-semibold text-secondary">Espèces</div>
-                          <div class="text-sm text-secondary-gray">Paiement en espèces sur place</div>
+                        <div class="flex-1 min-w-0">
+                          <div class="font-semibold text-secondary">Espèces à l'arrivée</div>
+                          <div class="text-sm text-secondary-gray">Aucun paiement requis maintenant</div>
                         </div>
+                        @if (paymentMethod() === 'CASH') {
+                          <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                            <lucide-icon name="check" [size]="12" [strokeWidth]="3" class="text-white"></lucide-icon>
+                          </div>
+                        }
                       </div>
                     </button>
                   </div>
+
+                  <p class="flex items-center justify-center gap-2 text-xs text-secondary-gray">
+                    <lucide-icon name="shield-check" [size]="14" [strokeWidth]="2" class="text-emerald-500"></lucide-icon>
+                    Paiement sécurisé par CinetPay
+                  </p>
                 }
 
                 </div><!-- /@stepSlide -->
@@ -463,7 +535,7 @@ import { LucideAngularModule } from 'lucide-angular';
                 <button (click)="nextStep()"
                         [disabled]="!canProceed()"
                         class="flex items-center gap-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
-                  {{ currentStep() === 5 ? 'Confirmer et payer' : 'Continuer' }}
+                  {{ currentStep() === 5 ? 'Payer maintenant' : 'Continuer' }}
                   <lucide-icon [name]="currentStep() === 5 ? 'check' : 'arrow-right'" [size]="16" [strokeWidth]="2.5"></lucide-icon>
                 </button>
               </div>
@@ -594,7 +666,8 @@ export class BookingComponent implements OnInit {
   selectedTime = signal<string | null>(null);
   bookingType = signal<'SALON' | 'HOME'>('SALON');
   selectedCommune = signal('');
-  paymentMethod = signal<'MOBILE_MONEY' | 'CASH'>('CASH');
+  paymentMethod = signal<'ORANGE_MONEY' | 'WAVE' | 'MTN_MONEY' | 'CASH'>('ORANGE_MONEY');
+  phoneNumber = signal<string>('');
   bookingNumber = signal('');
 
   business = signal<Business | null>(null);
@@ -645,6 +718,9 @@ export class BookingComponent implements OnInit {
       if (params['service']) {
         this.selectedServiceIds.set([params['service']]);
       }
+      if (params['date']) this.selectedDate.set(params['date']);
+      if (params['time']) this.selectedTime.set(params['time']);
+      if (params['step']) this.currentStep.set(+params['step']);
     });
 
     const today = new Date();
@@ -712,7 +788,7 @@ export class BookingComponent implements OnInit {
       : 'border-gray-200 hover:border-primary/50';
   }
 
-  getPaymentClass(method: 'MOBILE_MONEY' | 'CASH'): string {
+  getPaymentClass(method: 'ORANGE_MONEY' | 'WAVE' | 'MTN_MONEY' | 'CASH'): string {
     return this.paymentMethod() === method
       ? 'border-primary bg-primary/5'
       : 'border-gray-200 hover:border-primary/50';
@@ -736,7 +812,7 @@ export class BookingComponent implements OnInit {
     this.selectedCommune.set((event.target as HTMLSelectElement).value);
   }
 
-  selectPaymentMethod(method: 'MOBILE_MONEY' | 'CASH'): void {
+  selectPaymentMethod(method: 'ORANGE_MONEY' | 'WAVE' | 'MTN_MONEY' | 'CASH'): void {
     this.paymentMethod.set(method);
   }
 

@@ -139,7 +139,7 @@ export interface HomeServiceCommune {
 // Booking models
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
 export type BookingType = 'SALON' | 'HOME';
-export type PaymentMethod = 'MOBILE_MONEY' | 'CASH';
+export type PaymentMethod = 'ORANGE_MONEY' | 'WAVE' | 'MTN_MONEY' | 'MOBILE_MONEY' | 'CASH';
 export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 export type CancellationReason = 
   | 'PERSONAL_EMERGENCY'
