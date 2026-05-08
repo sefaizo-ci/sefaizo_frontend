@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, computed, input } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 
 export interface CategoryWithCount {
@@ -20,7 +20,7 @@ export class SearchFiltersComponent {
   @Input({ required: true }) selectedCommune = '';
   @Input({ required: true }) minRating = 0;
   @Input({ required: true }) maxPrice = 50000;
-  @Input({ required: true }) businessType: 'SALON' | 'FREELANCE' | null = null;
+  businessType = input<'SALON' | 'FREELANCE' | null>(null);
   @Input({ required: true }) resultCount = 0;
 
   @Output() communeChange = new EventEmitter<string>();
@@ -57,11 +57,14 @@ export class SearchFiltersComponent {
     this.ratingChange.emit(this.minRating === star ? 0 : star);
   }
 
-  getRdvBtnClass(typeId: string): string {
+  readonly rdvBtnClassMap = computed(() => {
+    const btype = this.businessType();
     const base = 'flex h-11 w-full items-center justify-center gap-1.5 rounded-full border text-[13px] font-bold transition-all px-3';
-    if (this.businessType === typeId) {
-      return `${base} border-[#7c3aed] bg-[#f3f0ff] text-[#7c3aed]`;
-    }
-    return `${base} border-[#e7e9f4] bg-white text-[#69708a]`;
-  }
+    const active   = `${base} border-[#7c3aed] bg-[#f3f0ff] text-[#7c3aed]`;
+    const inactive = `${base} border-[#e7e9f4] bg-white text-[#69708a]`;
+    return {
+      SALON:     btype === 'SALON'     ? active : inactive,
+      FREELANCE: btype === 'FREELANCE' ? active : inactive,
+    } as Record<string, string>;
+  });
 }

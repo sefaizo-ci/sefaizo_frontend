@@ -31,7 +31,7 @@
     <!-- Toggle vue Liste / Cartes : classes retournées par méthode pour Tailwind JIT -->
     <div class="flex h-9 overflow-hidden rounded-full border border-[#e7e9f4] bg-white">
       <button
-        [class]="getGridBtnClass()"
+        [class]="gridBtnClass()"
         type="button"
         aria-label="Vue grille"
         (click)="viewModeChange.emit('GRID')"
@@ -39,7 +39,7 @@
         <lucide-icon name="layout-grid" [size]="16" [strokeWidth]="2.1" aria-hidden="true" />
       </button>
       <button
-        [class]="getListBtnClass()"
+        [class]="listBtnClass()"
         type="button"
         aria-label="Vue liste"
         (click)="viewModeChange.emit('LIST')"
