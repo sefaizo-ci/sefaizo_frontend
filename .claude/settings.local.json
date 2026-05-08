@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx ng *)"
+      "Bash(npx ng *)",
+      "Bash(cat src/app/app.routes.ts)",
+      "Bash(cat src/app/app-routing.module.ts)"
     ]
   }
 }

@@ -109,19 +109,18 @@
   </section>
 
   <!-- Type RDV : grid-cols-1 pour éviter les problèmes de texte tronqué -->
-  <!-- Classes retournées par getRdvBtnClass() pour que Tailwind JIT les scanne depuis le .ts -->
   <section aria-labelledby="filter-rdv-title">
     <h3 id="filter-rdv-title" class="mb-3 text-[13px] font-black text-[#11152f]">Type RDV</h3>
     <div class="grid grid-cols-1 gap-2">
       @for (type of rdvTypes; track type.id) {
         <button
-          [class]="getRdvBtnClass(type.id)"
+          [class]="rdvBtnClassMap()[type.id]"
           type="button"
           (click)="businessTypeToggle.emit(type.id)"
         >
           <lucide-icon class="shrink-0" [name]="type.icon" [size]="15" [strokeWidth]="2" aria-hidden="true" />
           <span>{{ type.label }}</span>
-          @if (businessType === type.id) {
+          @if (businessType() === type.id) {
             <span class="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white">
               <lucide-icon name="check" [size]="10" [strokeWidth]="3" aria-hidden="true" />
             </span>
