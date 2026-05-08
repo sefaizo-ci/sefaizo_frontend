@@ -34,7 +34,7 @@ export interface BookingCommission {
   platformRevenue: number; // Total revenu plateforme
   professionalEarnings: number; // Ce que reçoit le professionnel
   isNewClient: boolean; // Si c'est un nouveau client marketplace
-  paymentMethod: 'MOBILE_MONEY' | 'CASH';
+  paymentMethod: 'ORANGE_MONEY' | 'WAVE' | 'MTN_MONEY' | 'MOBILE_MONEY' | 'CASH';
 }
 
 // Platform Revenue Summary
