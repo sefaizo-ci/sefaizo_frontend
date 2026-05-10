@@ -22,21 +22,20 @@ module.exports = {
         },
       },
       fontFamily: {
-        // MB Empire Light → contenu / body
-        sans: ['"MB Empire"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        // MB Empire Bold → sous-titres (h2, h3)
-        heading: ['"MB Empire"', 'Inter', 'sans-serif'],
-        // MB Empire Heavy → titres principaux (h1)
-        display: ['"MB Empire"', 'Inter', 'sans-serif'],
+        // DM Sans Regular → contenu / body
+        sans: ['"DM Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        // DM Sans Bold → titres (h1–h6)
+        heading: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        display: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
       fontWeight: {
-        light: '300',     // MB Empire Light  → contenu
-        normal: '400',
-        medium: '500',
+        light: '300',
+        normal: '400',    // DM Sans Regular  → contenu
+        medium: '500',    // DM Sans Medium   → boutons / labels
         semibold: '600',
-        bold: '700',      // MB Empire Bold   → sous-titres
+        bold: '700',      // DM Sans Bold     → titres
         extrabold: '800',
-        black: '900',     // MB Empire Heavy  → titres
+        black: '900',
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],
