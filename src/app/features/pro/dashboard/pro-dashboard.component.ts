@@ -1,188 +1,196 @@
 import { Component, OnInit, signal, computed, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
 import { MockDataService } from '../../../core/services/mock-data.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Booking, Wallet, Business, ProStats, User } from '../../../core/models';
+import { Booking, User } from '../../../core/models';
 import { FcfaPipe, DateFormatPipe } from '../../../shared/pipes/format.pipe';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+
+interface RevenuePoint { label: string; value: number; }
+interface ChartPoint { x: number; y: number; }
 
 @Component({
   selector: 'app-pro-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, FcfaPipe, DateFormatPipe, BadgeComponent],
+  imports: [CommonModule, RouterLink, LucideAngularModule, FcfaPipe, DateFormatPipe],
   template: `
-    <div class="space-y-6">
-      <!-- Welcome Banner -->
-      <div class="relative overflow-hidden rounded-2xl text-white p-6 md:p-8"
-        style="background: linear-gradient(135deg, #1a1a2e 0%, #2d2d50 60%, #3d1a3d 100%)">
-        <div class="relative z-10">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <p class="text-white/60 text-sm mb-1">Bonjour,</p>
-              <h1 class="text-2xl md:text-3xl font-bold">{{ user()?.firstName }} {{ user()?.lastName }}</h1>
-              @if (business()) {
-                <p class="text-white/70 mt-1 text-sm">{{ business()!.name }}</p>
-              }
-            </div>
-            <div class="flex items-center gap-2">
-              @if (business()?.kycStatus === 'APPROVED') {
-                <div class="flex items-center gap-2 bg-green-500/20 border border-green-400/30 px-3 py-1.5 rounded-lg">
-                  <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span class="text-sm text-green-300 font-medium">Boutique vérifiée</span>
-                </div>
-              } @else if (business()?.kycStatus === 'PENDING') {
-                <div class="flex items-center gap-2 bg-yellow-500/20 border border-yellow-400/30 px-3 py-1.5 rounded-lg">
-                  <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                  <span class="text-sm text-yellow-300 font-medium">Vérification en cours</span>
-                </div>
-              }
-            </div>
-          </div>
+<div class="space-y-6">
 
-          <!-- Quick Stats Row -->
-          <div class="grid grid-cols-3 md:grid-cols-4 gap-4 mt-6">
-            <div class="bg-white/10 rounded-xl p-3 text-center">
-              <div class="text-2xl font-bold">{{ proStats().completedBookings }}</div>
-              <div class="text-xs text-white/60 mt-0.5">Terminés</div>
-            </div>
-            <div class="bg-white/10 rounded-xl p-3 text-center">
-              <div class="text-2xl font-bold">{{ proStats().pendingBookings }}</div>
-              <div class="text-xs text-white/60 mt-0.5">En attente</div>
-            </div>
-            <div class="bg-white/10 rounded-xl p-3 text-center">
-              <div class="text-2xl font-bold">{{ proStats().averageRating | number: '1.1-1' }}</div>
-              <div class="text-xs text-white/60 mt-0.5">Note /5</div>
-            </div>
-            <div class="hidden md:block bg-white/10 rounded-xl p-3 text-center">
-              <div class="text-2xl font-bold">{{ proStats().totalReviews }}</div>
-              <div class="text-xs text-white/60 mt-0.5">Avis</div>
-            </div>
+  <!-- ── GREETING ── -->
+  <div>
+    <h1 class="m-0 text-[26px] font-bold text-[#11152f] leading-tight">
+      Bonjour, {{ user()?.firstName }} 👋
+    </h1>
+    <p class="mt-1 text-[15px] font-light text-[#66708d]">Voici votre activité</p>
+  </div>
+
+  <!-- ── KPI CARDS ── -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+    <!-- Revenus du mois — carte purple gradient -->
+    <div class="col-span-2 lg:col-span-1 rounded-2xl p-5 text-white relative overflow-hidden"
+         style="background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)">
+      <div class="relative z-10">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[13px] font-bold text-white/75">Revenus du mois</span>
+          <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+            <lucide-icon name="chart-bar" [size]="18" [strokeWidth]="2"></lucide-icon>
           </div>
         </div>
-
-        <!-- Decorative circles -->
-        <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"></div>
-        <div class="absolute -right-5 bottom-0 w-24 h-24 rounded-full bg-primary/20"></div>
-      </div>
-
-      <!-- Revenue & Wallet -->
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="md:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="font-semibold text-secondary">Revenus</h2>
-            <a routerLink="/espace-pro/statistiques" class="text-sm text-primary hover:underline">Voir les stats</a>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="bg-green-50 rounded-xl p-4">
-              <div class="text-xs text-secondary-gray mb-1">Ce mois</div>
-              <div class="text-xl font-bold text-green-700">{{ proStats().monthlyRevenue | fcfa }}</div>
-            </div>
-            <div class="bg-blue-50 rounded-xl p-4">
-              <div class="text-xs text-secondary-gray mb-1">Cette semaine</div>
-              <div class="text-xl font-bold text-blue-700">{{ proStats().weeklyRevenue | fcfa }}</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="font-semibold text-secondary">Wallet</h2>
-            <a routerLink="/espace-pro/wallet" class="text-sm text-primary hover:underline">Gérer</a>
-          </div>
-          @if (wallet()) {
-            <div class="text-center">
-              <div class="text-3xl font-bold text-secondary">{{ wallet()!.balance | fcfa:false }}</div>
-              <div class="text-xs text-secondary-gray mt-1">FCFA disponible</div>
-              @if (wallet()!.pendingBalance > 0) {
-                <div class="mt-2 text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded">
-                  + {{ wallet()!.pendingBalance | fcfa:false }} FCFA en attente
-                </div>
-              }
-              <a routerLink="/espace-pro/wallet" class="mt-3 block btn-primary text-center text-sm py-2">
-                Demander un reversement
-              </a>
-            </div>
-          }
+        <div class="text-[22px] font-black leading-none">{{ proStats().monthlyRevenue | fcfa }}</div>
+        <div class="mt-2 flex items-center gap-1 text-[12px] text-white/75">
+          <lucide-icon name="trending-up" [size]="12" [strokeWidth]="2.5"></lucide-icon>
+          +6,3% vs la semaine dernière
         </div>
       </div>
+      <div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-white/10 pointer-events-none"></div>
+    </div>
 
-      <!-- Quick Actions -->
-      <div>
-        <h2 class="font-semibold text-secondary mb-3">Actions rapides</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          @for (action of quickActions; track action.route) {
-            <a [routerLink]="action.route"
-              class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:border-primary/30 hover:shadow-md transition-all group text-center">
-              <div class="w-10 h-10 rounded-xl mx-auto mb-2 flex items-center justify-center transition-colors"
-                [style.background]="action.bgColor">
-                <svg class="w-5 h-5" [style.color]="action.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" [attr.d]="action.icon"/>
-                </svg>
-              </div>
-              <div class="text-sm font-medium text-secondary group-hover:text-primary transition-colors">{{ action.label }}</div>
-            </a>
-          }
+    <!-- Réservations -->
+    <div class="bg-white rounded-2xl p-5 border border-[#e7e9f4]">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[13px] font-bold text-[#66708d]">Réservations</span>
+        <div class="w-9 h-9 rounded-xl bg-[#ede9fe] flex items-center justify-center text-[#7c3aed]">
+          <lucide-icon name="calendar-days" [size]="18" [strokeWidth]="2"></lucide-icon>
         </div>
       </div>
+      <div class="text-[32px] font-black text-[#11152f] leading-none">{{ proStats().totalBookings }}</div>
+      <div class="mt-1 text-[12px] text-[#66708d]">Ce mois</div>
+    </div>
 
-      <!-- Pending Bookings Alert -->
-      @if (pendingBookings().length > 0) {
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-center gap-4">
-          <div class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    <!-- Clients -->
+    <div class="bg-white rounded-2xl p-5 border border-[#e7e9f4]">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[13px] font-bold text-[#66708d]">Clients</span>
+        <div class="w-9 h-9 rounded-xl bg-[#ede9fe] flex items-center justify-center text-[#7c3aed]">
+          <lucide-icon name="users" [size]="18" [strokeWidth]="2"></lucide-icon>
+        </div>
+      </div>
+      <div class="text-[32px] font-black text-[#11152f] leading-none">{{ totalClients() }}</div>
+      <div class="mt-1 text-[12px] text-[#66708d]">Total</div>
+    </div>
+
+    <!-- Note moyenne -->
+    <div class="bg-white rounded-2xl p-5 border border-[#e7e9f4]">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[13px] font-bold text-[#66708d]">Note moyenne</span>
+        <div class="w-9 h-9 rounded-xl bg-[#fff7ed] flex items-center justify-center text-[#f59e0b]">
+          <lucide-icon name="star" [size]="18" [strokeWidth]="2"></lucide-icon>
+        </div>
+      </div>
+      <div class="flex items-end gap-1">
+        <div class="text-[32px] font-black text-[#11152f] leading-none">
+          {{ proStats().averageRating | number:'1.1-1' }}
+        </div>
+        <span class="text-[#f59e0b] text-xl mb-0.5">★</span>
+      </div>
+      <div class="mt-1 text-[12px] text-[#66708d]">{{ proStats().totalReviews }} avis</div>
+    </div>
+
+  </div>
+
+  <!-- ── MAIN GRID (chart+pending left | agenda+actions right) ── -->
+  <div class="grid lg:grid-cols-[1fr_340px] gap-5">
+
+    <!-- ─ LEFT ─ -->
+    <div class="space-y-5 min-w-0">
+
+      <!-- Revenue chart -->
+      <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="m-0 text-[15px] font-bold text-[#11152f]">Revenus 6 derniers mois</h2>
+          <span class="text-[11px] font-bold text-[#66708d] bg-[#f7f5ff] px-2 py-1 rounded-lg">FCFA</span>
+        </div>
+
+        <div class="flex gap-3">
+          <!-- Y-axis labels -->
+          <div class="flex flex-col justify-between text-[10px] font-bold text-[#66708d] text-right shrink-0"
+               style="height:140px; padding-bottom:18px">
+            <span>{{ chartMaxLabel }}</span>
+            <span>{{ chartMidLabel }}</span>
+            <span>{{ chartMinLabel }}</span>
+          </div>
+
+          <!-- SVG area chart -->
+          <div class="flex-1 min-w-0">
+            <svg viewBox="0 0 560 140" preserveAspectRatio="none" class="w-full" style="height:140px;display:block">
+              <defs>
+                <linearGradient id="dashAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- Grid lines -->
+              <line x1="0" y1="18" x2="560" y2="18" stroke="#e7e9f4" stroke-width="1"/>
+              <line x1="0" y1="70" x2="560" y2="70" stroke="#e7e9f4" stroke-width="1"/>
+              <line x1="0" y1="122" x2="560" y2="122" stroke="#e7e9f4" stroke-width="1"/>
+              <!-- Gradient fill -->
+              <path [attr.d]="chartData().area" fill="url(#dashAreaGrad)"/>
+              <!-- Line -->
+              <path [attr.d]="chartData().line" fill="none" stroke="#7c3aed" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Points -->
+              @for (pt of chartData().points; track $index) {
+                <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="4" fill="#7c3aed" stroke="white" stroke-width="2"/>
+              }
             </svg>
+            <!-- X labels -->
+            <div class="flex justify-between mt-1">
+              @for (m of revenueMonths; track m.label) {
+                <span class="text-[10px] font-bold text-[#66708d]">{{ m.label }}</span>
+              }
+            </div>
           </div>
-          <div class="flex-1">
-            <div class="font-medium text-yellow-800">{{ pendingBookings().length }} réservation(s) en attente de confirmation</div>
-            <div class="text-sm text-yellow-700 mt-0.5">Confirmez ou refusez rapidement pour éviter les annulations automatiques</div>
+        </div>
+      </div>
+
+      <!-- Pending bookings -->
+      <div class="bg-white rounded-2xl border border-[#e7e9f4]">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-[#e7e9f4]">
+          <div class="flex items-center gap-2">
+            <h2 class="m-0 text-[15px] font-bold text-[#11152f]">Réservations en attente</h2>
+            @if (pendingBookings().length > 0) {
+              <span class="text-[11px] font-black px-2 py-0.5 rounded-full"
+                    style="background:#fef3c7;color:#d97706">
+                {{ pendingBookings().length }}
+              </span>
+            }
           </div>
-          <a routerLink="/espace-pro/agenda" class="flex-shrink-0 bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors">
-            Voir l'agenda
-          </a>
-        </div>
-      }
-
-      <!-- Recent Bookings -->
-      <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <div class="p-5 border-b flex items-center justify-between">
-          <h2 class="font-semibold text-secondary">Réservations récentes</h2>
-          <a routerLink="/espace-pro/agenda" class="text-sm text-primary hover:underline">Voir tout</a>
+          <a routerLink="/espace-pro/agenda"
+             class="text-[12px] font-bold text-[#7c3aed] hover:underline">Voir tout</a>
         </div>
 
-        @if (recentBookings().length === 0) {
-          <div class="p-12 text-center">
-            <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            <p class="text-secondary-gray">Aucune réservation pour le moment</p>
+        @if (pendingBookings().length === 0) {
+          <div class="flex flex-col items-center justify-center gap-2 py-10 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-[#f0fdf4] flex items-center justify-center text-[#16a34a]">
+              <lucide-icon name="calendar-check" [size]="22" [strokeWidth]="1.75"></lucide-icon>
+            </div>
+            <p class="text-sm font-bold text-[#66708d]">Aucune réservation en attente</p>
           </div>
         } @else {
-          <div class="divide-y divide-gray-50">
-            @for (booking of recentBookings(); track booking.id) {
-              <div class="p-5">
-                <div class="flex justify-between items-center gap-4">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100">
-                      <img [src]="booking.clientAvatar || 'https://i.pravatar.cc/40'" [alt]="booking.clientName" class="w-full h-full object-cover">
-                    </div>
-                    <div class="min-w-0">
-                      <div class="flex items-center gap-2 flex-wrap">
-                        <span class="font-medium text-secondary text-sm">{{ booking.clientName }}</span>
-                        <app-badge [variant]="getStatusVariant(booking.status)" class="text-xs">
-                          {{ getStatusLabel(booking.status) }}
-                        </app-badge>
-                      </div>
-                      <div class="text-xs text-secondary-gray mt-0.5">
-                        {{ booking.service.name }} · {{ booking.date | dateFormat: 'short' }} {{ booking.time }}
-                      </div>
-                    </div>
+          <div class="divide-y divide-[#f5f5f8]">
+            @for (bk of pendingBookings().slice(0, 4); track bk.id) {
+              <div class="flex items-center gap-3 px-5 py-3.5">
+                <img [src]="bk.clientAvatar || 'https://i.pravatar.cc/40?u=' + bk.clientId"
+                     [alt]="bk.clientName"
+                     class="w-10 h-10 rounded-full object-cover shrink-0 bg-[#e7e9f4]">
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-bold text-[#11152f] truncate">{{ bk.clientName }}</div>
+                  <div class="text-[12px] text-[#66708d] mt-0.5 truncate">
+                    {{ bk.service.name }} · {{ bk.date | dateFormat:'short' }} à {{ bk.time }}
                   </div>
-                  <div class="text-right flex-shrink-0">
-                    <div class="text-sm font-bold text-primary">{{ booking.total | fcfa }}</div>
-                    <div class="text-xs text-secondary-gray">{{ booking.type === 'SALON' ? 'Au salon' : 'À domicile' }}</div>
-                  </div>
+                </div>
+                <div class="flex gap-2 shrink-0">
+                  <button (click)="onConfirm(bk.id)"
+                          class="h-8 px-3 rounded-xl text-[12px] font-bold text-white transition-opacity hover:opacity-85 active:scale-95"
+                          style="background:#7c3aed">
+                    Confirmer
+                  </button>
+                  <button (click)="onRefuse(bk.id)"
+                          class="h-8 px-3 rounded-xl text-[12px] font-bold border border-[#e7e9f4] text-[#66708d] transition-colors hover:border-red-300 hover:text-red-500 active:scale-95">
+                    Refuser
+                  </button>
                 </div>
               </div>
             }
@@ -190,89 +198,122 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
         }
       </div>
 
-      <!-- Boutique Completion Card -->
-      @if (boutiqueCompletion() < 100) {
-        <div class="bg-gradient-to-br from-primary/5 to-purple-50 border border-primary/20 rounded-xl p-6">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-              </svg>
-            </div>
-            <div class="flex-1">
-              <h3 class="font-semibold text-secondary">Complétez votre boutique</h3>
-              <p class="text-sm text-secondary-gray mt-1">Une boutique complète attire 3x plus de clients</p>
-              <div class="mt-3">
-                <div class="flex items-center justify-between text-xs text-secondary-gray mb-1">
-                  <span>Progression</span>
-                  <span class="font-medium">{{ boutiqueCompletion() }}%</span>
-                </div>
-                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full transition-all" [style.width.%]="boutiqueCompletion()"></div>
-                </div>
-              </div>
-              <a routerLink="/espace-pro/boutique" class="mt-3 inline-block text-sm font-medium text-primary hover:underline">
-                Personnaliser ma boutique →
-              </a>
-            </div>
-          </div>
-        </div>
-      }
     </div>
+
+    <!-- ─ RIGHT ─ -->
+    <div class="space-y-5">
+
+      <!-- Agenda du jour -->
+      <div class="bg-white rounded-2xl border border-[#e7e9f4]">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-[#e7e9f4]">
+          <h2 class="m-0 text-[15px] font-bold text-[#11152f]">Agenda du jour</h2>
+          <a routerLink="/espace-pro/agenda"
+             class="text-[12px] font-bold text-[#7c3aed] hover:underline">Voir tout</a>
+        </div>
+
+        @if (agendaBookings().length === 0) {
+          <div class="flex flex-col items-center gap-2 py-8 text-center">
+            <div class="w-10 h-10 rounded-2xl bg-[#f7f5ff] flex items-center justify-center text-[#7c3aed]">
+              <lucide-icon name="calendar" [size]="18" [strokeWidth]="1.75"></lucide-icon>
+            </div>
+            <p class="text-sm text-[#66708d]">Aucun rendez-vous aujourd'hui</p>
+          </div>
+        } @else {
+          <div class="divide-y divide-[#f5f5f8]">
+            @for (bk of agendaBookings(); track bk.id) {
+              <div class="flex items-center gap-3 px-4 py-3">
+                <!-- Heure -->
+                <span class="text-[12px] font-black text-[#7c3aed] w-10 shrink-0 text-center">
+                  {{ bk.time }}
+                </span>
+                <!-- Avatar -->
+                <img [src]="bk.clientAvatar || 'https://i.pravatar.cc/32?u=' + bk.clientId"
+                     [alt]="bk.clientName"
+                     class="w-8 h-8 rounded-full object-cover shrink-0 bg-[#e7e9f4]">
+                <!-- Info -->
+                <div class="flex-1 min-w-0">
+                  <div class="text-[12px] font-bold text-[#11152f] truncate">{{ bk.clientName }}</div>
+                  <div class="text-[11px] text-[#66708d] truncate">{{ bk.service.name }}</div>
+                </div>
+                <!-- Badge statut -->
+                <span class="shrink-0 text-[10px] font-black px-2 py-1 rounded-lg"
+                      [style.background]="getAgendaBadgeBg(bk.status)"
+                      [style.color]="getAgendaBadgeColor(bk.status)">
+                  {{ getAgendaBadgeLabel(bk.status) }}
+                </span>
+              </div>
+            }
+          </div>
+          <div class="px-4 py-3 border-t border-[#f5f5f8]">
+            <a routerLink="/espace-pro/agenda"
+               class="inline-flex items-center gap-1 text-[12px] font-bold text-[#7c3aed] hover:underline">
+              Voir l'agenda complet
+              <lucide-icon name="arrow-right" [size]="12" [strokeWidth]="2.5"></lucide-icon>
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- Actions rapides -->
+      <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
+        <h2 class="m-0 mb-4 text-[15px] font-bold text-[#11152f]">Actions rapides</h2>
+        <div class="grid grid-cols-2 gap-3">
+          @for (action of quickActions; track action.label) {
+            <a [routerLink]="action.route"
+               class="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#e7e9f4]
+                      hover:border-[#7c3aed]/40 hover:bg-[#f7f5ff] transition-all text-center no-underline">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                   [style.background]="action.bg" [style.color]="action.color">
+                <lucide-icon [name]="action.icon" [size]="20" [strokeWidth]="2"></lucide-icon>
+              </div>
+              <span class="text-[11px] font-bold text-[#11152f] leading-tight">{{ action.label }}</span>
+            </a>
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
   `,
   styles: []
 })
 export class ProDashboardComponent implements OnInit {
   private _bookings = signal<Booking[]>([]);
-  private _wallet = signal<Wallet | null>(null);
-
-  quickActions = [
-    {
-      label: 'Ma Boutique',
-      route: '/espace-pro/boutique',
-      icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
-      bgColor: '#fce7f3',
-      iconColor: '#e91e63'
-    },
-    {
-      label: 'Ajouter service',
-      route: '/espace-pro/services',
-      icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6',
-      bgColor: '#dbeafe',
-      iconColor: '#2563eb'
-    },
-    {
-      label: 'Mes Clients',
-      route: '/espace-pro/clients',
-      icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
-      bgColor: '#dcfce7',
-      iconColor: '#16a34a'
-    },
-    {
-      label: 'Statistiques',
-      route: '/espace-pro/statistiques',
-      icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
-      bgColor: '#fef3c7',
-      iconColor: '#d97706'
-    },
-  ];
-
   user!: Signal<User | null>;
 
-  constructor(
-    private mockData: MockDataService,
-    private authService: AuthService
-  ) {
+  readonly revenueMonths: RevenuePoint[] = [
+    { label: 'Déc', value: 89000 },
+    { label: 'Jan', value: 112000 },
+    { label: 'Fév', value: 96000 },
+    { label: 'Mar', value: 148000 },
+    { label: 'Avr', value: 135000 },
+    { label: 'Mai', value: 178000 },
+  ];
+
+  readonly chartMaxLabel = '178K';
+  readonly chartMidLabel = '130K';
+  readonly chartMinLabel = '89K';
+
+  readonly quickActions = [
+    { label: 'Nouvelle réservation', route: '/espace-pro/agenda',     icon: 'calendar-plus', bg: '#ede9fe', color: '#7c3aed' },
+    { label: 'Ajouter service',      route: '/espace-pro/services',   icon: 'scissors',      bg: '#dbeafe', color: '#2563eb' },
+    { label: 'Bloquer horaire',      route: '/espace-pro/parametres', icon: 'clock',         bg: '#fef3c7', color: '#d97706' },
+    { label: 'Mes photos',           route: '/espace-pro/boutique',   icon: 'camera',        bg: '#dcfce7', color: '#16a34a' },
+  ];
+
+  constructor(private mockData: MockDataService, private authService: AuthService) {
     this.user = this.authService.user;
   }
 
-  business = computed<Business | null>(() => {
+  business = computed(() => {
     const u = this.user();
     if (!u) return null;
     return this.mockData.getBusinesses().find(b => b.professionalId === u.id) ?? null;
   });
 
-  proStats = computed<ProStats>(() => {
+  proStats = computed(() => {
     const u = this.user();
     if (!u) return {
       totalBookings: 0, pendingBookings: 0, confirmedBookings: 0,
@@ -283,47 +324,70 @@ export class ProDashboardComponent implements OnInit {
     return this.mockData.getProStats(u.id);
   });
 
-  wallet = this._wallet.asReadonly();
-
-  recentBookings = computed(() => this._bookings().slice(0, 6));
   pendingBookings = computed(() => this._bookings().filter(b => b.status === 'PENDING'));
 
-  boutiqueCompletion = computed(() => {
-    const b = this.business();
-    if (!b) return 20;
-    let score = 0;
-    if (b.name) score += 20;
-    if (b.description) score += 20;
-    if (b.coverImage) score += 20;
-    if (b.services.length > 0) score += 20;
-    if (b.workingHours.some(w => w.isOpen)) score += 20;
-    return score;
+  agendaBookings = computed(() =>
+    this._bookings()
+      .filter(b => b.status === 'CONFIRMED' || b.status === 'PENDING')
+      .sort((a, b) => a.time.localeCompare(b.time))
+      .slice(0, 4)
+  );
+
+  totalClients = computed(() => new Set(this._bookings().map(b => b.clientId)).size);
+
+  chartData = computed((): { line: string; area: string; points: ChartPoint[] } => {
+    const data = this.revenueMonths;
+    const W = 560, H = 140, PX = 10, PY = 15;
+    const vals = data.map(d => d.value);
+    const max = Math.max(...vals);
+    const min = Math.min(...vals);
+    const range = max - min || 1;
+    const pts: ChartPoint[] = data.map((d, i) => ({
+      x: PX + (i / (data.length - 1)) * (W - 2 * PX),
+      y: PY + (1 - (d.value - min) / range) * (H - 2 * PY)
+    }));
+    const line = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+    const area = `${line} L${pts[pts.length - 1].x.toFixed(1)},${H} L${pts[0].x.toFixed(1)},${H} Z`;
+    return { line, area, points: pts };
   });
 
   ngOnInit(): void {
     const user = this.user();
     if (user) {
-      const bookings = this.mockData.getBookingsByProfessional(user.id);
-      this._bookings.set(bookings);
-      this._wallet.set(this.mockData.wallet());
+      this._bookings.set(this.mockData.getBookingsByProfessional(user.id));
     }
   }
 
-  getStatusVariant(status: Booking['status']): 'success' | 'warning' | 'error' | 'info' | 'neutral' {
-    switch (status) {
-      case 'CONFIRMED':
-      case 'COMPLETED': return 'success';
-      case 'PENDING': return 'warning';
-      case 'CANCELLED': return 'error';
-      default: return 'info';
-    }
+  onConfirm(bookingId: string): void {
+    this.mockData.confirmBooking(bookingId);
+    this.refreshBookings();
   }
 
-  getStatusLabel(status: Booking['status']): string {
-    const labels: Record<string, string> = {
-      PENDING: 'En attente', CONFIRMED: 'Confirmé',
-      COMPLETED: 'Terminé', CANCELLED: 'Annulé', NO_SHOW: 'Absent'
-    };
-    return labels[status] ?? status;
+  onRefuse(bookingId: string): void {
+    this.mockData.cancelBooking(bookingId, 'PRO', 'OTHER');
+    this.refreshBookings();
+  }
+
+  getAgendaBadgeBg(status: Booking['status']): string {
+    if (status === 'CONFIRMED') return '#dcfce7';
+    if (status === 'PENDING')   return '#fef3c7';
+    return '#ede9fe';
+  }
+
+  getAgendaBadgeColor(status: Booking['status']): string {
+    if (status === 'CONFIRMED') return '#16a34a';
+    if (status === 'PENDING')   return '#d97706';
+    return '#7c3aed';
+  }
+
+  getAgendaBadgeLabel(status: Booking['status']): string {
+    if (status === 'CONFIRMED') return 'CONFIRMÉ';
+    if (status === 'PENDING')   return 'EN ATTENTE';
+    return 'À VENIR';
+  }
+
+  private refreshBookings(): void {
+    const user = this.user();
+    if (user) this._bookings.set(this.mockData.getBookingsByProfessional(user.id));
   }
 }

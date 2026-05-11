@@ -34,7 +34,7 @@ export class SearchFiltersComponent {
 
   readonly rdvTypes: { id: 'SALON' | 'FREELANCE'; label: string; icon: string }[] = [
     { id: 'SALON', label: 'En salon', icon: 'store' },
-    { id: 'FREELANCE', label: 'À domicile', icon: 'home' },
+    { id: 'FREELANCE', label: 'À domicile', icon: 'house' },
   ];
 
   // Mapping des icônes de ServiceCategory vers les noms d'icônes Lucide

@@ -172,6 +172,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
         loadComponent: () => import('./features/pro/dashboard/pro-dashboard.component').then(m => m.ProDashboardComponent)
       },
       {

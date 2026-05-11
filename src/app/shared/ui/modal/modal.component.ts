@@ -15,25 +15,30 @@ import { CommonModule } from '@angular/common';
         </div>
 
         <!-- Modal Center -->
-        <div class="flex min-h-full items-center justify-center p-4">
+        <div class="flex min-h-full items-center justify-center p-6 py-10">
           <div
-            class="relative bg-white rounded-lg shadow-xl max-w-md w-full"
-            [class.max-w-lg]="size === 'lg'"
-            [class.max-w-sm]="size === 'sm'"
+            class="relative bg-white rounded-2xl shadow-2xl w-full"
+            [ngClass]="{
+              'max-w-sm':  size === 'sm',
+              'max-w-md':  size === 'md',
+              'max-w-lg':  size === 'lg',
+              'max-w-4xl': size === 'xl'
+            }"
             @modalAnimation>
             
             <!-- Header -->
             @if (title || showCloseButton) {
-              <div class="flex items-center justify-between p-4 border-b">
+              <div class="flex items-center justify-between px-6 py-4 border-b border-[#e7e9f4] flex-shrink-0">
                 @if (title) {
-                  <h3 class="text-lg font-semibold text-secondary">{{ title }}</h3>
+                  <h3 class="text-[17px] font-black" style="color:#11152f">{{ title }}</h3>
                 }
                 @if (showCloseButton) {
                   <button
                     (click)="close()"
-                    class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-[#f0f1f6] transition-colors"
+                    style="color:#69708a">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                   </button>
                 }
@@ -41,7 +46,7 @@ import { CommonModule } from '@angular/common';
             }
 
             <!-- Body -->
-            <div class="p-4">
+            <div class="px-6 py-5 overflow-y-auto" style="max-height:82vh">
               <ng-content></ng-content>
             </div>
 
@@ -79,7 +84,7 @@ import { CommonModule } from '@angular/common';
 export class ModalComponent {
   @Input() isOpen = false;
   @Input() title = '';
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
+  @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
   @Input() showCloseButton = true;
   @Input() showFooter = false;
   @Input() showCancel = true;

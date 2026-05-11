@@ -64,14 +64,14 @@ import {
 export class MockDataService {
   // Service Categories
   private categories: ServiceCategory[] = [
-    { id: 'cat-1', name: 'Coiffure', icon: 'cut', sortOrder: 1 },
-    { id: 'cat-2', name: 'Esthétique', icon: 'sparkles', sortOrder: 2 },
-    { id: 'cat-3', name: 'Manucure', icon: 'hand', sortOrder: 3 },
-    { id: 'cat-4', name: 'Pédicure', icon: 'foot', sortOrder: 4 },
-    { id: 'cat-5', name: 'Barbier', icon: 'user', sortOrder: 5 },
-    { id: 'cat-6', name: 'Maquillage', icon: 'brush', sortOrder: 6 },
-    { id: 'cat-7', name: 'Soins du visage', icon: 'face', sortOrder: 7 },
-    { id: 'cat-8', name: 'Massage', icon: 'spa', sortOrder: 8 },
+    { id: 'cat-1', name: 'Coiffure',        icon: 'scissors',   sortOrder: 1 },
+    { id: 'cat-2', name: 'Esthétique',      icon: 'sparkles',   sortOrder: 2 },
+    { id: 'cat-3', name: 'Manucure',        icon: 'hand',       sortOrder: 3 },
+    { id: 'cat-4', name: 'Pédicure',        icon: 'footprints', sortOrder: 4 },
+    { id: 'cat-5', name: 'Barbier',         icon: 'user',       sortOrder: 5 },
+    { id: 'cat-6', name: 'Maquillage',      icon: 'paintbrush', sortOrder: 6 },
+    { id: 'cat-7', name: 'Soins du visage', icon: 'smile',      sortOrder: 7 },
+    { id: 'cat-8', name: 'Massage',         icon: 'leaf',       sortOrder: 8 },
   ];
 
   // Communes d'Abidjan
@@ -96,127 +96,179 @@ export class MockDataService {
   private generateMockBookings(): Booking[] {
     const now = new Date();
     const businesses = this.generateBusinesses();
-    
+    const b1 = businesses.find(b => b.id === 'business-1')!;
+    const b2 = businesses.find(b => b.id === 'business-2')!;
+    const b3 = businesses.find(b => b.id === 'business-3')!;
+    const b4 = businesses.find(b => b.id === 'business-4')!;
+
+    // svc(i) → service at index i for Beauty Salon Cocody (business-1)
+    // [0] Coupe simple 5000 | [1] Coupe+Brushing 8000 | [2] Coloration 15000
+    // [3] Tresses 20000     | [4] Nattes 25000         | [5] Soin du visage 10000
+    // [6] Épilation sourcils 3000 | [7] Épil.lèvres 2000 | [8] Gommage corps 15000
+    // [9] Manucure simple 5000 | [10] Manucure russe 10000
+    // [11] Pose vernis gel 12000 | [12] Nail art 15000
+    const svc = (i: number) => b1.services[i];
+
+    const clients = [
+      { id: 'client-2', name: 'Fatou Diallo',     phone: '+225 07 12 34 56 78', avatar: 'https://i.pravatar.cc/40?img=47' },
+      { id: 'client-3', name: 'Aicha Bamba',      phone: '+225 05 23 45 67 89', avatar: 'https://i.pravatar.cc/40?img=48' },
+      { id: 'client-4', name: 'Awa Traoré',       phone: '+225 01 34 56 78 90', avatar: 'https://i.pravatar.cc/40?img=49' },
+      { id: 'client-5', name: 'Mariam Koné',      phone: '+225 07 45 67 89 01', avatar: 'https://i.pravatar.cc/40?img=45' },
+      { id: 'client-6', name: 'Natacha Gnahoré',  phone: '+225 05 56 78 90 12', avatar: 'https://i.pravatar.cc/40?img=55' },
+      { id: 'client-7', name: 'Rosaly Gbané',     phone: '+225 01 67 89 01 23', avatar: 'https://i.pravatar.cc/40?img=56' },
+      { id: 'client-8', name: 'Edwige Assi',      phone: '+225 07 78 90 12 34', avatar: 'https://i.pravatar.cc/40?img=44' },
+      { id: 'client-9', name: 'Adjoua Coulibaly', phone: '+225 05 89 01 23 45', avatar: 'https://i.pravatar.cc/40?img=43' },
+    ];
+
+    const dayDate = (offset: number, h: number, m: number) =>
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset, h, m);
+
+    const mk = (
+      id: string, num: string, cIdx: number, svcIdx: number,
+      dayOff: number, time: string,
+      status: Booking['status'], pm: Booking['paymentMethod'],
+      isHome = false
+    ): Booking => {
+      const c = clients[cIdx];
+      const s = svc(svcIdx);
+      const [hh, mm] = time.split(':').map(Number);
+      const homeFee = isHome ? 3000 : 0;
+      const payStatus: Booking['paymentStatus'] =
+        status === 'COMPLETED' ? 'PAID' :
+        status === 'CANCELLED' ? 'REFUNDED' :
+        pm === 'CASH' ? 'PENDING' : 'PAID';
+      return {
+        id, bookingNumber: num,
+        clientId: c.id, businessId: b1.id, professionalId: 'pro-1',
+        serviceId: s.id, service: s,
+        businessName: b1.name, professionalName: 'Jean Koffi',
+        clientName: c.name, clientPhone: c.phone, clientAvatar: c.avatar,
+        date: dayDate(dayOff, hh, mm), time,
+        duration: s.duration, type: isHome ? 'HOME' : 'SALON',
+        subtotal: s.price, homeServiceFee: homeFee, total: s.price + homeFee,
+        status, paymentMethod: pm, paymentStatus: payStatus,
+        isNewClientMarketplace: status === 'COMPLETED',
+        marketplaceCommission: status === 'COMPLETED' ? Math.round(s.price * 0.15) : 0,
+        transactionFee: status === 'COMPLETED' && pm !== 'CASH' ? Math.round(s.price * 0.025) : 0,
+        platformRevenue: status === 'COMPLETED' ? Math.round(s.price * (pm !== 'CASH' ? 0.175 : 0.15)) : 0,
+        professionalEarnings: status === 'COMPLETED' ? Math.round(s.price * (pm !== 'CASH' ? 0.825 : 0.85)) : 0,
+        createdAt: new Date(now.getTime() - (Math.abs(dayOff) + 3) * 86400000),
+        updatedAt: new Date()
+      };
+    };
+
     return [
-      // Confirmed booking (can be cancelled)
+      // ── Client-space backward compat (Aminata Kouassi, pro-2/3/4) ──────────
       {
-        id: 'booking-confirmed-1',
-        bookingNumber: 'SEF-20260325-001',
-        clientId: 'client-1',
-        businessId: 'business-1',
-        professionalId: 'pro-1',
-        serviceId: 'business-1-1',
-        service: businesses[0].services[0],
-        businessName: businesses[0].name,
-        professionalName: businesses[0].name,
-        clientName: 'Aminata Kouassi',
-        clientPhone: '+225 07 07 07 07 07',
+        id: 'booking-confirmed-1', bookingNumber: 'SEF-20260325-001',
+        clientId: 'client-1', businessId: b2.id, professionalId: 'pro-2',
+        serviceId: b2.services[0].id, service: b2.services[0],
+        businessName: b2.name, professionalName: b2.name,
+        clientName: 'Aminata Kouassi', clientPhone: '+225 07 07 07 07 07',
         clientAvatar: 'https://i.pravatar.cc/150?img=5',
-        date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 10, 30),
-        time: '10:30',
-        duration: 45,
-        type: 'SALON',
-        subtotal: 8000,
-        homeServiceFee: 0,
-        total: 8000,
-        status: 'CONFIRMED',
-        paymentMethod: 'MOBILE_MONEY',
-        paymentStatus: 'PAID',
-        createdAt: new Date(now.getTime() - 86400000 * 2),
-        updatedAt: new Date()
+        date: dayDate(2, 10, 30), time: '10:30', duration: 45, type: 'SALON',
+        subtotal: 8000, homeServiceFee: 0, total: 8000,
+        status: 'CONFIRMED', paymentMethod: 'MOBILE_MONEY', paymentStatus: 'PAID',
+        createdAt: new Date(now.getTime() - 86400000 * 2), updatedAt: new Date()
       },
-      // Pending booking (can be cancelled)
       {
-        id: 'booking-pending-1',
-        bookingNumber: 'SEF-20260326-002',
-        clientId: 'client-1',
-        businessId: 'business-2',
-        professionalId: 'pro-2',
-        serviceId: 'business-2-1',
-        service: businesses[1].services[0],
-        businessName: businesses[1].name,
-        professionalName: businesses[1].name,
-        clientName: 'Aminata Kouassi',
-        clientPhone: '+225 07 07 07 07 07',
+        id: 'booking-pending-1', bookingNumber: 'SEF-20260326-002',
+        clientId: 'client-1', businessId: b3.id, professionalId: 'pro-3',
+        serviceId: b3.services[0].id, service: b3.services[0],
+        businessName: b3.name, professionalName: b3.name,
+        clientName: 'Aminata Kouassi', clientPhone: '+225 07 07 07 07 07',
         clientAvatar: 'https://i.pravatar.cc/150?img=5',
-        date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 14, 0),
-        time: '14:00',
-        duration: 30,
-        type: 'SALON',
-        subtotal: 5000,
-        homeServiceFee: 0,
-        total: 5000,
-        status: 'PENDING',
-        paymentMethod: 'CASH',
-        paymentStatus: 'PENDING',
-        createdAt: new Date(now.getTime() - 3600000),
-        updatedAt: new Date()
+        date: dayDate(3, 14, 0), time: '14:00', duration: 30, type: 'SALON',
+        subtotal: 5000, homeServiceFee: 0, total: 5000,
+        status: 'PENDING', paymentMethod: 'CASH', paymentStatus: 'PENDING',
+        createdAt: new Date(now.getTime() - 3600000), updatedAt: new Date()
       },
-      // Completed booking (can leave review)
       {
-        id: 'booking-completed-1',
-        bookingNumber: 'SEF-20260310-003',
-        clientId: 'client-1',
-        businessId: 'business-3',
-        professionalId: 'pro-3',
-        serviceId: 'business-3-1',
-        service: businesses[2].services[0],
-        businessName: businesses[2].name,
-        professionalName: businesses[2].name,
-        clientName: 'Aminata Kouassi',
-        clientPhone: '+225 07 07 07 07 07',
+        id: 'booking-completed-1', bookingNumber: 'SEF-20260310-003',
+        clientId: 'client-1', businessId: b3.id, professionalId: 'pro-3',
+        serviceId: b3.services[0].id, service: b3.services[0],
+        businessName: b3.name, professionalName: b3.name,
+        clientName: 'Aminata Kouassi', clientPhone: '+225 07 07 07 07 07',
         clientAvatar: 'https://i.pravatar.cc/150?img=5',
-        date: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 10, 11, 0),
-        time: '11:00',
-        duration: 60,
-        type: 'SALON',
-        subtotal: 10000,
-        homeServiceFee: 0,
-        total: 10000,
-        status: 'COMPLETED',
-        paymentMethod: 'MOBILE_MONEY',
-        paymentStatus: 'PAID',
-        isNewClientMarketplace: true,
-        marketplaceCommission: 1500, // 15% de 10000
-        transactionFee: 250, // 2.5% de 10000
-        platformRevenue: 1750, // 1500 + 250
-        professionalEarnings: 8250, // 10000 - 1750
+        date: dayDate(-10, 11, 0), time: '11:00', duration: 60, type: 'SALON',
+        subtotal: 10000, homeServiceFee: 0, total: 10000,
+        status: 'COMPLETED', paymentMethod: 'MOBILE_MONEY', paymentStatus: 'PAID',
+        isNewClientMarketplace: true, marketplaceCommission: 1500,
+        transactionFee: 250, platformRevenue: 1750, professionalEarnings: 8250,
         createdAt: new Date(now.getTime() - 86400000 * 15),
         updatedAt: new Date(now.getTime() - 86400000 * 10)
       },
-      // Cancelled booking (shows reason)
       {
-        id: 'booking-cancelled-1',
-        bookingNumber: 'SEF-20260315-004',
-        clientId: 'client-1',
-        businessId: 'business-4',
-        professionalId: 'pro-4',
-        serviceId: 'business-4-1',
-        service: businesses[3].services[0],
-        businessName: businesses[3].name,
-        professionalName: businesses[3].name,
-        clientName: 'Aminata Kouassi',
-        clientPhone: '+225 07 07 07 07 07',
+        id: 'booking-cancelled-1', bookingNumber: 'SEF-20260315-004',
+        clientId: 'client-1', businessId: b4.id, professionalId: 'pro-4',
+        serviceId: b4.services[0].id, service: b4.services[0],
+        businessName: b4.name, professionalName: b4.name,
+        clientName: 'Aminata Kouassi', clientPhone: '+225 07 07 07 07 07',
         clientAvatar: 'https://i.pravatar.cc/150?img=5',
-        date: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 5, 15, 0),
-        time: '15:00',
-        duration: 45,
-        type: 'HOME',
-        subtotal: 12000,
-        homeServiceFee: 3000,
-        total: 15000,
-        status: 'CANCELLED',
-        paymentMethod: 'MOBILE_MONEY',
-        paymentStatus: 'REFUNDED',
+        date: dayDate(-5, 15, 0), time: '15:00', duration: 45, type: 'HOME',
+        subtotal: 12000, homeServiceFee: 3000, total: 15000,
+        status: 'CANCELLED', paymentMethod: 'MOBILE_MONEY', paymentStatus: 'REFUNDED',
         cancellation: {
-          cancelledBy: 'CLIENT',
-          reason: 'SCHEDULE_CONFLICT',
-          cancelledAt: new Date(now.getTime() - 86400000 * 6),
-          refundAmount: 15000
+          cancelledBy: 'CLIENT', reason: 'SCHEDULE_CONFLICT',
+          cancelledAt: new Date(now.getTime() - 86400000 * 6), refundAmount: 15000
         },
         createdAt: new Date(now.getTime() - 86400000 * 10),
         updatedAt: new Date(now.getTime() - 86400000 * 6)
-      }
+      },
+
+      // ── pro-1 PENDING (agenda upcoming) ─────────────────────────────────────
+      mk('bk-p1-01','SEF-PRO-001', 0, 3,  1,'09:30','PENDING','MOBILE_MONEY'),  // Fatou — Tresses 20K
+      mk('bk-p1-02','SEF-PRO-002', 1,10,  1,'14:00','PENDING','CASH'),          // Aicha — Manucure russe 10K
+      mk('bk-p1-03','SEF-PRO-003', 2, 2,  2,'11:00','PENDING','WAVE'),          // Awa — Coloration 15K
+      mk('bk-p1-04','SEF-PRO-004', 3, 5,  3,'15:30','PENDING','ORANGE_MONEY'),  // Mariam — Soin visage 10K
+
+      // ── pro-1 CONFIRMED (agenda du jour = today) ────────────────────────────
+      mk('bk-p1-05','SEF-PRO-005', 4, 1,  0,'09:30','CONFIRMED','MOBILE_MONEY'), // Natacha — Coupe+Brush 8K
+      mk('bk-p1-06','SEF-PRO-006', 5,12,  0,'11:00','CONFIRMED','WAVE'),         // Rosaly — Nail art 15K
+      mk('bk-p1-07','SEF-PRO-007', 6, 9,  0,'14:30','CONFIRMED','CASH'),         // Edwige — Manucure simple 5K
+      mk('bk-p1-08','SEF-PRO-008', 7, 4,  4,'10:00','CONFIRMED','ORANGE_MONEY'), // Adjoua — Nattes 25K
+
+      // ── pro-1 COMPLETED last 30 days (revenue) ──────────────────────────────
+      mk('bk-p1-09', 'SEF-PRO-009', 0, 0,  -2,'10:00','COMPLETED','MOBILE_MONEY'),  // Fatou — Coupe simple 5K
+      mk('bk-p1-10', 'SEF-PRO-010', 1, 6,  -3,'09:30','COMPLETED','CASH'),           // Aicha — Épil.sourcils 3K
+      mk('bk-p1-11', 'SEF-PRO-011', 2, 3,  -5,'11:00','COMPLETED','WAVE'),           // Awa — Tresses 20K
+      mk('bk-p1-12', 'SEF-PRO-012', 3,10,  -7,'15:00','COMPLETED','ORANGE_MONEY'),   // Mariam — Manucure russe 10K
+      mk('bk-p1-13', 'SEF-PRO-013', 4, 2,  -9,'14:00','COMPLETED','MOBILE_MONEY'),   // Natacha — Coloration 15K
+      mk('bk-p1-14', 'SEF-PRO-014', 5,11, -11,'10:30','COMPLETED','WAVE'),            // Rosaly — Vernis gel 12K
+      mk('bk-p1-15', 'SEF-PRO-015', 6, 8, -13,'09:00','COMPLETED','CASH'),            // Edwige — Gommage corps 15K
+      mk('bk-p1-16', 'SEF-PRO-016', 7, 4, -15,'11:30','COMPLETED','MOBILE_MONEY'),   // Adjoua — Nattes 25K
+      mk('bk-p1-17', 'SEF-PRO-017', 0, 1, -17,'10:00','COMPLETED','ORANGE_MONEY'),   // Fatou — Coupe+Brushing 8K
+      mk('bk-p1-18', 'SEF-PRO-018', 1, 5, -19,'14:00','COMPLETED','MOBILE_MONEY'),   // Aicha — Soin visage 10K
+      mk('bk-p1-19', 'SEF-PRO-019', 2,12, -21,'15:30','COMPLETED','WAVE'),            // Awa — Nail art 15K
+      mk('bk-p1-20', 'SEF-PRO-020', 3, 9, -24,'09:30','COMPLETED','CASH'),            // Mariam — Manucure simple 5K
+      mk('bk-p1-21', 'SEF-PRO-021', 4, 3, -26,'10:00','COMPLETED','MOBILE_MONEY'),   // Natacha — Tresses 20K
+      mk('bk-p1-22', 'SEF-PRO-022', 5, 2, -28,'11:00','COMPLETED','ORANGE_MONEY'),   // Rosaly — Coloration 15K
+
+      // ── pro-1 COMPLETED 1–3 months ago (chart historique) ──────────────────
+      mk('bk-p1-23', 'SEF-PRO-023', 6,10, -35,'14:00','COMPLETED','MOBILE_MONEY'),   // Edwige — Manucure russe 10K
+      mk('bk-p1-24', 'SEF-PRO-024', 7, 4, -40,'09:00','COMPLETED','WAVE'),           // Adjoua — Nattes 25K
+      mk('bk-p1-25', 'SEF-PRO-025', 0, 1, -45,'10:30','COMPLETED','MOBILE_MONEY'),   // Fatou — Coupe+Brushing 8K
+      mk('bk-p1-26', 'SEF-PRO-026', 1, 8, -50,'14:00','COMPLETED','ORANGE_MONEY'),   // Aicha — Gommage corps 15K
+      mk('bk-p1-27', 'SEF-PRO-027', 2, 3, -60,'11:00','COMPLETED','MOBILE_MONEY'),   // Awa — Tresses 20K
+      mk('bk-p1-28', 'SEF-PRO-028', 3, 2, -68,'15:00','COMPLETED','WAVE'),           // Mariam — Coloration 15K
+      mk('bk-p1-29', 'SEF-PRO-029', 4, 4, -75,'10:00','COMPLETED','CASH'),           // Natacha — Nattes 25K
+      mk('bk-p1-30', 'SEF-PRO-030', 5,12, -82,'11:30','COMPLETED','MOBILE_MONEY'),   // Rosaly — Nail art 15K
+
+      // ── pro-1 CANCELLED ─────────────────────────────────────────────────────
+      {
+        ...mk('bk-p1-31','SEF-PRO-031', 2, 3, -6,'11:00','CANCELLED','MOBILE_MONEY'),
+        cancellation: {
+          cancelledBy: 'CLIENT' as const, reason: 'SCHEDULE_CONFLICT' as const,
+          cancelledAt: new Date(now.getTime() - 86400000 * 5), refundAmount: 20000
+        }
+      },
+      {
+        ...mk('bk-p1-32','SEF-PRO-032', 3,12, -3,'15:00','CANCELLED','CASH'),
+        cancellation: {
+          cancelledBy: 'CLIENT' as const, reason: 'PRICE_TOO_HIGH' as const,
+          cancelledAt: new Date(now.getTime() - 86400000 * 2), refundAmount: 0
+        }
+      },
     ];
   }
 
@@ -430,20 +482,32 @@ export class MockDataService {
     return false;
   }
 
+  confirmBooking(bookingId: string): boolean {
+    const current = this.bookingsSignal();
+    const booking = current.find(b => b.id === bookingId);
+    if (booking && booking.status === 'PENDING') {
+      this.bookingsSignal.set(current.map(b =>
+        b.id === bookingId ? { ...b, status: 'CONFIRMED' as const, updatedAt: new Date() } : b
+      ));
+      return true;
+    }
+    return false;
+  }
+
   completeBooking(bookingId: string): boolean {
     const current = this.bookingsSignal();
     const booking = current.find(b => b.id === bookingId);
-    
+
     if (booking && booking.status === 'CONFIRMED') {
-      const updated = current.map(b => 
-        b.id === bookingId 
+      const updated = current.map(b =>
+        b.id === bookingId
           ? { ...b, status: 'COMPLETED' as const, updatedAt: new Date() }
           : b
       );
       this.bookingsSignal.set(updated);
       return true;
     }
-    
+
     return false;
   }
 
@@ -1119,17 +1183,30 @@ export class MockDataService {
   // Pro Stats
   getProStats(professionalId: string): ProStats {
     const bookings = this.getBookingsByProfessional(professionalId);
-    
+    const completed = bookings.filter(b => b.status === 'COMPLETED');
+
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000);
+    const sevenDaysAgo  = new Date(now.getTime() -  7 * 86400000);
+
+    const monthlyRevenue = completed
+      .filter(b => b.date >= thirtyDaysAgo)
+      .reduce((sum, b) => sum + b.total, 0);
+
+    const weeklyRevenue = completed
+      .filter(b => b.date >= sevenDaysAgo)
+      .reduce((sum, b) => sum + b.total, 0);
+
     return {
       totalBookings: bookings.length,
-      pendingBookings: bookings.filter(b => b.status === 'PENDING').length,
+      pendingBookings:   bookings.filter(b => b.status === 'PENDING').length,
       confirmedBookings: bookings.filter(b => b.status === 'CONFIRMED').length,
       cancelledBookings: bookings.filter(b => b.status === 'CANCELLED').length,
-      completedBookings: bookings.filter(b => b.status === 'COMPLETED').length,
-      monthlyRevenue: bookings.filter(b => b.status === 'COMPLETED').reduce((sum, b) => sum + b.total, 0),
-      weeklyRevenue: bookings.filter(b => b.status === 'COMPLETED').reduce((sum, b) => sum + b.total, 0) * 0.25,
+      completedBookings: completed.length,
+      monthlyRevenue,
+      weeklyRevenue,
       averageRating: 4.8,
-      totalReviews: bookings.filter(b => b.status === 'COMPLETED').length,
+      totalReviews: completed.length,
       referralPoints: 150,
       bookingsByDay: [],
       servicesByCategory: [],

@@ -278,7 +278,7 @@ type TabName = 'Infos' | 'Services' | 'Avis' | 'Photos';
                               </span>
                             } @else {
                               <span class="inline-flex items-center gap-1.5 text-sm font-light text-[#c5c7d9]">
-                                <lucide-icon name="x-circle" [size]="14" [strokeWidth]="2" aria-hidden="true"></lucide-icon>
+                                <lucide-icon name="circle-x" [size]="14" [strokeWidth]="2" aria-hidden="true"></lucide-icon>
                                 Fermé
                               </span>
                             }
@@ -299,34 +299,6 @@ type TabName = 'Infos' | 'Services' | 'Avis' | 'Photos';
                             <div class="min-w-0 pt-1">
                               <span class="block text-[13px] font-bold uppercase tracking-[0.06em] text-[#66708d]">Adresse</span>
                               <span class="mt-0.5 block text-sm font-light text-[#11152f]">{{ b.address || b.city }}</span>
-                            </div>
-                          </li>
-                        }
-                        @if (b.phone) {
-                          <li class="flex items-start gap-3">
-                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#7c3aed]">
-                              <lucide-icon name="phone" [size]="17" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
-                            </span>
-                            <div class="min-w-0 pt-1">
-                              <span class="block text-[13px] font-bold uppercase tracking-[0.06em] text-[#66708d]">Téléphone</span>
-                              <a
-                                [href]="'tel:' + b.phone"
-                                class="mt-0.5 block text-sm font-bold text-[#7c3aed] hover:underline"
-                              >{{ b.phone }}</a>
-                            </div>
-                          </li>
-                        }
-                        @if (b.email) {
-                          <li class="flex items-start gap-3">
-                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#7c3aed]">
-                              <lucide-icon name="mail" [size]="17" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
-                            </span>
-                            <div class="min-w-0 pt-1">
-                              <span class="block text-[13px] font-bold uppercase tracking-[0.06em] text-[#66708d]">Email</span>
-                              <a
-                                [href]="'mailto:' + b.email"
-                                class="mt-0.5 block text-sm font-bold text-[#7c3aed] hover:underline"
-                              >{{ b.email }}</a>
                             </div>
                           </li>
                         }

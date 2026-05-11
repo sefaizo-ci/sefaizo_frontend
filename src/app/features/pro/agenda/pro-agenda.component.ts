@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -12,14 +12,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
 @Component({
   selector: 'app-pro-agenda',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    LucideAngularModule,
-    FcfaPipe,
-    DateFormatPipe,
-    ModalComponent
-  ],
+  imports: [CommonModule, FormsModule, LucideAngularModule, FcfaPipe, DateFormatPipe, ModalComponent],
   template: `
     <div>
       <!-- En-tête -->
@@ -28,37 +21,76 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
         <p class="mt-1 text-base text-[#69708a]">Gérez vos rendez-vous et vos disponibilités</p>
       </div>
 
-      <!-- Stats -->
+      <!-- ── Cartes stats (cliquables = filtre) ── -->
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-7">
-        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
-          <div class="text-[28px] font-black text-[#11152f]">{{ stats.total }}</div>
-          <div class="text-sm font-bold text-[#69708a] mt-0.5">Total</div>
+
+        <!-- Total -->
+        <div (click)="setFilter('')"
+             class="rounded-2xl border p-5 cursor-pointer transition-all select-none"
+             [ngClass]="statusFilter() === ''
+               ? 'bg-[#f7f5ff] border-[#7c3aed] ring-2 ring-[#7c3aed]/30'
+               : 'bg-white border-[#e7e9f4] hover:border-[#c4b5fd]'">
+          <div class="text-[28px] font-black text-[#11152f]">{{ stats().total }}</div>
+          <div class="text-sm font-bold mt-0.5"
+               [ngClass]="statusFilter() === '' ? 'text-[#7c3aed]' : 'text-[#69708a]'">Total</div>
         </div>
-        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
-          <div class="text-[28px] font-black text-[#d97706]">{{ stats.pending }}</div>
-          <div class="text-sm font-bold text-[#69708a] mt-0.5">En attente</div>
+
+        <!-- En attente -->
+        <div (click)="setFilter('PENDING')"
+             class="rounded-2xl border p-5 cursor-pointer transition-all select-none"
+             [ngClass]="statusFilter() === 'PENDING'
+               ? 'bg-amber-50 border-amber-400 ring-2 ring-amber-300/40'
+               : 'bg-white border-[#e7e9f4] hover:border-amber-300'">
+          <div class="text-[28px] font-black text-[#d97706]">{{ stats().pending }}</div>
+          <div class="text-sm font-bold mt-0.5"
+               [ngClass]="statusFilter() === 'PENDING' ? 'text-amber-700' : 'text-[#69708a]'">En attente</div>
         </div>
-        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
-          <div class="text-[28px] font-black text-[#7c3aed]">{{ stats.confirmed }}</div>
-          <div class="text-sm font-bold text-[#69708a] mt-0.5">Confirmés</div>
+
+        <!-- Confirmés -->
+        <div (click)="setFilter('CONFIRMED')"
+             class="rounded-2xl border p-5 cursor-pointer transition-all select-none"
+             [ngClass]="statusFilter() === 'CONFIRMED'
+               ? 'bg-[#f3e8ff] border-[#7c3aed] ring-2 ring-[#7c3aed]/30'
+               : 'bg-white border-[#e7e9f4] hover:border-[#c4b5fd]'">
+          <div class="text-[28px] font-black text-[#7c3aed]">{{ stats().confirmed }}</div>
+          <div class="text-sm font-bold mt-0.5"
+               [ngClass]="statusFilter() === 'CONFIRMED' ? 'text-[#7c3aed]' : 'text-[#69708a]'">Confirmés</div>
         </div>
-        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
-          <div class="text-[28px] font-black text-[#10b45e]">{{ stats.completed }}</div>
-          <div class="text-sm font-bold text-[#69708a] mt-0.5">Terminés</div>
+
+        <!-- Terminés -->
+        <div (click)="setFilter('COMPLETED')"
+             class="rounded-2xl border p-5 cursor-pointer transition-all select-none"
+             [ngClass]="statusFilter() === 'COMPLETED'
+               ? 'bg-emerald-50 border-emerald-400 ring-2 ring-emerald-300/40'
+               : 'bg-white border-[#e7e9f4] hover:border-emerald-300'">
+          <div class="text-[28px] font-black text-[#10b45e]">{{ stats().completed }}</div>
+          <div class="text-sm font-bold mt-0.5"
+               [ngClass]="statusFilter() === 'COMPLETED' ? 'text-emerald-700' : 'text-[#69708a]'">Terminés</div>
         </div>
-        <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5">
-          <div class="text-[28px] font-black text-[#dc2626]">{{ stats.cancelled }}</div>
-          <div class="text-sm font-bold text-[#69708a] mt-0.5">Annulés</div>
+
+        <!-- Annulés -->
+        <div (click)="setFilter('CANCELLED')"
+             class="rounded-2xl border p-5 cursor-pointer transition-all select-none"
+             [ngClass]="statusFilter() === 'CANCELLED'
+               ? 'bg-red-50 border-red-400 ring-2 ring-red-300/40'
+               : 'bg-white border-[#e7e9f4] hover:border-red-300'">
+          <div class="text-[28px] font-black text-[#dc2626]">{{ stats().cancelled }}</div>
+          <div class="text-sm font-bold mt-0.5"
+               [ngClass]="statusFilter() === 'CANCELLED' ? 'text-red-700' : 'text-[#69708a]'">Annulés</div>
         </div>
+
       </div>
 
-      <!-- Filtres -->
+      <!-- ── Barre de filtres ── -->
       <div class="bg-white rounded-2xl border border-[#e7e9f4] p-5 mb-6">
         <div class="flex flex-wrap gap-4">
+
+          <!-- Filtre statut -->
           <div class="flex-1 min-w-[200px]">
             <label class="block text-sm font-black text-[#11152f] mb-2">Statut</label>
-            <select [(ngModel)]="statusFilter"
-              class="w-full h-10 rounded-full border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 cursor-pointer">
+            <select [value]="statusFilter()"
+                    (change)="setFilter($any($event.target).value)"
+                    class="w-full h-10 rounded-full border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 cursor-pointer">
               <option value="">Tous les statuts</option>
               <option value="PENDING">En attente</option>
               <option value="CONFIRMED">Confirmé</option>
@@ -66,28 +98,64 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
               <option value="CANCELLED">Annulé</option>
             </select>
           </div>
+
+          <!-- Recherche client -->
           <div class="flex-1 min-w-[200px]">
             <label class="block text-sm font-black text-[#11152f] mb-2">Rechercher</label>
             <div class="relative">
-              <lucide-icon name="search" [size]="15" [strokeWidth]="2" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#69708a]"></lucide-icon>
-              <input type="text" [(ngModel)]="searchQuery" placeholder="Nom du client..."
-                class="w-full h-10 rounded-full border border-[#e7e9f4] pl-9 pr-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
+              <lucide-icon name="search" [size]="15" [strokeWidth]="2"
+                class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#69708a]">
+              </lucide-icon>
+              <input type="text"
+                     [value]="searchQuery()"
+                     (input)="searchQuery.set($any($event.target).value)"
+                     placeholder="Nom du client..."
+                     class="w-full h-10 rounded-full border border-[#e7e9f4] pl-14 pr-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
             </div>
           </div>
+
+          <!-- Bouton reset -->
+          @if (statusFilter() || searchQuery()) {
+            <div class="flex items-end">
+              <button (click)="resetFilters()"
+                class="h-10 px-4 rounded-full border border-[#e7e9f4] text-sm font-bold text-[#69708a] hover:bg-[#f0f1f6] transition-colors flex items-center gap-2">
+                <lucide-icon name="x" [size]="14" [strokeWidth]="2.5"></lucide-icon>
+                Réinitialiser
+              </button>
+            </div>
+          }
+
         </div>
       </div>
 
-      <!-- Liste RDV -->
+      <!-- ── Liste Rendez-vous ── -->
       <div class="bg-white rounded-2xl border border-[#e7e9f4] overflow-hidden">
         <div class="px-6 py-5 border-b border-[#e7e9f4] flex items-center justify-between">
-          <h2 class="text-[17px] font-black text-[#11152f] m-0">Rendez-vous</h2>
-          <span class="text-sm font-bold text-[#69708a]">{{ filteredBookings().length }} résultat{{ filteredBookings().length > 1 ? 's' : '' }}</span>
+          <div class="flex items-center gap-3">
+            <h2 class="text-[17px] font-black text-[#11152f] m-0">Rendez-vous</h2>
+            @if (statusFilter()) {
+              <span class="text-[11px] font-black px-2.5 py-1 rounded-full"
+                    [style.background]="filterBadgeBg()"
+                    [style.color]="filterBadgeColor()">
+                {{ filterLabel() }}
+              </span>
+            }
+          </div>
+          <span class="text-sm font-bold text-[#69708a]">
+            {{ filteredBookings().length }} résultat{{ filteredBookings().length > 1 ? 's' : '' }}
+          </span>
         </div>
 
         @if (filteredBookings().length === 0) {
           <div class="py-16 text-center">
             <lucide-icon name="calendar-x" [size]="40" [strokeWidth]="1.5" class="text-[#d9dbe9] mx-auto mb-3"></lucide-icon>
             <p class="text-base font-bold text-[#69708a]">Aucun rendez-vous trouvé</p>
+            @if (statusFilter() || searchQuery()) {
+              <button (click)="resetFilters()"
+                class="mt-4 text-sm font-bold text-[#7c3aed] hover:underline">
+                Effacer les filtres
+              </button>
+            }
           </div>
         } @else {
           <div class="divide-y divide-[#e7e9f4]">
@@ -118,14 +186,14 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
                       <div class="flex flex-wrap gap-4 text-sm font-bold text-[#69708a]">
                         <span class="flex items-center gap-1.5">
                           <lucide-icon name="calendar-days" [size]="14" [strokeWidth]="2"></lucide-icon>
-                          {{ booking.date | dateFormat: 'long' }}
+                          {{ booking.date | dateFormat:'long' }}
                         </span>
                         <span class="flex items-center gap-1.5">
                           <lucide-icon name="clock" [size]="14" [strokeWidth]="2"></lucide-icon>
                           {{ booking.time }} · {{ booking.duration }} min
                         </span>
                         <span class="flex items-center gap-1.5">
-                          <lucide-icon [name]="booking.type === 'SALON' ? 'store' : 'home'" [size]="14" [strokeWidth]="2"></lucide-icon>
+                          <lucide-icon [name]="booking.type === 'SALON' ? 'store' : 'house'" [size]="14" [strokeWidth]="2"></lucide-icon>
                           {{ booking.type === 'SALON' ? 'Au salon' : 'À domicile' }}
                         </span>
                       </div>
@@ -147,7 +215,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
                     <div class="text-[22px] font-black text-[#7c3aed]">{{ booking.total | fcfa }}</div>
                     <div class="flex flex-col gap-2">
                       @if (booking.status === 'PENDING') {
-                        <button (click)="confirmBooking(booking)"
+                        <button (click)="onConfirm(booking)"
                           class="h-9 px-4 rounded-full bg-[#7c3aed] text-white text-sm font-black hover:bg-[#6d28d9] transition-colors">
                           Confirmer
                         </button>
@@ -157,7 +225,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
                         </button>
                       }
                       @if (booking.status === 'CONFIRMED') {
-                        <button (click)="completeBooking(booking)"
+                        <button (click)="onComplete(booking)"
                           class="h-9 px-4 rounded-full bg-[#10b45e] text-white text-sm font-black hover:bg-[#0ea550] transition-colors">
                           Marquer terminé
                         </button>
@@ -167,13 +235,20 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
                         </button>
                       }
                       @if (booking.status === 'COMPLETED') {
-                        <span class="text-sm font-bold text-[#10b45e]">Terminé</span>
+                        <span class="inline-flex items-center gap-1 text-sm font-bold text-[#10b45e]">
+                          <lucide-icon name="circle-check" [size]="14" [strokeWidth]="2"></lucide-icon>
+                          Terminé
+                        </span>
                       }
                       @if (booking.status === 'CANCELLED') {
-                        <span class="text-sm font-bold text-red-500">Annulé</span>
+                        <span class="inline-flex items-center gap-1 text-sm font-bold text-red-500">
+                          <lucide-icon name="circle-x" [size]="14" [strokeWidth]="2"></lucide-icon>
+                          Annulé
+                        </span>
                       }
                     </div>
                   </div>
+
                 </div>
               </div>
             }
@@ -182,7 +257,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
       </div>
     </div>
 
-    <!-- Cancel Modal -->
+    <!-- ── Modal annulation ── -->
     <app-modal
       [isOpen]="cancelModalOpen()"
       title="Annuler le rendez-vous"
@@ -244,51 +319,88 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
   `,
   styles: []
 })
-export class ProAgendaComponent implements OnInit {
-  allBookings = signal<Booking[]>([]);
-  statusFilter = '';
-  searchQuery = '';
-  
+export class ProAgendaComponent {
+  // Lit le signal public mockData.bookings() directement — tracking garanti
+  allBookings = computed(() => {
+    const proId = this.authService.user()?.id ?? 'pro-1';
+    return this.mockData.bookings().filter(b => b.professionalId === proId);
+  });
+
+  // Signals — réactivité garantie dans computed()
+  statusFilter = signal<string>('');
+  searchQuery  = signal<string>('');
+
   cancelModalOpen = signal(false);
   selectedBooking = signal<Booking | null>(null);
   selectedCancellationReason: CancellationReason | null = null;
   otherCancellationReason = '';
   suggestAlternatives = false;
 
-  stats = {
-    total: 0,
-    pending: 0,
-    confirmed: 0,
-    completed: 0,
-    cancelled: 0
-  };
-
-  proCancellationReasons = [
-    { value: 'PRO_UNAVAILABLE', label: 'Professionnel indisponible' },
-    { value: 'OVERBOOKED', label: 'Surbooké / Trop de réservations' },
-    { value: 'PERSONAL_EMERGENCY', label: 'Urgence personnelle' },
+  readonly proCancellationReasons = [
+    { value: 'PRO_UNAVAILABLE',   label: 'Professionnel indisponible' },
+    { value: 'OVERBOOKED',        label: 'Surbooké / Trop de réservations' },
+    { value: 'PERSONAL_EMERGENCY',label: 'Urgence personnelle' },
     { value: 'SCHEDULE_CONFLICT', label: 'Conflit d\'horaire' },
-    { value: 'OTHER', label: 'Autre' }
+    { value: 'OTHER',             label: 'Autre' }
   ];
 
+  // Stats toujours calculées sur TOUS les bookings (indépendant du filtre)
+  stats = computed(() => {
+    const bk = this.allBookings();
+    return {
+      total:     bk.length,
+      pending:   bk.filter(b => b.status === 'PENDING').length,
+      confirmed: bk.filter(b => b.status === 'CONFIRMED').length,
+      completed: bk.filter(b => b.status === 'COMPLETED').length,
+      cancelled: bk.filter(b => b.status === 'CANCELLED').length
+    };
+  });
+
+  // Liste filtrée — réactive sur les 3 signals
   filteredBookings = computed(() => {
-    let bookings = this.allBookings();
-    
-    if (this.statusFilter) {
-      bookings = bookings.filter(b => b.status === this.statusFilter);
+    const filter = this.statusFilter();
+    const search = this.searchQuery().toLowerCase().trim();
+    let bk = this.allBookings();
+
+    if (filter) {
+      bk = bk.filter(b => b.status === filter);
     }
-    
-    if (this.searchQuery) {
-      bookings = bookings.filter(b => 
-        b.clientName.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+    if (search) {
+      bk = bk.filter(b => b.clientName.toLowerCase().includes(search));
     }
-    
-    return bookings.sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return dateA - dateB;
-    });
+
+    return [...bk].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  });
+
+  // Badge visuel du filtre actif dans le titre de la liste
+  filterLabel = computed(() => {
+    const map: Record<string, string> = {
+      PENDING:   'En attente',
+      CONFIRMED: 'Confirmés',
+      COMPLETED: 'Terminés',
+      CANCELLED: 'Annulés'
+    };
+    return map[this.statusFilter()] ?? '';
+  });
+
+  filterBadgeBg = computed(() => {
+    const map: Record<string, string> = {
+      PENDING:   '#fef3c7',
+      CONFIRMED: '#ede9fe',
+      COMPLETED: '#d1fae5',
+      CANCELLED: '#fee2e2'
+    };
+    return map[this.statusFilter()] ?? '#e7e9f4';
+  });
+
+  filterBadgeColor = computed(() => {
+    const map: Record<string, string> = {
+      PENDING:   '#d97706',
+      CONFIRMED: '#7c3aed',
+      COMPLETED: '#065f46',
+      CANCELLED: '#dc2626'
+    };
+    return map[this.statusFilter()] ?? '#69708a';
   });
 
   constructor(
@@ -297,69 +409,23 @@ export class ProAgendaComponent implements OnInit {
     private toast: ToastService
   ) {}
 
-  ngOnInit(): void {
-    this.loadBookings();
+  setFilter(value: string): void {
+    this.statusFilter.set(value);
   }
 
-  loadBookings(): void {
-    const user = this.authService.user();
-    if (user) {
-      const bookings = this.mockData.getBookingsByProfessional(user.id);
-      this.allBookings.set(bookings);
-      this.updateStats();
-    }
+  resetFilters(): void {
+    this.statusFilter.set('');
+    this.searchQuery.set('');
   }
 
-  updateStats(): void {
-    const bookings = this.allBookings();
-    this.stats = {
-      total: bookings.length,
-      pending: bookings.filter(b => b.status === 'PENDING').length,
-      confirmed: bookings.filter(b => b.status === 'CONFIRMED').length,
-      completed: bookings.filter(b => b.status === 'COMPLETED').length,
-      cancelled: bookings.filter(b => b.status === 'CANCELLED').length
-    };
+  onConfirm(booking: Booking): void {
+    const ok = this.mockData.confirmBooking(booking.id);
+    if (ok) { this.toast.success('Rendez-vous confirmé'); }
   }
 
-  getStatusClass(status: Booking['status']): string {
-    const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-black';
-    switch (status) {
-      case 'PENDING':   return `${base} bg-amber-50 text-amber-700 border border-amber-200`;
-      case 'CONFIRMED': return `${base} bg-[#f3e8ff] text-[#7c3aed] border border-[#ddd6fe]`;
-      case 'COMPLETED': return `${base} bg-emerald-50 text-emerald-700 border border-emerald-200`;
-      case 'CANCELLED': return `${base} bg-red-50 text-red-700 border border-red-200`;
-      default:          return `${base} bg-gray-50 text-gray-700 border border-gray-200`;
-    }
-  }
-
-  getStatusLabel(status: Booking['status']): string {
-    const labels = {
-      'PENDING': 'En attente',
-      'CONFIRMED': 'Confirmé',
-      'COMPLETED': 'Terminé',
-      'CANCELLED': 'Annulé',
-      'NO_SHOW': 'Non présenté'
-    };
-    return labels[status];
-  }
-
-  getCancellationReasonLabel(reason: CancellationReason): string {
-    const found = [...this.proCancellationReasons, ...CANCELLATION_REASONS].find(r => r.value === reason);
-    return found?.label || reason;
-  }
-
-  confirmBooking(booking: Booking): void {
-    // In real app, call API
-    this.toast.success('Rendez-vous confirmé');
-    this.loadBookings();
-  }
-
-  completeBooking(booking: Booking): void {
-    const success = this.mockData.completeBooking(booking.id);
-    if (success) {
-      this.toast.success('Rendez-vous marqué comme terminé');
-      this.loadBookings();
-    }
+  onComplete(booking: Booking): void {
+    const ok = this.mockData.completeBooking(booking.id);
+    if (ok) { this.toast.success('Rendez-vous marqué comme terminé'); }
   }
 
   openCancelModal(booking: Booking): void {
@@ -379,27 +445,49 @@ export class ProAgendaComponent implements OnInit {
     const booking = this.selectedBooking();
     if (!booking || !this.selectedCancellationReason) return;
 
-    const success = this.mockData.cancelBooking(
+    const ok = this.mockData.cancelBooking(
       booking.id,
       'PRO',
       this.selectedCancellationReason,
       this.selectedCancellationReason === 'OTHER' ? this.otherCancellationReason : undefined
     );
 
-    if (success) {
+    if (ok) {
       this.toast.success('Rendez-vous annulé');
-      
-      // If suggestAlternatives is checked, create referrals
       if (this.suggestAlternatives) {
-        // In real app, this would notify other businesses
         this.toast.info('Autres professionnels suggérés au client');
       }
-      
-      this.loadBookings();
     } else {
       this.toast.error('Erreur lors de l\'annulation');
     }
 
     this.closeCancelModal();
+  }
+
+  getStatusClass(status: Booking['status']): string {
+    const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-black';
+    switch (status) {
+      case 'PENDING':   return `${base} bg-amber-50 text-amber-700 border border-amber-200`;
+      case 'CONFIRMED': return `${base} bg-[#f3e8ff] text-[#7c3aed] border border-[#ddd6fe]`;
+      case 'COMPLETED': return `${base} bg-emerald-50 text-emerald-700 border border-emerald-200`;
+      case 'CANCELLED': return `${base} bg-red-50 text-red-700 border border-red-200`;
+      default:          return `${base} bg-gray-50 text-gray-700 border border-gray-200`;
+    }
+  }
+
+  getStatusLabel(status: Booking['status']): string {
+    const labels: Record<string, string> = {
+      PENDING:   'En attente',
+      CONFIRMED: 'Confirmé',
+      COMPLETED: 'Terminé',
+      CANCELLED: 'Annulé',
+      NO_SHOW:   'Non présenté'
+    };
+    return labels[status] ?? status;
+  }
+
+  getCancellationReasonLabel(reason: CancellationReason): string {
+    const all = [...this.proCancellationReasons, ...CANCELLATION_REASONS];
+    return all.find(r => r.value === reason)?.label ?? reason;
   }
 }

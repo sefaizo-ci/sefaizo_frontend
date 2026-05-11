@@ -112,7 +112,7 @@ import { LucideAngularModule } from 'lucide-angular';
 
           <a routerLink="/admin/statistics" routerLinkActive="admin-nav-active"
              class="admin-nav-link group">
-            <lucide-icon name="bar-chart-2" [size]="16" [strokeWidth]="1.75" class="flex-shrink-0"></lucide-icon>
+            <lucide-icon name="chart-bar" [size]="16" [strokeWidth]="1.75" class="flex-shrink-0"></lucide-icon>
             Statistiques
           </a>
 

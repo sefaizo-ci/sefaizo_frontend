@@ -15,6 +15,7 @@
   @media (max-width: 860px) {
     grid-template-columns: 1fr;
     min-height: auto;
+    padding-bottom: 0;
   }
 }
 
@@ -32,7 +33,7 @@
 
 .download-title {
   margin: 0 0 14px;
-  font-family: 'MB Empire', 'Inter', sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(26px, 3.2vw, 38px);
   line-height: 1.12;
@@ -41,8 +42,8 @@
 
 .download-desc {
   margin: 0 0 28px;
-  font-family: 'MB Empire', 'Inter', sans-serif;
-  font-weight: 300;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 400;
   font-size: 17px;
   line-height: 1.55;
   color: rgba(255,255,255,0.88);
@@ -82,8 +83,8 @@
     line-height: 1.2;
 
     small {
-      font-family: 'MB Empire', 'Inter', sans-serif;
-      font-weight: 300;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-weight: 400;
       font-size: 9px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
@@ -91,7 +92,7 @@
     }
 
     strong {
-      font-family: 'MB Empire', 'Inter', sans-serif;
+      font-family: 'DM Sans', system-ui, sans-serif;
       font-weight: 700;
       font-size: 15px;
       color: #fff;
@@ -107,7 +108,13 @@
   justify-content: center;
 
   @media (max-width: 860px) {
-    display: none;
+    display: flex;
+    height: 310px;
+    width: 100%;
+  }
+
+  @media (max-width: 400px) {
+    height: 270px;
   }
 }
 
@@ -126,6 +133,19 @@
     0 28px 56px rgba(17,21,47,0.55),
     0 0 0 1px rgba(255,255,255,0.08);
   z-index: 10;
+
+  @media (max-width: 860px) {
+    width: 152px;
+    height: 316px;
+    border-radius: 28px;
+  }
+
+  @media (max-width: 400px) {
+    width: 132px;
+    height: 275px;
+    border-radius: 24px;
+    border-width: 5px;
+  }
 
   /* Encoche (notch) */
   &::before {
@@ -169,7 +189,7 @@
   display: flex;
   flex-direction: column;
   font-size: 9px;
-  font-family: 'MB Empire', 'Inter', sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
 
   &__header {
     display: flex;
