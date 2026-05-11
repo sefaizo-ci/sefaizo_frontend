@@ -47,7 +47,7 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div class="flex items-center justify-between mb-3">
             <div class="w-9 h-9 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center">
-              <lucide-icon name="check-circle" [size]="16" [strokeWidth]="1.75" style="color:#16a34a"></lucide-icon>
+              <lucide-icon name="circle-check" [size]="16" [strokeWidth]="1.75" style="color:#16a34a"></lucide-icon>
             </div>
           </div>
           <div class="text-2xl font-black" style="color:#111827">{{ stats.terminees }}</div>

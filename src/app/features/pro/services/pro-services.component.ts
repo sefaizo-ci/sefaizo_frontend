@@ -92,7 +92,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
                       }
                       @if (service.isHomeService) {
                         <div class="flex items-center gap-1 mt-1">
-                          <lucide-icon name="home" [size]="11" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
+                          <lucide-icon name="house" [size]="11" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
                           <span class="text-[11px] font-black text-[#7c3aed]">À domicile</span>
                         </div>
                       }
@@ -163,162 +163,263 @@ import { ToastService } from '../../../shared/ui/toast/toast.component';
       [isOpen]="serviceModalOpen()"
       [title]="editingService() ? 'Modifier le service' : 'Ajouter un service'"
       [showFooter]="false"
-      size="lg"
+      size="xl"
       (closed)="closeServiceModal()">
-      <form (ngSubmit)="saveService()" class="space-y-5">
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-black text-[#11152f] mb-2">Nom du service *</label>
-            <input type="text" [(ngModel)]="formData.name" name="name" required
-              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
-          </div>
-          <div>
-            <label class="block text-sm font-black text-[#11152f] mb-2">Catégorie *</label>
-            <select [(ngModel)]="formData.categoryName" name="categoryName" required
-              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 cursor-pointer">
-              <option value="">Sélectionner</option>
-              @for (cat of categories; track cat) { <option [value]="cat">{{ cat }}</option> }
-            </select>
-          </div>
-        </div>
+      <form (ngSubmit)="saveService()">
 
-        <div>
-          <label class="block text-sm font-black text-[#11152f] mb-2">Description</label>
-          <textarea [(ngModel)]="formData.description" name="description" rows="2"
-            placeholder="Décrivez votre service..."
-            class="w-full rounded-xl border border-[#e7e9f4] px-4 py-2.5 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 resize-none"></textarea>
-        </div>
+        <!-- ── Grille 2 colonnes paysage ── -->
+        <div class="grid grid-cols-2 gap-5">
 
-        <div class="grid md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-sm font-black text-[#11152f] mb-2">Prix de base (FCFA) *</label>
-            <input type="number" [(ngModel)]="formData.price" name="price" required min="0"
-              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
-          </div>
-          <div>
-            <label class="block text-sm font-black text-[#11152f] mb-2">Durée (min) *</label>
-            <input type="number" [(ngModel)]="formData.duration" name="duration" required min="15" step="15"
-              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
-          </div>
-          <div>
-            <label class="block text-sm font-black text-[#11152f] mb-2">Points parrainage</label>
-            <input type="number" [(ngModel)]="formData.referralPoints" name="referralPoints" min="0"
-              class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
-          </div>
-        </div>
+          <!-- ═══ COLONNE GAUCHE ═══ -->
+          <div class="space-y-4">
 
-        <!-- Lieu de prestation -->
-        <div class="bg-[#f7f5ff] rounded-2xl p-4">
-          <h3 class="text-sm font-black text-[#11152f] mb-3">Lieu de prestation</h3>
-          <div class="grid grid-cols-3 gap-2">
-            @for (loc of locationOptions; track loc.value) {
-              <label class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all text-center"
-                     [class.border-[#7c3aed]]="formData.locationType === loc.value"
-                     [class.bg-white]="formData.locationType === loc.value"
-                     [class.border-[#e7e9f4]]="formData.locationType !== loc.value">
-                <input type="radio" name="locationType" [value]="loc.value"
-                  [(ngModel)]="formData.locationType" class="sr-only">
-                <lucide-icon [name]="loc.icon" [size]="20" [strokeWidth]="1.75"
-                  [class.text-[#7c3aed]]="formData.locationType === loc.value"
-                  [class.text-[#69708a]]="formData.locationType !== loc.value"></lucide-icon>
-                <span class="text-xs font-black"
-                  [class.text-[#7c3aed]]="formData.locationType === loc.value"
-                  [class.text-[#69708a]]="formData.locationType !== loc.value">{{ loc.label }}</span>
-              </label>
-            }
-          </div>
-        </div>
-
-        <!-- Majoration domicile -->
-        @if (formData.locationType === 'HOME' || formData.locationType === 'BOTH') {
-          <div class="bg-[#f3e8ff] border border-[#ddd6fe] rounded-2xl p-4">
-            <h3 class="text-sm font-black text-[#11152f] mb-3">Majoration à domicile</h3>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-black text-[#69708a] mb-1.5">Montant fixe (FCFA)</label>
-                <input type="number" [(ngModel)]="formData.homeServiceMarkup" name="homeServiceMarkup" min="0" placeholder="Ex: 3000"
-                  class="w-full h-10 rounded-xl border border-[#ddd6fe] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
+            <!-- Section 1 : Informations de base -->
+            <div class="bg-[#f7f5ff] rounded-2xl p-4 space-y-3">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-[#ede9ff] flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="tag" [size]="13" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
+                </div>
+                <span class="text-sm font-black text-[#11152f]">Informations de base</span>
               </div>
               <div>
-                <label class="block text-xs font-black text-[#69708a] mb-1.5">Ou en % du prix</label>
-                <input type="number" [(ngModel)]="formData.homeServiceMarkupPercent" name="homeServiceMarkupPercent" min="0" max="100" placeholder="Ex: 20"
-                  class="w-full h-10 rounded-xl border border-[#ddd6fe] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
+                <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Nom du service *</label>
+                <input type="text" [(ngModel)]="formData.name" name="name" required
+                  placeholder="Ex: Coupe + brushing femme"
+                  class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+              </div>
+              <div>
+                <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Catégorie *</label>
+                <select [(ngModel)]="formData.categoryName" name="categoryName" required
+                  class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 cursor-pointer transition-all">
+                  <option value="">Sélectionner...</option>
+                  @for (cat of categories; track cat) { <option [value]="cat">{{ cat }}</option> }
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Description</label>
+                <textarea [(ngModel)]="formData.description" name="description" rows="3"
+                  placeholder="Décrivez votre prestation en quelques mots..."
+                  class="w-full rounded-xl border border-[#e7e9f4] px-4 py-2.5 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 resize-none transition-all"></textarea>
               </div>
             </div>
-            @if (formData.homeServiceMarkup || formData.homeServiceMarkupPercent) {
-              <div class="mt-3 bg-white rounded-xl p-3 flex items-center justify-between">
-                <span class="text-sm font-bold text-[#69708a]">Prix total à domicile</span>
-                <span class="text-base font-black text-[#7c3aed]">{{ calculateHomeServicePrice() | fcfa }}</span>
-              </div>
-            }
-          </div>
-        }
 
-        <!-- Zones de desserte -->
-        @if (formData.locationType === 'HOME' || formData.locationType === 'BOTH') {
-          <div>
-            <label class="block text-sm font-black text-[#11152f] mb-2">Zones de desserte</label>
-            <div class="border border-[#e7e9f4] rounded-2xl p-4">
-              <div class="flex flex-wrap gap-2 mb-3">
-                @for (area of formData.serviceAreas; track area; let i = $index) {
-                  <span class="inline-flex items-center gap-1.5 bg-[#f3e8ff] text-[#7c3aed] px-3 py-1 rounded-full text-xs font-black">
-                    {{ area }}
-                    <button type="button" (click)="removeServiceArea(i)"
-                      class="w-3.5 h-3.5 rounded-full hover:bg-[#7c3aed] hover:text-white flex items-center justify-center transition-colors">
-                      <lucide-icon name="x" [size]="9" [strokeWidth]="3"></lucide-icon>
-                    </button>
-                  </span>
+            <!-- Section 2 : Tarification & Durée -->
+            <div class="bg-white border border-[#e7e9f4] rounded-2xl p-4 space-y-3">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-[#fef3c7] flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="circle-dollar-sign" [size]="13" [strokeWidth]="2" class="text-[#d97706]"></lucide-icon>
+                </div>
+                <span class="text-sm font-black text-[#11152f]">Tarification & Durée</span>
+              </div>
+              <div class="grid grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Prix (FCFA) *</label>
+                  <input type="number" [(ngModel)]="formData.price" name="price" required min="0"
+                    placeholder="0"
+                    class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Durée *</label>
+                  <div class="relative">
+                    <input type="number" [(ngModel)]="formData.duration" name="duration" required min="15" step="15"
+                      placeholder="30"
+                      class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 pr-10 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#a0a8c3] pointer-events-none">min</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Pts parrainage</label>
+                  <input type="number" [(ngModel)]="formData.referralPoints" name="referralPoints" min="0"
+                    placeholder="0"
+                    class="w-full h-10 rounded-xl border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /col gauche -->
+
+          <!-- ═══ COLONNE DROITE ═══ -->
+          <div class="space-y-4">
+
+            <!-- Section 3 : Lieu de prestation -->
+            <div class="bg-white border border-[#e7e9f4] rounded-2xl p-4 space-y-3">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-[#e0f2fe] flex items-center justify-center flex-shrink-0">
+                  <lucide-icon name="map-pin" [size]="13" [strokeWidth]="2" class="text-[#0284c7]"></lucide-icon>
+                </div>
+                <span class="text-sm font-black text-[#11152f]">Lieu de prestation</span>
+              </div>
+              <div class="grid grid-cols-3 gap-3">
+                @for (loc of locationOptions; track loc.value) {
+                  <label class="relative flex flex-col items-center gap-2 p-3 rounded-2xl border-2 cursor-pointer transition-all"
+                         [ngClass]="formData.locationType === loc.value ? 'border-[#7c3aed] bg-[#faf5ff]' : 'border-[#e7e9f4] bg-white'">
+                    <input type="radio" name="locationType" [value]="loc.value"
+                      [(ngModel)]="formData.locationType" class="sr-only">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+                         [ngClass]="formData.locationType === loc.value ? 'bg-[#7c3aed]' : 'bg-[#f0f1f6]'">
+                      <lucide-icon [name]="loc.icon" [size]="18" [strokeWidth]="1.75"
+                        [ngClass]="formData.locationType === loc.value ? 'text-white' : 'text-[#69708a]'"></lucide-icon>
+                    </div>
+                    <span class="text-xs font-black text-center leading-tight"
+                          [ngClass]="formData.locationType === loc.value ? 'text-[#7c3aed]' : 'text-[#303653]'">{{ loc.label }}</span>
+                    @if (formData.locationType === loc.value) {
+                      <div class="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#7c3aed] flex items-center justify-center">
+                        <lucide-icon name="check" [size]="9" [strokeWidth]="3" class="text-white"></lucide-icon>
+                      </div>
+                    }
+                  </label>
                 }
               </div>
-              <div class="flex gap-2 mb-3">
-                <input type="text" [(ngModel)]="newAreaInput" (keydown.enter)="addServiceAreaFromInput()"
-                  placeholder="Ajouter une commune ou quartier..."
-                  class="flex-1 h-9 rounded-full border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20">
-                <button type="button" (click)="addServiceAreaFromInput()"
-                  class="h-9 px-4 rounded-full bg-[#7c3aed] text-white text-xs font-black hover:bg-[#6d28d9] transition-colors">
-                  Ajouter
-                </button>
+            </div>
+
+            <!-- Section 4 : Majoration domicile (conditionnelle) -->
+            @if (formData.locationType === 'HOME' || formData.locationType === 'BOTH') {
+              <div class="bg-[#fdf4ff] border border-[#e9d5ff] rounded-2xl p-4 space-y-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#f3e8ff] flex items-center justify-center flex-shrink-0">
+                    <lucide-icon name="house" [size]="13" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
+                  </div>
+                  <span class="text-sm font-black text-[#11152f]">Majoration à domicile</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Montant fixe (FCFA)</label>
+                    <input type="number" [(ngModel)]="formData.homeServiceMarkup" name="homeServiceMarkup" min="0"
+                      placeholder="Ex: 3000"
+                      class="w-full h-10 rounded-xl border border-[#e9d5ff] px-4 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">En % du prix</label>
+                    <div class="relative">
+                      <input type="number" [(ngModel)]="formData.homeServiceMarkupPercent" name="homeServiceMarkupPercent"
+                        min="0" max="100" placeholder="Ex: 20"
+                        class="w-full h-10 rounded-xl border border-[#e9d5ff] px-4 pr-8 text-sm font-bold text-[#303653] bg-white outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+                      <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#a0a8c3] pointer-events-none">%</span>
+                    </div>
+                  </div>
+                </div>
+                @if (formData.homeServiceMarkup || formData.homeServiceMarkupPercent) {
+                  <div class="flex items-center justify-between bg-white border border-[#e9d5ff] rounded-xl px-4 py-2.5">
+                    <div class="flex items-center gap-2">
+                      <lucide-icon name="calculator" [size]="13" [strokeWidth]="2" class="text-[#7c3aed]"></lucide-icon>
+                      <span class="text-xs font-bold text-[#69708a]">Prix total à domicile</span>
+                    </div>
+                    <span class="text-sm font-black text-[#7c3aed]">{{ calculateHomeServicePrice() | fcfa }}</span>
+                  </div>
+                }
               </div>
-              <div class="flex flex-wrap gap-1.5">
-                @for (commune of communes; track commune) {
-                  <button type="button" (click)="addServiceAreaByName(commune)"
-                    class="px-3 py-1 rounded-full text-xs font-bold transition-colors"
-                    [class.bg-[#7c3aed]]="formData.serviceAreas.includes(commune)"
-                    [class.text-white]="formData.serviceAreas.includes(commune)"
-                    [class.bg-[#f0f1f6]]="!formData.serviceAreas.includes(commune)"
-                    [class.text-[#69708a]]="!formData.serviceAreas.includes(commune)">
-                    {{ commune }}
+            }
+
+            <!-- Section 5 : Zones de desserte (conditionnelle) -->
+            @if (formData.locationType === 'HOME' || formData.locationType === 'BOTH') {
+              <div class="bg-white border border-[#e7e9f4] rounded-2xl p-4 space-y-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#dcfce7] flex items-center justify-center flex-shrink-0">
+                    <lucide-icon name="map" [size]="13" [strokeWidth]="2" class="text-[#16a34a]"></lucide-icon>
+                  </div>
+                  <span class="text-sm font-black text-[#11152f]">Zones de desserte</span>
+                  @if (formData.serviceAreas.length > 0) {
+                    <span class="ml-auto text-[11px] font-black px-2 py-0.5 rounded-full bg-[#f3e8ff] text-[#7c3aed]">
+                      {{ formData.serviceAreas.length }} zone{{ formData.serviceAreas.length > 1 ? 's' : '' }}
+                    </span>
+                  }
+                </div>
+                @if (formData.serviceAreas.length > 0) {
+                  <div class="flex flex-wrap gap-1.5">
+                    @for (area of formData.serviceAreas; track area; let i = $index) {
+                      <span class="inline-flex items-center gap-1 bg-[#f3e8ff] text-[#7c3aed] px-2.5 py-1 rounded-full text-xs font-black">
+                        {{ area }}
+                        <button type="button" (click)="removeServiceArea(i)"
+                          class="w-3 h-3 rounded-full hover:bg-[#7c3aed] hover:text-white flex items-center justify-center transition-colors">
+                          <lucide-icon name="x" [size]="8" [strokeWidth]="3"></lucide-icon>
+                        </button>
+                      </span>
+                    }
+                  </div>
+                }
+                <div class="flex gap-2">
+                  <input type="text" [(ngModel)]="newAreaInput" (keydown.enter)="addServiceAreaFromInput()"
+                    name="newAreaInput" placeholder="Commune ou quartier..."
+                    class="flex-1 h-9 rounded-full border border-[#e7e9f4] px-4 text-sm font-bold text-[#303653] outline-none focus:border-[#7c3aed] focus:ring-2 focus:ring-[#7c3aed]/20 transition-all">
+                  <button type="button" (click)="addServiceAreaFromInput()"
+                    class="h-9 px-3 rounded-full bg-[#7c3aed] text-white text-xs font-black hover:bg-[#6d28d9] transition-colors flex items-center gap-1">
+                    <lucide-icon name="plus" [size]="11" [strokeWidth]="2.5"></lucide-icon>
+                    Ajouter
                   </button>
-                }
+                </div>
+                <div>
+                  <p class="text-[11px] font-black text-[#a0a8c3] uppercase tracking-widest mb-1.5">Communes d'Abidjan</p>
+                  <div class="flex flex-wrap gap-1.5">
+                    @for (commune of communes; track commune) {
+                      <button type="button" (click)="addServiceAreaByName(commune)"
+                        class="px-2.5 py-1 rounded-full text-xs font-bold transition-all"
+                        [ngClass]="formData.serviceAreas.includes(commune) ? 'bg-[#7c3aed] text-white' : 'bg-[#f0f1f6] text-[#69708a]'">
+                        {{ commune }}
+                      </button>
+                    }
+                  </div>
+                </div>
               </div>
+            }
+
+            <!-- Section 6 : Options de publication -->
+            <div class="space-y-2">
+              <label class="flex items-center justify-between px-4 py-3 bg-white border border-[#e7e9f4] rounded-2xl cursor-pointer hover:border-[#c4b5fd] transition-all">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-xl bg-[#ecfdf5] flex items-center justify-center flex-shrink-0">
+                    <lucide-icon name="globe" [size]="14" [strokeWidth]="2" class="text-[#16a34a]"></lucide-icon>
+                  </div>
+                  <div>
+                    <div class="text-sm font-black text-[#11152f]">Publier immédiatement</div>
+                    <div class="text-xs font-bold text-[#69708a]">Visible sur la marketplace</div>
+                  </div>
+                </div>
+                <div class="flex-shrink-0">
+                  <input type="checkbox" [(ngModel)]="formData.isPublished" name="isPublished" class="sr-only">
+                  <div class="w-11 h-6 rounded-full transition-colors flex items-center px-[3px]"
+                       [ngClass]="formData.isPublished ? 'bg-[#7c3aed]' : 'bg-[#d9dbe9]'">
+                    <div class="w-[18px] h-[18px] rounded-full bg-white shadow transition-transform"
+                         [ngClass]="formData.isPublished ? 'translate-x-5' : 'translate-x-0'"></div>
+                  </div>
+                </div>
+              </label>
+              <label class="flex items-center justify-between px-4 py-3 bg-white border border-[#e7e9f4] rounded-2xl cursor-pointer hover:border-[#c4b5fd] transition-all">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-xl bg-[#fff7ed] flex items-center justify-center flex-shrink-0">
+                    <lucide-icon name="share-2" [size]="14" [strokeWidth]="2" class="text-[#ea580c]"></lucide-icon>
+                  </div>
+                  <div>
+                    <div class="text-sm font-black text-[#11152f]">Service référençable</div>
+                    <div class="text-xs font-bold text-[#69708a]">Points via parrainage</div>
+                  </div>
+                </div>
+                <div class="flex-shrink-0">
+                  <input type="checkbox" [(ngModel)]="formData.isReferrable" name="isReferrable" class="sr-only">
+                  <div class="w-11 h-6 rounded-full transition-colors flex items-center px-[3px]"
+                       [ngClass]="formData.isReferrable ? 'bg-[#7c3aed]' : 'bg-[#d9dbe9]'">
+                    <div class="w-[18px] h-[18px] rounded-full bg-white shadow transition-transform"
+                         [ngClass]="formData.isReferrable ? 'translate-x-5' : 'translate-x-0'"></div>
+                  </div>
+                </div>
+              </label>
             </div>
-          </div>
-        }
 
-        <!-- Options -->
-        <div class="flex flex-wrap items-center gap-6 p-4 bg-[#f7f5ff] rounded-2xl">
-          <label class="flex items-center gap-2.5 cursor-pointer">
-            <input type="checkbox" [(ngModel)]="formData.isPublished" name="isPublished"
-              class="w-4 h-4 accent-[#7c3aed]">
-            <span class="text-sm font-black text-[#11152f]">Publier immédiatement</span>
-          </label>
-          <label class="flex items-center gap-2.5 cursor-pointer">
-            <input type="checkbox" [(ngModel)]="formData.isReferrable" name="isReferrable"
-              class="w-4 h-4 accent-[#7c3aed]">
-            <span class="text-sm font-black text-[#11152f]">Service référençable</span>
-          </label>
-        </div>
+          </div><!-- /col droite -->
+        </div><!-- /grid -->
 
-        <div class="flex justify-end gap-3 pt-4 border-t border-[#e7e9f4]">
+        <!-- ── Footer ── -->
+        <div class="flex justify-end gap-3 mt-5 pt-4 border-t border-[#e7e9f4]">
           <button type="button" (click)="closeServiceModal()"
-            class="h-10 px-5 rounded-full border border-[#e7e9f4] text-sm font-bold text-[#69708a] hover:bg-[#f0f1f6] transition-colors">
+            class="h-11 px-6 rounded-full border border-[#e7e9f4] text-sm font-bold text-[#69708a] hover:bg-[#f0f1f6] transition-colors">
             Annuler
           </button>
           <button type="submit"
-            class="h-10 px-5 rounded-full bg-[#7c3aed] text-white text-sm font-black hover:bg-[#6d28d9] transition-colors">
+            class="h-11 px-7 rounded-full bg-[#7c3aed] text-white text-sm font-black hover:bg-[#6d28d9] transition-colors flex items-center gap-2">
+            <lucide-icon name="check" [size]="15" [strokeWidth]="2.5"></lucide-icon>
             {{ editingService() ? 'Mettre à jour' : 'Créer le service' }}
           </button>
         </div>
+
       </form>
     </app-modal>
   `,
@@ -333,7 +434,7 @@ export class ProServicesComponent implements OnInit {
 
   readonly locationOptions: { value: 'SALON' | 'HOME' | 'BOTH'; label: string; icon: string }[] = [
     { value: 'SALON', label: 'Au salon', icon: 'store' },
-    { value: 'HOME',  label: 'À domicile', icon: 'home' },
+    { value: 'HOME',  label: 'À domicile', icon: 'house' },
     { value: 'BOTH',  label: 'Les deux', icon: 'map-pin' },
   ];
   

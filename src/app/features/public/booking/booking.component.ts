@@ -147,7 +147,7 @@ import { LucideAngularModule } from 'lucide-angular';
               <!-- Lieu -->
               <div class="grid min-h-[58px] grid-cols-[36px_1fr_auto] items-center gap-3 border-b border-gray-100 py-2 max-[520px]:grid-cols-[32px_1fr]">
                 <span class="flex h-9 w-9 items-center justify-center text-primary flex-shrink-0">
-                  <lucide-icon [name]="bookingType() === 'SALON' ? 'store' : 'home'" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
+                  <lucide-icon [name]="bookingType() === 'SALON' ? 'store' : 'house'" [size]="22" [strokeWidth]="2.2" aria-hidden="true"></lucide-icon>
                 </span>
                 <span class="text-sm font-bold text-[#626985]">Lieu</span>
                 <div class="min-w-0 text-right max-[520px]:col-span-2 max-[520px]:pl-11 max-[520px]:text-left">
@@ -185,7 +185,7 @@ import { LucideAngularModule } from 'lucide-angular';
                 class="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border border-[#7c3aed] bg-white px-6 text-base font-extrabold text-[#7c3aed] transition-transform hover:-translate-y-0.5"
               >
                 Retour à l'accueil
-                <lucide-icon name="home" [size]="19" [strokeWidth]="2.3" aria-hidden="true"></lucide-icon>
+                <lucide-icon name="house" [size]="19" [strokeWidth]="2.3" aria-hidden="true"></lucide-icon>
               </button>
             </div>
 
@@ -321,7 +321,7 @@ import { LucideAngularModule } from 'lucide-angular';
                             class="p-5 rounded-xl border-2 text-left transition-all duration-150 hover:shadow-sm active:scale-[0.99]">
                       <div class="flex items-center gap-3 mb-2">
                         <div class="w-11 h-11 rounded-xl bg-primary/8 flex items-center justify-center">
-                          <lucide-icon name="home" [size]="22" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
+                          <lucide-icon name="house" [size]="22" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
                         </div>
                         <span class="text-base font-semibold">À domicile</span>
                       </div>
@@ -396,7 +396,7 @@ import { LucideAngularModule } from 'lucide-angular';
                     </div>
                     <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
                       <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <lucide-icon [name]="bookingType() === 'SALON' ? 'store' : 'home'" [size]="18" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
+                        <lucide-icon [name]="bookingType() === 'SALON' ? 'store' : 'house'" [size]="18" [strokeWidth]="1.75" class="text-primary"></lucide-icon>
                       </div>
                       <div class="flex-1">
                         <div class="text-xs text-secondary-gray uppercase tracking-wide font-semibold mb-0.5">Lieu</div>

@@ -92,7 +92,7 @@ import { MockDataService } from '../../../core/services/mock-data.service';
           </a>
 
           <a routerLink="/espace-pro/statistiques" routerLinkActive="pro-nav-active" class="pro-nav-link">
-            <lucide-icon name="bar-chart-2" [size]="18" [strokeWidth]="1.75" class="flex-shrink-0"></lucide-icon>
+            <lucide-icon name="chart-bar" [size]="18" [strokeWidth]="1.75" class="flex-shrink-0"></lucide-icon>
             Statistiques
           </a>
 
@@ -130,38 +130,39 @@ import { MockDataService } from '../../../core/services/mock-data.service';
       <div class="flex-1 flex flex-col min-w-0">
 
         <!-- Top bar -->
+        <!--
         <div class="bg-white border-b border-[#e7e9f4] flex items-center justify-between px-8 flex-shrink-0 sticky top-0 z-30"
              style="min-height:88px">
 
-          <!-- Mobile menu button -->
           <button class="md:hidden p-2 rounded-xl hover:bg-gray-50 transition-colors"
                   style="color:#69708a" (click)="mobileNavOpen.set(!mobileNavOpen())">
             <lucide-icon name="menu" [size]="20" [strokeWidth]="2"></lucide-icon>
           </button>
 
-          <!-- Date / greeting desktop -->
-          <div class="hidden md:flex flex-col">
-            <span class="text-[13px] font-bold" style="color:#69708a">{{ todayLabel }}</span>
-            <span class="text-[22px] font-black leading-tight" style="color:#11152f">
-              Bonjour, {{ user()?.firstName }} 👋
-            </span>
-          </div>
-
-          <!-- Right actions -->
           <div class="flex items-center gap-3">
             <button class="relative w-10 h-10 flex items-center justify-center rounded-xl transition-colors border border-[#e7e9f4] hover:border-[#7c3aed]"
                     style="color:#69708a">
               <lucide-icon name="bell" [size]="18" [strokeWidth]="1.75"></lucide-icon>
-              @if (pendingCount() > 0) {
-                <span class="absolute top-2 right-2 w-2 h-2 rounded-full border-2 border-white" style="background:#7c3aed"></span>
-              }
             </button>
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black flex-shrink-0"
+            <div class="hidden md:flex items-center gap-2.5 pl-2 border-l border-[#e7e9f4]">
+              <div class="text-right hidden lg:block">
+                <div class="text-[13px] font-bold leading-tight" style="color:#11152f">
+                  {{ user()?.firstName }} {{ user()?.lastName }}
+                </div>
+                <div class="text-[11px]" style="color:#69708a">Professionnel</div>
+              </div>
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black flex-shrink-0"
+                   style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+                {{ initials() }}
+              </div>
+            </div>
+            <div class="md:hidden w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-black"
                  style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
               {{ initials() }}
             </div>
           </div>
         </div>
+        -->
 
         <!-- Mobile nav overlay -->
         @if (mobileNavOpen()) {
@@ -225,7 +226,7 @@ export class ProLayoutComponent {
     { path: '/espace-pro/services',    icon: 'scissors',         label: 'Mes Services' },
     { path: '/espace-pro/agenda',      icon: 'calendar-days',    label: 'Agenda' },
     { path: '/espace-pro/clients',     icon: 'users',            label: 'Mes Clients' },
-    { path: '/espace-pro/statistiques',icon: 'bar-chart-2',      label: 'Statistiques' },
+    { path: '/espace-pro/statistiques',icon: 'chart-bar',      label: 'Statistiques' },
     { path: '/espace-pro/wallet',      icon: 'wallet',           label: 'Wallet' },
     { path: '/espace-pro/parametres',  icon: 'settings',         label: 'Paramètres' },
   ];

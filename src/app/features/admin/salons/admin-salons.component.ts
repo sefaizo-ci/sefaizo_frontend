@@ -583,7 +583,7 @@ interface SalonSoumission {
                 </div>
                 <div class="px-4 py-4 space-y-3">
                   @for (opt of [
-                    {key:'valide', label:'Document valide', icon:'check-circle'},
+                    {key:'valide', label:'Document valide', icon:'circle-check'},
                     {key:'expire', label:'Document expiré', icon:'calendar-x'},
                     {key:'incorrect', label:'Informations incorrectes', icon:'alert-circle'}
                   ]; track opt.key) {
@@ -637,13 +637,13 @@ interface SalonSoumission {
               <button (click)="rejeterDoc()"
                       class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95"
                       style="background:#fee2e2;color:#dc2626;border:1.5px solid #fecaca">
-                <lucide-icon name="x-circle" [size]="15" [strokeWidth]="2"></lucide-icon>
+                <lucide-icon name="circle-x" [size]="15" [strokeWidth]="2"></lucide-icon>
                 REJETER
               </button>
               <button (click)="validerDoc()"
                       class="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
                       style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 4px 14px rgba(124,58,237,0.35)">
-                <lucide-icon name="check-circle" [size]="15" [strokeWidth]="2"></lucide-icon>
+                <lucide-icon name="circle-check" [size]="15" [strokeWidth]="2"></lucide-icon>
                 VALIDER
               </button>
             </div>
@@ -657,7 +657,7 @@ interface SalonSoumission {
     @if (toast()) {
       <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl text-white text-sm font-semibold"
            [style.background]="toast()!.type === 'success' ? '#16a34a' : toast()!.type === 'error' ? '#dc2626' : '#d97706'">
-        <lucide-icon [name]="toast()!.type === 'success' ? 'check-circle' : toast()!.type === 'error' ? 'x-circle' : 'alert-circle'"
+        <lucide-icon [name]="toast()!.type === 'success' ? 'circle-check' : toast()!.type === 'error' ? 'circle-x' : 'alert-circle'"
                      [size]="18" [strokeWidth]="2"></lucide-icon>
         {{ toast()!.message }}
       </div>
